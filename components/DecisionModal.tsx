@@ -16,9 +16,20 @@ import {
   ShieldCheck,
   Sun,
   Layers,
-  Ruler
+  Ruler,
+  Clock,
+  Droplets,
+  Zap,
+  Hammer
 } from "lucide-react";
-import { PROPERTY_DATA, STYLES_DATA, ZONES_DATA } from "@/data/projectData";
+import { 
+  PROPERTY_DATA, 
+  STYLES_DATA, 
+  ZONES_DATA, 
+  CONSTRUCTION_ROADMAP, 
+  BIOHACKING_ECOLOGY, 
+  BUDGET_WEIGHT_DISTRIBUTION 
+} from "@/data/projectData";
 import { getJohorSunData } from "@/utils/solarCalculator";
 
 interface DecisionModalProps {
@@ -102,50 +113,59 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
         </div>
 
         {/* Printable Report Content */}
-        <div className="p-6 sm:p-8 space-y-8 text-slate-800 text-xs leading-relaxed max-h-[75vh] overflow-y-auto print:max-h-none print:overflow-visible">
-          {/* Section 1: Property Metadata Summary */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        <div className="p-6 sm:p-8 space-y-6 text-xs text-slate-700 max-h-[75vh] overflow-y-auto">
+          {/* Section 1: Property Summary Card */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-blue-50/50 p-4 rounded-2xl border border-blue-200">
             <div>
-              <div className="text-[10px] text-slate-500 font-medium">物业名称与户型</div>
-              <div className="font-bold text-slate-900 mt-0.5">{PROPERTY_DATA.projectName} ({PROPERTY_DATA.unitType})</div>
+              <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">房产代号</div>
+              <div className="text-sm font-black text-slate-900 font-mono mt-0.5">{PROPERTY_DATA.unitNo} (Tower A)</div>
             </div>
             <div>
-              <div className="text-[10px] text-slate-500 font-medium">房号与楼层</div>
-              <div className="font-bold text-blue-700 font-mono mt-0.5">{PROPERTY_DATA.unitNo} (24F 高层无遮挡)</div>
+              <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">实测建筑面积</div>
+              <div className="text-sm font-black text-slate-900 font-mono mt-0.5">{PROPERTY_DATA.builtUpSqm} ㎡ ({PROPERTY_DATA.builtUpSqFt} sqft)</div>
             </div>
             <div>
-              <div className="text-[10px] text-slate-500 font-medium">建筑总面积 (锁定)</div>
-              <div className="font-bold text-slate-900 mt-0.5">{PROPERTY_DATA.builtUpSqFt} sq ft ({PROPERTY_DATA.builtUpSqm} ㎡)</div>
+              <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">物理外围轴网</div>
+              <div className="text-sm font-black text-slate-900 font-mono mt-0.5">6,900 × 9,725 mm</div>
             </div>
             <div>
-              <div className="text-[10px] text-slate-500 font-medium">主采光面朝向</div>
-              <div className="font-bold text-amber-700 mt-0.5">SSE 165° (零西晒)</div>
+              <div className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">主采光朝向</div>
+              <div className="text-sm font-black text-amber-700 font-mono mt-0.5">SSE 165° (零西晒)</div>
             </div>
           </div>
 
-          {/* Section 2: 3D BIM Live Snapshot */}
-          {canvasSnapshot && (
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
+          {/* Section 2: 3D Visual Rendering Snapshot */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+              <div className="flex items-center space-x-2 text-sm font-bold text-slate-900">
                 <Camera className="w-4 h-4 text-blue-600" />
-                <span>3D BIM 空间推演实景快照 (Live 3D Snapshot)</span>
+                <span>3D 空间切片与家具轴网实测视图</span>
               </div>
-              <div className="rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 max-h-72 flex items-center justify-center p-2">
+              <span className="text-xs text-slate-400 font-mono">1:1 BIM Cutaway</span>
+            </div>
+
+            {canvasSnapshot ? (
+              <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-slate-200 bg-slate-950 shadow-inner">
                 <img
                   src={canvasSnapshot}
-                  alt="3D Space Snapshot"
-                  className="max-h-64 object-contain rounded-xl shadow-xs"
+                  alt="3D Canvas Snapshot"
+                  className="w-full h-full object-contain"
                 />
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="aspect-video w-full rounded-2xl bg-slate-100 border border-slate-200 flex flex-col items-center justify-center text-slate-400 space-y-2">
+                <Layers className="w-8 h-8 text-slate-300" />
+                <span>3D 视口已生成，导出时自动嵌入</span>
+              </div>
+            )}
+          </div>
 
-          {/* Section 3: 9-Zone Area Quantitative Breakdown (Sum = 60.22 ㎡) */}
+          {/* Section 3: 9 Zones Spatial Dimension Breakdown */}
           <div className="space-y-3">
-            <div className="flex items-center justify-between text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
-              <div className="flex items-center space-x-2">
-                <Layers className="w-4 h-4 text-blue-600" />
-                <span>9 大功能分区套内面积校准清单 (Total: 60.22 ㎡ / 648 sq ft)</span>
+            <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+              <div className="flex items-center space-x-2 text-sm font-bold text-slate-900">
+                <Ruler className="w-4 h-4 text-blue-600" />
+                <span>9 大功能分区毫米级空间定制与面积总账 (总计 60.22 ㎡)</span>
               </div>
               <span className="text-xs font-mono font-normal text-slate-500">100% 吻合 Type B 购房合同</span>
             </div>
@@ -166,53 +186,81 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
             </div>
           </div>
 
-          {/* Section 4: Mandatory Compliance Check */}
+          {/* Section 4: 5-Stage Construction Execution Roadmap */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>硬性指标达标自检校验表 (Mandatory Compliance Check)</span>
+              <Clock className="w-4 h-4 text-indigo-600" />
+              <span>施工落地执行路线图 (5大阶段全景控制表)</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 flex items-start space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-bold text-emerald-950">尺寸基准锁定：X=6,900mm × Y=9,725mm</div>
-                  <div className="text-[11px] text-emerald-800">总面积固定 60.22 ㎡ (648 sq ft)，层高 3.0m，吊顶净高 2,650~2,750mm。</div>
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+              {CONSTRUCTION_ROADMAP.map((stage) => (
+                <div key={stage.stageNumber} className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col justify-between space-y-2">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-mono">
+                        阶段 {stage.stageNumber}
+                      </span>
+                      <span className="text-[10px] text-slate-500 font-bold">{stage.durationWeeks}</span>
+                    </div>
+                    <div className="font-black text-slate-900 text-xs mt-1.5">{stage.name}</div>
+                    <div className="text-[10px] text-slate-600 mt-1 leading-relaxed">{stage.focus}</div>
+                  </div>
+                  <div className="text-[9px] text-slate-400 border-t border-slate-200 pt-1 font-mono">
+                    {stage.keyCheckpoints[0]}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section 5: Biohacking & Indoor Ecology */}
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
+              <Droplets className="w-4 h-4 text-cyan-600" />
+              <span>光热微气候与健康生活机电系统 (Biohacking & Circadian Lighting)</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Water Filtration Chain */}
+              <div className="bg-cyan-50/50 p-4 rounded-xl border border-cyan-200 space-y-2">
+                <div className="font-bold text-cyan-950 flex items-center">
+                  <Droplets className="w-3.5 h-3.5 mr-1 text-cyan-600" />
+                  <span>全屋三道健康水循环链条</span>
+                </div>
+                <div className="space-y-1.5 text-[11px]">
+                  {BIOHACKING_ECOLOGY.waterFiltrationChain.map((w, idx) => (
+                    <div key={idx} className="bg-white p-2 rounded-lg border border-cyan-100 space-y-0.5">
+                      <div className="font-bold text-slate-900">{w.stage}: <span className="text-cyan-700">{w.device}</span></div>
+                      <div className="text-[10px] text-slate-500">{w.healthBenefit}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 flex items-start space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-bold text-emerald-950">朝向光影合规：南偏东 SSE 165° 零西晒</div>
-                  <div className="text-[11px] text-emerald-800">SunCalc 天体计算：晨光方位 108.5° / 高度角 28.5°，全天漫射采光。</div>
+              {/* Circadian Lighting Curve */}
+              <div className="bg-amber-50/50 p-4 rounded-xl border border-amber-200 space-y-2">
+                <div className="font-bold text-amber-950 flex items-center">
+                  <Sun className="w-3.5 h-3.5 mr-1 text-amber-600" />
+                  <span>24 小时生物节律照明算法曲线</span>
                 </div>
-              </div>
-
-              <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 flex items-start space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-bold text-emerald-950">家政分区铁律：洗衣设备归入北侧 Yard</div>
-                  <div className="text-[11px] text-emerald-800">洗烘一体与自动上下水全部就位北侧生活阳台，南向阳台完全保持景观休闲。</div>
-                </div>
-              </div>
-
-              <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 flex items-start space-x-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <div className="font-bold text-emerald-950">动线安全达标：全屋过道净宽 ≥ 800mm</div>
-                  <div className="text-[11px] text-emerald-800">入户主通道 1,050mm，中岛过道 950mm，卧室床侧 750~850mm。</div>
+                <div className="space-y-1.5 text-[11px]">
+                  {BIOHACKING_ECOLOGY.circadianLightingCurve.map((c, idx) => (
+                    <div key={idx} className="bg-white p-2 rounded-lg border border-amber-100 space-y-0.5">
+                      <div className="font-bold text-slate-900">{c.timeSlot}: <span className="text-amber-700">{c.cct}</span></div>
+                      <div className="text-[10px] text-slate-500">{c.biologicalGoal}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Section 5: Selected Interior Style */}
+          {/* Section 6: Selected Interior Style */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
               <Palette className="w-4 h-4 text-blue-600" />
-              <span>已选定主美学风格路线</span>
+              <span>已选定主美学风格路线与材质规格</span>
             </div>
 
             <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
@@ -240,46 +288,38 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
             </div>
           </div>
 
-          {/* Section 6: Smart Home & Automation Profile */}
-          <div className="space-y-3">
-            <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
-              <Cpu className="w-4 h-4 text-purple-600" />
-              <span>全屋智能家居规划 (Aqara / 米家生态)</span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
-                <div className="font-bold text-slate-900">极客工位与公区控制</div>
-                <div className="text-slate-600 text-[11px]">
-                  Aqara Hub M3 旗舰网关 + FP2 人体存在毫米波雷达 (4区域定位) + 智能升降桌联动
-                </div>
-              </div>
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
-                <div className="font-bold text-slate-900">安防与环境健康</div>
-                <div className="text-slate-600 text-[11px]">
-                  D200 3D人脸门锁 + C3 智能双轨电动帘 + 扫地机器人自动上下水 + 厨下 RO 1000G 直饮
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Section 7: Budget & Cost Estimation */}
+          {/* Section 7: Scientific Budget Weight Model */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
               <Calculator className="w-4 h-4 text-amber-600" />
-              <span>新山本地装修总预算预估 (MYR / RM)</span>
+              <span>新山高品质装修预算科学权重配比 (5大板块总造价预估)</span>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+              {BUDGET_WEIGHT_DISTRIBUTION.map((bw, idx) => (
+                <div key={idx} className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between text-xs font-black">
+                      <span className="text-slate-900">{bw.category}</span>
+                      <span className="text-blue-600 font-mono">{bw.percentage}%</span>
+                    </div>
+                    <div className="text-sm font-black text-amber-700 font-mono mt-1">RM {bw.budgetMYR.toLocaleString()}</div>
+                  </div>
+                  <div className="text-[10px] text-slate-500 mt-2 line-clamp-2">{bw.itemsSummary}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-slate-900 text-white p-4 rounded-2xl flex items-center justify-between">
               <div>
-                <div className="text-xs text-slate-500">推荐「极客科技高配」落地总造价</div>
-                <div className="text-2xl font-black text-amber-700 font-mono mt-0.5">
-                  RM 68,000 ~ RM 72,000
+                <div className="text-xs text-slate-400">极客全维高配落地总预算预估 (含全屋定制+Aqara智能+3台空调+净水)</div>
+                <div className="text-xl font-black text-amber-400 font-mono mt-0.5">
+                  RM 62,350 ~ RM 68,000
                 </div>
               </div>
               <div className="text-right text-xs">
-                <div className="text-slate-500">均平米造价</div>
-                <div className="font-mono font-bold text-blue-700">~RM 1,150 / ㎡ (RM 106 / sqft)</div>
+                <div className="text-slate-400">均平米造价</div>
+                <div className="font-mono font-bold text-emerald-400 text-sm">~RM 1,050 / ㎡ (RM 98 / sqft)</div>
               </div>
             </div>
           </div>
@@ -298,7 +338,7 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
             className="px-6 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm hover:bg-blue-700 flex items-center space-x-1.5"
           >
             <Download className="w-4 h-4" />
-            <span>下载/打印完整决策单</span>
+            <span>下载/打印完整决策终审单</span>
           </button>
         </div>
       </div>

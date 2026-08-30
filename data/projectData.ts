@@ -382,6 +382,38 @@ export const MATERIAL_COMPARISONS: MaterialComparisonItem[] = [
   }
 ];
 
+export interface ConstructionStage {
+  stageNumber: number;
+  name: string;
+  enName: string;
+  durationWeeks: string;
+  focus: string;
+  keyCheckpoints: string[];
+}
+
+export interface BiohackingEcology {
+  waterFiltrationChain: {
+    stage: string;
+    location: string;
+    device: string;
+    spec: string;
+    healthBenefit: string;
+  }[];
+  circadianLightingCurve: {
+    timeSlot: string;
+    cct: string;
+    intensity: string;
+    biologicalGoal: string;
+  }[];
+}
+
+export interface BudgetWeightCategory {
+  category: string;
+  percentage: number;
+  budgetMYR: number;
+  itemsSummary: string;
+}
+
 export const ZONES_DATA: ZoneData[] = [
   {
     id: "entrance",
@@ -389,14 +421,15 @@ export const ZONES_DATA: ZoneData[] = [
     enName: "Entrance Foyer",
     sqm: 3.8,
     sqft: 40.9,
-    dimensionsMm: "2200 × 1720 mm",
+    dimensionsMm: "1200 × 3160 mm",
     clearHeightMm: 2700,
-    description: "入户缓冲与落尘区，配备全高悬浮鞋柜、洞洞板拓展架、智能门锁与归家自动感应迎宾灯。",
+    description: "入户垂直收纳鞋塔，靠右墙定制 350mm 进深顶天立地悬浮柜（底部悬空 180mm + 3000K 感应灯带），容量 40+ 双；中间 450mm 高置物台内嵌无线充，保留 850mm 宽敞净过道。",
     coordinates: { x: 50, y: 0, w: 50, h: 16 },
     ergonomicHighlights: [
-      "鞋柜进深 350mm（黄金容量，不侵占走道净宽）",
-      "底部悬空 160mm（常穿鞋无需弯腰开门即可踢入）",
-      "中部置物台 1150mm（钥匙/拆快递黄金人体高度）"
+      "350mm 进深顶天立地悬浮玄关柜（容量 40+ 双鞋）",
+      "底部悬空 180mm（常穿鞋无需开门直接踢入，内嵌 3000K 感应灯带）",
+      "中间镂空置物台 450mm 高（集成无线充电板与隐形弱电箱检修口）",
+      "玄关过道净宽保持 850mm（双手提重物/换鞋畅通无阻）"
     ],
     mepPoints: ["DB配电总箱 1组", "入户照明双控开关", "弱电光纤 Fiber Socket"],
     smartDevices: ["Aqara D200 智能人脸门锁", "人体存在传感器 FP2", "超薄无边框智能开关 H1"]
@@ -407,142 +440,296 @@ export const ZONES_DATA: ZoneData[] = [
     enName: "Open Kitchen",
     sqm: 5.2,
     sqft: 56.0,
-    dimensionsMm: "3600 × 1440 mm",
+    dimensionsMm: "2100 × 2475 mm",
     clearHeightMm: 2650,
-    description: "高效单人 L 型开放式料理区，配备嵌入式静音大吸力抽油烟机、双口电磁灶、微蒸烤一体机与厨下净水系统。",
+    description: "L 型黄金三角动线（洗涤 ➔ 切配 ➔ 烹饪），15mm 哑光岩板耐高温抗刮台面，地柜内嵌台下大单盆与 45cm 洗碗机，吊柜底板嵌入 4000K 手扫料理灯，预留极窄边超白玻璃推拉门轨道。",
     coordinates: { x: 50, y: 16, w: 50, h: 15 },
     ergonomicHighlights: [
-      "洗涤切菜台面 880mm / 烹饪灶台 820mm 双高度高低差",
-      "吊柜底部离台面 550mm（防碰头同时伸手可触）",
-      "柜底内嵌 4000K 洗切专用无影灯带"
+      "L 型黄金三角动线（洗涤区 ➔ 切配区 ➔ 烹饪区）",
+      "15mm 哑光耐污岩板台面（耐高温、抗刮擦、零吸水率）",
+      "地柜内嵌台下大单盆 + 45cm 嵌入式洗碗机",
+      "吊柜底板嵌入 4000K 高显色手扫操作灯（消灭切菜暗角）",
+      "预留极窄边超白玻璃推拉门轨道（半封闭/全开敞自由切换）"
     ],
     mepPoints: ["厨房水槽上下水 1组", "烟道排气口", "大功率动力插座 3组", "厨下RO电源"],
     smartDevices: ["Aqara 水浸传感器", "烟雾与天然气报警器", "厨下智能净水龙头", "手扫感应柜底线性灯"]
   },
   {
     id: "dining",
-    name: "多功能中岛吧台",
-    enName: "Island & Dining Bar",
+    name: "核心餐厅与中岛水吧",
+    enName: "Dining & Island Bar",
     sqm: 4.2,
     sqft: 45.2,
-    dimensionsMm: "2400 × 1750 mm",
+    dimensionsMm: "1700 × 2470 mm",
     clearHeightMm: 2700,
-    description: "现代悬浮岩板中岛，兼具手冲咖啡水吧、快节奏简餐、品酒社交与轻量笔记本办公，释放公区走道动线。",
+    description: "1400×800mm 轻薄岩板餐桌（容纳 4 人用餐）靠厨房一侧延伸 300mm 吧台；侧墙定制 400mm 进深餐边柜塔，上层咖啡水吧，下层预留小厨宝与 RO 直饮出水。",
     coordinates: { x: 50, y: 31, w: 50, h: 19 },
     ergonomicHighlights: [
-      "吧台高度 900mm + 650mm 吧椅（手肘 90° 最佳伏案姿态）",
-      "台面内缩 250mm 预留舒适放腿空间",
-      "中岛侧面整合弹出式轨道插座"
+      "1400×800mm 轻薄岩板餐桌（4 人就餐，侧向延伸 300mm 吧台）",
+      "400mm 进深薄型餐边柜水吧塔（咖啡机与日常营养补剂专属台面）",
+      "下层预留小厨宝与 1000G RO 直饮水出水系统",
+      "餐椅离岛台 800mm 舒适就坐与通行容差"
     ],
-    mepPoints: ["岛台预埋升降轨道插座", "吧台下电热水器/制冰机预留点", "吊灯回路"],
+    mepPoints: ["岛台预埋升降轨道插座", "吧台下电热水器/RO直饮水点", "吊灯回路"],
     smartDevices: ["智能轨道插座（带电量统计）", "氛围色温吊灯 2700K-5000K", "智能即热饮水机"]
   },
   {
     id: "living",
-    name: "客厅极简影音区",
-    enName: "Living & AV Zone",
+    name: "景观客厅影音区",
+    enName: "Landscape Living & AV",
     sqm: 13.5,
     sqft: 145.3,
-    dimensionsMm: "3600 × 3750 mm",
+    dimensionsMm: "3400 × 3970 mm",
     clearHeightMm: 2750,
-    description: "南向采光核心活动区，配备 85寸悬浮超薄电视、杜比全景声隐藏回音壁、直排科技布沙发与悬浮地台，极简利落。",
+    description: "微水泥/哑光木饰面电视墙，2800mm 长度悬浮地台（离地 150mm，管线全预埋）；2200mm 低矮直排皮质沙发（背高≤800mm 保障视线开阔），双眼防眩深杯射灯+极窄磁吸轨道灯。",
     coordinates: { x: 50, y: 50, w: 50, h: 35 },
     ergonomicHighlights: [
-      "85寸电视中心高 1050mm（平视沙发视线中心，不仰头）",
-      "视距 2.5m~2.7m（4K 超高清最佳沉浸视野角 40°）",
-      "悬浮地台离地 180mm（扫地机器人畅行无阻）"
+      "2800mm 悬浮电视地台（离地 150mm，扫地机畅行，管线内嵌入墙）",
+      "2200mm 三人位低矮直排皮质沙发（靠背高度≤800mm，视野无遮挡）",
+      "视距 2.5m~2.7m（85 吋电视 40° 黄金沉浸观影视野角）",
+      "双眼防眩嵌入式深杯射灯 + 极窄磁吸轨道灯（UGR<10，视感层高最大化）"
     ],
     mepPoints: ["SMATV 电视点位", "15A 空调专用动力点", "5组五孔插座", "沙发侧 USB-C 快充"],
     smartDevices: ["Aqara 空调伴侣 P3", "电动蜂巢帘电机", "全景声电视背景 RGB 同步灯带", "FP2 微动传感器"]
   },
   {
     id: "balcony",
-    name: "南向景观阳台",
+    name: "南向休闲景观阳台",
     enName: "SSE Landscape Balcony",
     sqm: 4.2,
     sqft: 45.2,
-    dimensionsMm: "3600 × 1170 mm",
+    dimensionsMm: "1200 × 3500 mm",
     clearHeightMm: 2850,
-    description: "南偏东 165° 黄金朝向，24楼无遮挡俯瞰新山城市天际线与低密洋房，配置高空吧台椅、绿植与微风景观休闲角。",
+    description: "纯粹高空景观休憩空间，地面铺设户外高耐候炭化防腐木地板与鹅卵石收边，配置户外单人休闲椅与轻便圆几，享受南偏东 165° 零西晒温和晨光与城市天际线。",
     coordinates: { x: 50, y: 85, w: 50, h: 15 },
     ergonomicHighlights: [
-      "栏杆高度 1250mm（高层安全感充足同时不阻挡坐姿远眺视野）",
-      "推拉门地轨 10mm 极窄平嵌（无障碍步入无绊脚）"
+      "地面铺设高耐候炭化防腐木地板 + 鹅卵石自然收边",
+      "单人户外休闲椅 + 轻便小圆几（晨起冥想与晚风品酒）",
+      "南偏东 165° 零西晒，全天候柔和漫射自然采光",
+      "24 楼高空无遮挡俯瞰新山城市天际线与新加坡远景"
     ],
     mepPoints: ["防水双联插座 1组", "地漏排水平面", "外墙吸顶防水灯"],
     smartDevices: ["太阳能户外微光感应灯", "温湿度气象站传感器", "植物土壤湿度监测仪"]
   },
   {
-    id: "yard",
-    name: "生活阳台与设备平台",
-    enName: "Service Yard",
-    sqm: 3.8,
-    sqft: 40.9,
-    dimensionsMm: "2300 × 1650 mm",
-    clearHeightMm: 2700,
-    description: "西北侧独立封闭家政区，集中容纳洗烘一体机、扫拖机器人自动上下水与空调外机百叶散热平台，隔绝家政噪音。",
-    coordinates: { x: 0, y: 0, w: 50, h: 17 },
-    ergonomicHighlights: [
-      "洗衣机给排水独立点位",
-      "扫拖机器人自动上下水防溢自切阀",
-      "外机百叶隔绝震动噪音"
-    ],
-    mepPoints: ["洗衣机专用上下水与动力电", "空调外机 3组回路", "扫拖机器人自动排污"],
-    smartDevices: ["户外水浸传感器", "漏水自动切断阀", "智能插座电量监测"]
-  },
-  {
     id: "study",
-    name: "极客工作站 (1+1房)",
-    enName: "Geek Workstation (1+1)",
+    name: "极客多功能书房 (1+1房)",
+    enName: "Geek Multi-Function Study",
     sqm: 6.8,
     sqft: 73.2,
-    dimensionsMm: "3300 × 2060 mm",
+    dimensionsMm: "2400 × 2830 mm",
     clearHeightMm: 2700,
-    description: "保留完整硬性隔墙的高性能极客独立工位，配置 2.0m×0.8m 电动升降大板桌、满墙 600mm 深度大件收纳高柜（可推入 28寸行李箱）与隐藏走线系统。",
+    description: "极窄黑框折叠长虹玻璃移门（日常开敞融入公区视觉放大 20%，专注闭合形成隔音舱）；1600×750mm 双电机升降桌 + 加厚双屏悬臂区 + 隐藏理线架；通顶书柜嵌入 900×1900mm 隐藏翻板床（Murphy Bed）。",
     coordinates: { x: 0, y: 17, w: 50, h: 18 },
     ergonomicHighlights: [
-      "桌面进深 800mm（双32寸屏最佳视距 65cm）",
-      "升降范围 650-1250mm（坐立交替办公）",
-      "侧面大柜下层无底板设计（28寸大行李箱直推进出）"
+      "极窄黑框折叠长虹玻璃移门（日常开敞空间放大20%，闭合声学降噪办公）",
+      "1600×750mm 双电机升降桌（加厚双屏悬臂区 + 下方隐藏理线架）",
+      "通顶书柜内嵌 900×1900mm 隐藏式翻板床（Murphy Bed，兼顾偶有留宿需求）",
+      "工位专属 4000K Ra>95 护眼照明 + 声学吸音毛毡护墙"
     ],
     mepPoints: ["15A 空调动力点", "千兆网络接口 RJ45", "工位 8组高密度抗涌浪插座", "顶面吸顶磁吸轨道"],
     smartDevices: ["智能升降桌联动控制器", "Aqara 智能窗帘控制器", "屏幕挂灯与背光流光溢彩联动", "入座自动亮屏传感器"]
   },
   {
+    id: "bedroom",
+    name: "主卧室深睡舱",
+    enName: "Master Bedroom Suite",
+    sqm: 14.2,
+    sqft: 152.8,
+    dimensionsMm: "3500 × 4050 mm",
+    clearHeightMm: 2700,
+    description: "居中放置 1800×2000mm King Size 悬浮大床（床底内嵌 2700K 暖光感应起夜灯）；内侧定制 2400mm 宽顶天立地一字型哑光衣柜（深600mm，分长衣/抽屉/大行李箱位）；南向大窗配置双层电动窗帘（纱帘+100%全遮光）。",
+    coordinates: { x: 0, y: 61, w: 50, h: 39 },
+    ergonomicHighlights: [
+      "1800×2000mm King Size 悬浮大床（床底内嵌 2700K 暖光起夜感应灯）",
+      "2400mm 宽顶天立地一字型哑光衣柜（进深 600mm，长衣/叠放/行李箱分区）",
+      "南向大窗双层电动导轨（高透光纱帘 + 100% 遮光静音布帘）",
+      "床侧保留 750mm 舒适更衣与通行通道"
+    ],
+    mepPoints: ["15A 空调专用点", "床头双侧 USB+Type-C 插座", "满墙衣柜内置 LED 变压器预留"],
+    smartDevices: ["Aqara 智能双轨电动窗帘 (纱帘+全遮光)", "睡眠监测雷达", "床底感应起夜小夜灯", "智能温控空调联动"]
+  },
+  {
     id: "bathroom",
-    name: "卫浴室 (大平台+大镜面)",
-    enName: "Master Bath (Big Vanity & Mirror)",
+    name: "独立卫浴室 (干湿分离)",
+    enName: "Master Bathroom 1",
     sqm: 4.5,
     sqft: 48.4,
-    dimensionsMm: "2500 × 1800 mm",
+    dimensionsMm: "1700 × 2650 mm",
     clearHeightMm: 2550,
-    description: "五星级酒店奢雅卫浴！定制 1.8m 贯穿式悬浮大平台（横跨延伸至马桶上方形成超长大理石台阶）+ 满墙通体 LED 触控除雾无框大镜柜 + 上下隐藏悬浮 3000K 洗墙漫射光。",
+    description: "一字型高效动线（台盆区 ➔ 智能马桶区 ➔ 淋浴房）；定制悬空 250mm 浴室柜（无卫生死角）+ 大容量一体式除雾镜柜（内置插座+4000K无影面光）；淋浴房安装 8mm 超白钢化玻璃隔断与恒温防烫花洒。",
     coordinates: { x: 0, y: 35, w: 50, h: 26 },
     ergonomicHighlights: [
-      "悬浮台面高度 880mm（减少弯腰倾角 22°）",
-      "满墙镜柜进深 150mm（双侧发光消除面部阴影，Ra>98）",
-      "淋浴区 1000×1200mm 宽敞站姿空间"
+      "一字型高效干湿分离动线（台盆区 ➔ 智能马桶区 ➔ 淋浴房）",
+      "悬空 250mm 浴室柜（无卫生死角，扫地机畅行）",
+      "大容量一体镜柜（防雾发光 + 内置电动牙刷/吹风机插座）",
+      "8mm 超白钢化玻璃隔断 + 恒温防烫精铜花洒系统"
     ],
     mepPoints: ["20A 电热水器独立点", "1.5m 镜柜内隐藏防溅插座", "智能马桶电源预留", "干湿分离地漏"],
     smartDevices: ["智能镜面恒温除雾控制器", "智能感应夜间微光地脚灯", "高精度水浸防漏传感器"]
   },
   {
-    id: "bedroom",
-    name: "主卧深睡空间",
-    enName: "Master Bedroom",
-    sqm: 14.2,
-    sqft: 152.8,
-    dimensionsMm: "3600 × 3940 mm",
+    id: "yard",
+    name: "生活阳台 (家政中枢)",
+    enName: "Service Yard",
+    sqm: 3.8,
+    sqft: 40.9,
+    dimensionsMm: "1400 × 2710 mm",
     clearHeightMm: 2700,
-    description: "南向大采光窗主卧，配置 1.8m 悬浮静音大床、满墙一字型哑光抗指纹衣柜、悬浮床头柜与 2700K 舒缓深睡照明。",
-    coordinates: { x: 0, y: 61, w: 50, h: 39 },
+    description: "西北侧独立封闭家政中枢，定制铝合金防潮高柜上下垂直叠放洗烘套装（洗衣机 + 热泵烘干机）；配置深槽陶瓷家政水槽与扫拖机自动上下水，空调外机区加装消音百叶与防尘金刚网。",
+    coordinates: { x: 0, y: 0, w: 50, h: 17 },
     ergonomicHighlights: [
-      "床面高度 500mm（起卧轻松，膝关节无负担）",
-      "床头柜悬浮离地 200mm（起夜防磕碰）",
-      "满墙衣柜 600mm 深度 + 1100mm 宽敞更衣走道"
+      "定制铝合金防潮高柜垂直叠放洗烘套装（洗衣机 + 热泵烘干机）",
+      "深槽陶瓷家政水槽 + 清洁工具充电收纳位",
+      "扫拖机器人自动上下水与防溢漏电磁切断阀",
+      "空调外机加装消音百叶与防尘金刚网（阻隔外部杂物与震动噪音）"
     ],
-    mepPoints: ["15A 空调专用点", "床头双侧 USB+Type-C 插座", "满墙衣柜内置 LED 变压器预留"],
-    smartDevices: ["Aqara 智能双轨电动窗帘 (纱帘+全遮光)", "睡眠监测雷达", "床底感应起夜小夜灯", "智能温控空调联动"]
+    mepPoints: ["洗衣机专用上下水与动力电", "空调外机 3组回路", "扫拖机器人自动排污"],
+    smartDevices: ["户外水浸传感器", "漏水自动切断阀", "智能插座电量监测"]
+  }
+];
+
+export const CONSTRUCTION_ROADMAP: ConstructionStage[] = [
+  {
+    stageNumber: 1,
+    name: "交房验收与缺陷核查",
+    enName: "Defect Check & Handover",
+    durationWeeks: "第 1 周",
+    focus: "空鼓、空开回路测试、门窗密封度、给排水坡度与水压测试",
+    keyCheckpoints: [
+      "使用红外热成像仪检查窗框与外墙渗水隐患",
+      "全屋配电箱回路标注与接地电阻阻抗检测",
+      "排水管通水排污测试与地漏防臭封盖检查"
+    ]
+  },
+  {
+    stageNumber: 2,
+    name: "隐蔽机电与水路管线深化改造",
+    enName: "Concealed MEP & Smart Wiring",
+    durationWeeks: "第 2-3 周",
+    focus: "零火线智能布线、大功率空调回路、工位万兆网线、水循环三道过滤预埋",
+    keyCheckpoints: [
+      "入户主水表后加装 40μm 大流量前置过滤器预留位",
+      "厨房直饮水管暗埋延伸至餐厅水吧台",
+      "极客工位与电视背景墙 50mm 穿线管（防外露杂线）",
+      "天花双轨电动窗帘 220V 供电线与吸顶 AP 预留"
+    ]
+  },
+  {
+    stageNumber: 3,
+    name: "泥瓦、天花吊顶与木工基层打底",
+    enName: "Civil Works & Framing",
+    durationWeeks: "第 4-6 周",
+    focus: "全屋轻钢龙骨耐潮吊顶、反光灯槽制作、书房移门暗藏轨道、卫浴防水",
+    keyCheckpoints: [
+      "全屋天花采用 9mm 耐潮石膏板，回字形无影反光灯槽",
+      "卫浴干湿区双层刚柔性防水涂料（闭水试验 48 小时）",
+      "书房极窄折叠移门顶轨受力钢梁加固与隐蔽收纳槽制作"
+    ]
+  },
+  {
+    stageNumber: 4,
+    name: "全屋高定柜体与台面石材安装",
+    enName: "Custom Joinery & Stone Surfaces",
+    durationWeeks: "第 7-9 周",
+    focus: "顶天立地柜体进场、超薄岩板中岛、卫浴大平台一体台面、长虹玻璃移门",
+    keyCheckpoints: [
+      "纳米抗指纹超哑 PET 门板激光封边与阻尼反弹器调试",
+      "1400×800mm 岩板中岛与悬浮电视地台水平校准",
+      "卫浴 1.8m 悬浮岩板台面钢架承重测试（承重>150kg）"
+    ]
+  },
+  {
+    stageNumber: 5,
+    name: "Aqara 智能联调、家具进场与空气治理",
+    enName: "Smart Ecosystem & Soft Furnishings",
+    durationWeeks: "第 10-11 周",
+    focus: "M3 网关 Matter/Thread 场景调试、生物节律光热联动、家具摆放与交付",
+    keyCheckpoints: [
+      "5 大定制智能自动化场景（晨间唤醒/极客专注/沉浸影音/深睡/离家）端到端联调",
+      "24小时生物节律照明算法曲线（4000K -> 3000K -> 2700K）自动执行",
+      "直排沙发、1.8m King Size 悬浮大床与人体工学椅进场定位",
+      "全屋新风与光触媒空气净化治理，甲醛与 TVOC 达标交付"
+    ]
+  }
+];
+
+export const BIOHACKING_ECOLOGY: BiohackingEcology = {
+  waterFiltrationChain: [
+    {
+      stage: "第一道：入户前置总过滤",
+      location: "主供水入户总管（生活阳台/水表井）",
+      device: "大流量反冲洗前置过滤器",
+      spec: "40 微米食品级 316L 不锈钢滤网，额定流量 4.5T/h",
+      healthBenefit: "有效拦截市政管网铁锈、泥沙、红虫，保护全屋涉水家电与涉水龙头寿命。"
+    },
+    {
+      stage: "第二道：厨下+水吧双端直饮",
+      location: "厨房水槽下方 ➔ 餐厅餐边柜水吧",
+      device: "1000G 大通量反渗透 (RO) 直饮净水机",
+      spec: "0.0001 微米 RO 膜，双出水龙头，直连手冲咖啡与即热饮水机",
+      healthBenefit: "滤除重金属、抗生素与微塑料，TDS<10，保障日常纯净饮水与咖啡风味萃取。"
+    },
+    {
+      stage: "第三道：卫浴健康洗浴除氯",
+      location: "独立卫浴室恒温花洒前端",
+      device: "微米级亚硫酸钙除氯除杂滤芯",
+      spec: "高吸附 VC 复合滤芯，有效去除余氯 >99%",
+      healthBenefit: "避免热水挥发氯气吸入呼吸道，保护头皮屏障与娇嫩肌肤，改善发质干涩。"
+    }
+  ],
+  circadianLightingCurve: [
+    {
+      timeSlot: "08:00 ~ 16:00 (日间高效期)",
+      cct: "4000K 高显色中性白光 (Ra>95)",
+      intensity: "80% ~ 100% 照度",
+      biologicalGoal: "有效抑制褪黑素分泌，刺激皮质醇正常释放，提升大脑认知效率与工作专注度。"
+    },
+    {
+      timeSlot: "17:00 ~ 20:00 (傍晚过渡期)",
+      cct: "3000K 柔和暖白光",
+      intensity: "50% ~ 70% 照度",
+      biologicalGoal: "温和模拟黄昏自然光谱，平稳过渡情绪，降低交感神经兴奋性，促进身心放松。"
+    },
+    {
+      timeSlot: "20:00 ~ 07:00 (夜间深睡准备)",
+      cct: "2700K 琥珀极暖暗光 (低照度地脚漫射)",
+      intensity: "15% ~ 30% (起夜 5%)",
+      biologicalGoal: "零蓝光刺激，促使大脑松果体正常分泌褪黑素，缩短入睡潜伏期，延长深度睡眠。"
+    }
+  ]
+};
+
+export const BUDGET_WEIGHT_DISTRIBUTION: BudgetWeightCategory[] = [
+  {
+    category: "全屋高定柜体与木作",
+    percentage: 35,
+    budgetMYR: 21800,
+    itemsSummary: "玄关鞋柜、岩板中岛、悬浮地台、主卧通顶衣柜、书房移门与大件行李箱柜"
+  },
+  {
+    category: "机电、空调与水循环系统",
+    percentage: 20,
+    budgetMYR: 12500,
+    itemsSummary: "3台变频空调、全屋三道净水系统、电热水器、强弱电增补与高阶开关插座"
+  },
+  {
+    category: "Aqara 智能与无主灯照明",
+    percentage: 15,
+    budgetMYR: 9350,
+    itemsSummary: "M3 中枢、FP2 存在雷达、C3 电动窗帘电机、防眩磁吸轨道与生物节律灯带"
+  },
+  {
+    category: "硬装土建与吊顶油漆",
+    percentage: 15,
+    budgetMYR: 9350,
+    itemsSummary: "轻钢龙骨耐潮石膏板平顶、反光灯槽、艺术涂料/微水泥、地砖打底"
+  },
+  {
+    category: "移动家具与软装配饰",
+    percentage: 15,
+    budgetMYR: 9350,
+    itemsSummary: "直排沙发、1.8m King Size 悬浮大床与床垫、岩板餐桌椅、阳台防腐木设施"
   }
 ];
 
