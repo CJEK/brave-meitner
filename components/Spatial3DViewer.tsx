@@ -118,15 +118,16 @@ const ZONE_VIEWBOXES: { [key: string]: string } = {
   "birds-eye": "0 0 690 972.5",
   "iso-2.5d": "0 0 690 972.5",
   "all": "0 0 690 972.5",
-  "entrance": "300 0 380 180",
-  "kitchen": "300 140 380 200",
-  "dining": "300 290 380 220",
-  "living": "300 470 380 370",
-  "balcony": "300 790 380 180",
-  "yard": "0 0 350 190",
-  "bathroom": "0 160 350 260",
-  "study": "0 390 350 230",
-  "bedroom": "0 580 350 390"
+  "entrance": "320 0 370 170",
+  "kitchen": "320 150 370 170",
+  "dining": "320 300 370 200",
+  "living": "320 480 370 360",
+  "balcony": "320 800 370 172",
+  "yard": "0 0 340 180",
+  "bathroom": "0 160 340 250",
+  "study": "0 380 340 230",
+  "workstation": "0 380 340 230",
+  "bedroom": "0 580 340 390"
 };
 
 // 1:1 Standard Coordinate System: Width X [-3.45, +3.45] (6.9m), Depth Z [-4.8625, +4.8625] (9.725m), Origin (0,0,0) at Geometric Center
@@ -715,35 +716,59 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, [showDimensions]);
 
-  // 5. Smooth Camera Preset Navigation & SVG ViewBox Focus Transition
+  // 5. Dual-Directional Camera Preset Navigation & SVG ViewBox Focus Transition
   const applyCameraPreset = (preset: "birds-eye" | "iso-2.5d" | "living" | "workstation" | "bedroom" | "balcony") => {
     setCameraPreset(preset);
-    if (ZONE_VIEWBOXES[preset]) {
+
+    // (A) Dual-Directional Synchronization with Zone Inspector
+    if (preset === "living") {
+      const found = ZONES_DATA.find((z) => z.id === "living");
+      if (found) setActiveZone(found);
+    } else if (preset === "workstation") {
+      const found = ZONES_DATA.find((z) => z.id === "study");
+      if (found) setActiveZone(found);
+    } else if (preset === "bedroom") {
+      const found = ZONES_DATA.find((z) => z.id === "bedroom");
+      if (found) setActiveZone(found);
+    } else if (preset === "balcony") {
+      const found = ZONES_DATA.find((z) => z.id === "balcony");
+      if (found) setActiveZone(found);
+    }
+
+    // (B) 2.5D SVG Isometric & ViewBox Zoom Coordination
+    if (preset === "iso-2.5d") {
+      setIsIsometricPerspective(true);
+      setSvgViewBox("0 0 690 972.5");
+    } else if (preset === "birds-eye") {
+      setIsIsometricPerspective(false);
+      setSvgViewBox("0 0 690 972.5");
+    } else if (ZONE_VIEWBOXES[preset]) {
       setSvgViewBox(ZONE_VIEWBOXES[preset]);
     }
 
-    if (!controlsRef.current) return;
-    const ctrl = controlsRef.current;
-
-    switch (preset) {
-      case "birds-eye":
-        ctrl.setLookAt(0, 10, 8, 0, 0, 0, true);
-        break;
-      case "iso-2.5d":
-        ctrl.setLookAt(7.5, 7.5, 7.5, 0, 0, 0, true);
-        break;
-      case "living":
-        ctrl.setLookAt(1.5, 3.4, 3.8, 1.5, 0.3, 1.8, true);
-        break;
-      case "workstation":
-        ctrl.setLookAt(-1.5, 3.0, 2.2, -1.5, 0.3, 0.8, true);
-        break;
-      case "bedroom":
-        ctrl.setLookAt(-1.8, 3.0, 4.5, -1.8, 0.3, 3.0, true);
-        break;
-      case "balcony":
-        ctrl.setLookAt(1.5, 2.0, 3.0, 1.5, 0.3, 4.28, true);
-        break;
+    // (C) 3D Camera Controls Glide Animation
+    if (controlsRef.current && viewMode === "3d") {
+      const ctrl = controlsRef.current;
+      switch (preset) {
+        case "birds-eye":
+          ctrl.setLookAt(0, 10, 8, 0, 0, 0, true);
+          break;
+        case "iso-2.5d":
+          ctrl.setLookAt(7.5, 7.5, 7.5, 0, 0, 0, true);
+          break;
+        case "living":
+          ctrl.setLookAt(1.5, 3.4, 3.8, 1.5, 0.3, 1.8, true);
+          break;
+        case "workstation":
+          ctrl.setLookAt(-1.5, 3.0, 2.2, -1.5, 0.3, 0.8, true);
+          break;
+        case "bedroom":
+          ctrl.setLookAt(-1.8, 3.0, 4.5, -1.8, 0.3, 3.0, true);
+          break;
+        case "balcony":
+          ctrl.setLookAt(1.5, 2.0, 3.0, 1.5, 0.3, 4.28, true);
+          break;
+      }
     }
   };
 
@@ -877,10 +902,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               视角:
             </span>
             <button
-              onClick={() => {
-                setViewMode("3d");
-                applyCameraPreset("birds-eye");
-              }}
+              onClick={() => applyCameraPreset("birds-eye")}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "birds-eye"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
@@ -890,10 +912,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               俯瞰全景
             </button>
             <button
-              onClick={() => {
-                setViewMode("3d");
-                applyCameraPreset("iso-2.5d");
-              }}
+              onClick={() => applyCameraPreset("iso-2.5d")}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "iso-2.5d"
                   ? "bg-blue-600 text-white font-semibold shadow-2xs"
@@ -903,9 +922,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               45° 等轴测 3D
             </button>
             <button
-              onClick={() => {
-                applyCameraPreset("living");
-              }}
+              onClick={() => applyCameraPreset("living")}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "living"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
@@ -915,9 +932,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               客厅影音
             </button>
             <button
-              onClick={() => {
-                applyCameraPreset("workstation");
-              }}
+              onClick={() => applyCameraPreset("workstation")}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "workstation"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
@@ -927,9 +942,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               极客工位
             </button>
             <button
-              onClick={() => {
-                applyCameraPreset("bedroom");
-              }}
+              onClick={() => applyCameraPreset("bedroom")}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "bedroom"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
@@ -939,9 +952,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               主卧深睡
             </button>
             <button
-              onClick={() => {
-                applyCameraPreset("balcony");
-              }}
+              onClick={() => applyCameraPreset("balcony")}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "balcony"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
