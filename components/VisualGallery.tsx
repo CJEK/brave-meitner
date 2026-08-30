@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { 
   Sparkles, 
   Eye, 
@@ -44,6 +44,8 @@ interface StyleRoomData {
   roomId: "living" | "bedroom" | "bathroom" | "workstation" | "kitchen";
   roomName: string;
   enName: string;
+  sqm: number;
+  physicalConstraint: string;
   title: string;
   subtitle: string;
   description: string;
@@ -53,7 +55,7 @@ interface StyleRoomData {
   views: RoomAngleView[];
 }
 
-// 4 Global Styles × 5 Rooms × 3 Angles Photorealistic Studio Dataset
+// 4 Global Styles × 5 Rooms × 3 Angles Photorealistic Studio Dataset (Strict 60.22 ㎡ 1+1 Physical Constraints)
 const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
   // 1. 现代极简科技风 (Modern Minimalist Tech)
   "modern-minimalist": [
@@ -61,41 +63,87 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       roomId: "living",
       roomName: "客厅极简影音区",
       enName: "Living & Media Zone",
-      title: "85 吋超薄巨幕与太空灰微水泥通透公区",
-      subtitle: "微水泥无缝通铺 · 晨光漫射 · 极简无界动线",
-      description: "85寸壁画电视超薄贴墙无缝内嵌，公区通铺太空灰纳米微水泥，搭配 2.6m 直排科技布浅灰沙发与极窄磁吸轨道灯，南向景观阳台将晨光均匀漫射于室内，通透纯粹。",
+      sqm: 15.2,
+      physicalConstraint: "15.2 ㎡ 公区 · 净开间 3.6m · 2.5m~2.7m 黄金视距",
+      title: "85 吋超薄贴墙巨幕与 2.5m 黄金观影视距",
+      subtitle: "15.2 ㎡ 紧凑公区 · 2.6m 直排沙发 · 南向阳台晨光漫射",
+      description: "85寸壁画电视超薄贴平东墙，搭配 2.6m 直排科技布浅灰沙发，精准形成 2.5m 黄金观影视距（不仰头、视界角 40°）。公区通铺太空灰微水泥，南向景观阳台引入晨曦漫射光。",
       materials: [
-        { name: "地面工程", spec: "纳米耐污微水泥 (全屋无缝整体通铺，厚度 3mm)" },
-        { name: "电视背景墙", spec: "超白哑光抗指纹肤感护墙板 (内嵌隐藏式 3500K 线性灯)" },
-        { name: "极简沙发", spec: "2600mm 直排科技布沙发 (离地悬空 180mm，扫地机畅行)" },
-        { name: "顶面吊顶", spec: "全平极简吊顶 (边缘见光不见灯反光槽，层高视觉拉升)" }
+        { name: "电视安装", spec: "85吋超薄壁画电视贴平东墙 (厚度≤100mm，中心高 1050mm)" },
+        { name: "公区地面", spec: "太空灰纳米耐污微水泥 (全屋整体无缝通铺，厚度 3mm)" },
+        { name: "极简沙发", spec: "2600mm 浅灰直排科技布沙发 (深度 900mm，离地悬空 180mm)" },
+        { name: "通畅动线", spec: "沙发与中岛间保留 1100mm 宽敞走道，直通南向景观阳台" }
       ],
-      lighting: "3500K 间接洗天花漫射反光槽 + 沙发上方 3000K 防眩深杯重点射灯 (UGR<10)",
-      focalPoints: ["85寸超薄贴墙巨幕", "无缝微水泥通铺", "见光不见灯反光槽", "2.6m 直排科技布沙发"],
+      lighting: "3500K 隐藏反光槽间接洗天花 + 沙发上方 3000K 深防眩聚焦射灯 (UGR<10)",
+      focalPoints: ["85寸贴平东墙巨幕", "2.5m 黄金观影视距", "1.1m 通畅无障碍过道", "微水泥无缝通铺"],
       views: [
         {
           key: "A",
           label: "视角 A: 主视角全景",
-          sublabel: "入户俯瞰客厅影音区全貌",
+          sublabel: "入户俯瞰 15.2 ㎡ 客厅全貌与 85 吋巨幕",
           imageUrl: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
-          highlight: "大开间纵深视野，85 吋电视贴墙悬浮，南向落地窗将晨光均匀漫射于微水泥地面",
-          prompt: "Interior architectural photo of a modern minimalist 60 sqm apartment living room, 85-inch ultra-thin TV mounted flush on white matte feature wall, seamless grey micro-cement floor, light grey fabric sofa, large floor-to-ceiling balcony window with warm morning sunlight streaming in, soft ambient strip lighting, Hasselblad medium format, ultra-detailed 8k --ar 16:9 --style raw"
+          highlight: "真实 60.22 ㎡ 户型比例，85 吋电视贴墙安装，沙发至屏幕 2.5m 黄金视距，南向落地窗洒入清晨阳光",
+          prompt: "Minimalist living room interior photography, 15.2 sqm compact space, 85-inch flat TV mounted flush on wall, 1.8m kitchen island on the side, compact sofa with 2.5m viewing distance, clear walkway to south-facing balcony with morning sunlight, realistic 60.22 sqm condo scale, Hasselblad photography --ar 16:9 --style raw"
         },
         {
           key: "B",
           label: "视角 B: 材质与光影特写",
-          sublabel: "微水泥地台与护墙板接缝微光",
+          sublabel: "微水泥地面与悬浮电视柜接缝微光",
           imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-          highlight: "微水泥细腻微粒质感，悬浮地台内嵌 3000K 暖光漫射，触感温润无指纹",
-          prompt: "Macro interior shot of a minimalist living room floating media console, under-cabinet warm 3000K LED lighting strip casting soft glow on micro-cement floor, subtle wall texture details, luxury architectural design, depth of field, architectural digest style, 8k resolution --ar 16:9 --style raw"
+          highlight: "微水泥细腻哑光肌理，悬浮地台内嵌 3000K 暖光漫射，触感温润无指纹",
+          prompt: "Macro interior shot of a minimalist living room floating media console in a 15.2 sqm apartment, under-cabinet warm 3000K LED lighting strip casting soft glow on micro-cement floor, subtle wall texture details, luxury architectural design, depth of field, 8k resolution --ar 16:9 --style raw"
         },
         {
           key: "C",
           label: "视角 C: 反向/侧角视角",
-          sublabel: "由南向阳台回望室内公区",
+          sublabel: "由南向阳台回望客厅与中岛动线",
           imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-          highlight: "站在阳台推拉门处望向公区，开阔通畅的 1.2m 走道动线与开放厨房一览无遗",
-          prompt: "Reverse angle interior photo looking from the sunlit balcony into a sleek modern minimalist open-plan apartment, floating living room media unit, warm oak accents, ultra-clean wide walkway, diffused architectural lighting, highly detailed photorealistic render --ar 16:9 --style raw"
+          highlight: "站在阳台移门处望向公区，开阔通畅的 1.1m 走道动线与 1.8m 中岛吧台一览无遗",
+          prompt: "Reverse angle interior photo looking from the sunlit balcony into a sleek modern minimalist open-plan apartment, 15.2 sqm living space, floating media unit, 1.8m island, ultra-clean wide walkway, diffused architectural lighting, realistic scale --ar 16:9 --style raw"
+        }
+      ]
+    },
+    {
+      roomId: "bathroom",
+      roomName: "独立卫浴室",
+      enName: "Compact Luxury Bathroom",
+      sqm: 4.2,
+      physicalConstraint: "4.2 ㎡ 紧凑干湿分离 · 1.8m 贯穿大台面 · 跨越壁挂马桶上方",
+      title: "1.8m 贯穿式岩板大台面直接跨越马桶上方",
+      subtitle: "4.2 ㎡ 空间极致利用 · 满墙除雾大镜柜 · 暗装枪灰瀑布龙头",
+      description: "针对 4.2 ㎡ 紧凑卫浴，定制 1.8m 劳伦白金耐污岩板台面横向贯穿，直接延伸至壁挂马桶上方形成整体置物平台；搭配满墙触控智能除雾镜柜与 10mm 极窄黑框长虹玻璃淋浴隔断。",
+      materials: [
+        { name: "贯穿大台面", spec: "1800mm 劳伦白金岩板 (横向无缝延伸跨越直接位于壁挂马桶上方)" },
+        { name: "满墙大镜柜", spec: "通宽 LED 智能恒温除雾镜门 (双向 45° 侧发光，上下 3000K 洗墙)" },
+        { name: "暗装五金", spec: "暗装枪灰拉丝瀑布入墙式冷热龙头 (防溅静音出水，精铜主体)" },
+        { name: "淋浴隔断", spec: "10mm 超窄黑框超白长虹防爆钢化玻璃推拉门 (干湿严格分离)" }
+      ],
+      lighting: "Ra>98 高显色无影美妆面光 + 镜柜上下 3000K 纯净洗墙氛围灯带",
+      focalPoints: ["1.8m 台面跨越马桶上方", "满墙超薄除雾镜柜", "暗装枪灰瀑布龙头", "10mm极窄长虹玻门"],
+      views: [
+        {
+          key: "A",
+          label: "视角 A: 主视角全景",
+          sublabel: "正对 1.8m 贯穿大台面与马桶上方置物台",
+          imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+          highlight: "4.2 ㎡ 紧凑空间极致收纳，1.8m 白色岩板台面横跨延伸至壁挂马桶上方，满墙镜柜上下透出柔和洗墙光",
+          prompt: "Photorealistic interior render of a compact 4.2 sqm luxury modern bathroom, 1.8m continuous white sintered stone floating countertop seamlessly extending directly ABOVE the wall-hung toilet, frameless LED fogless mirror cabinet, 10mm ultra-thin black frame glass shower partition on the side, concealed gunmetal waterfall faucet, highly realistic space scale for a 60.22 sqm apartment, Hasselblad photography --ar 16:9 --style raw"
+        },
+        {
+          key: "B",
+          label: "视角 B: 材质与光影特写",
+          sublabel: "枪灰入墙龙头出水与岩板水波纹微距",
+          imageUrl: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80",
+          highlight: "暗装入墙龙头金属拉丝质感，流水轻柔抚过一体成型大单盆，触感极其细腻",
+          prompt: "Macro interior photography of a gunmetal wall-mounted waterfall faucet over a white sintered stone floating basin in a 4.2 sqm compact bathroom, ambient 3000K LED lighting reflecting on stone, water droplets, ultra-detailed texture, luxury craftsmanship, 8k --ar 16:9 --style raw"
+        },
+        {
+          key: "C",
+          label: "视角 C: 反向/侧角视角",
+          sublabel: "淋浴区透过 10mm 长虹玻望向干区大台面",
+          imageUrl: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
+          highlight: "长虹玻璃透光不透影，干湿分区清晰，壁挂马桶上方 1.8m 大台面置物从容",
+          prompt: "Interior perspective looking from the frameless glass shower enclosure towards the compact 4.2 sqm bathroom vanity and wall-hung toilet, glowing mirror cabinet, clean dry-wet separation, hotel suite bathroom rendering, 8k resolution --ar 16:9 --style raw"
         }
       ]
     },
@@ -103,83 +151,43 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       roomId: "bedroom",
       roomName: "主卧深睡区",
       enName: "Master Bedroom Suite",
-      title: "1.8m 悬浮科技布大床与纯白隐形衣柜",
-      subtitle: "2700K 暖光洗墙 · 悬浮起夜地脚灯 · 电动全遮光帘",
-      description: "专属私密深睡区，1.8m 悬浮大床床底内嵌温和感应地脚灯，西侧为整面 600mm 深度纯白哑光无把手衣柜，南向大窗配置电动双轨静音窗帘，打造极度松弛的沉浸深睡体验。",
+      sqm: 11.0,
+      physicalConstraint: "11.0 ㎡ 私密主卧 · 1.8m 大床 · 0.6m 舒适过道",
+      title: "1.8m 悬浮科技布大床与整墙 600mm 隐形衣柜",
+      subtitle: "11.0 ㎡ 舒适深睡舱 · 0.6m 更衣动线 · 2700K 暖光洗墙",
+      description: "11.0 ㎡ 私密深睡区，1.8m 悬浮大床床底内嵌低照度感应夜灯，床侧保留 600mm 舒适通行与更衣动线。西侧整面 600mm 深哑光无把手衣柜，南向大窗配置电动双轨静音全遮光帘。",
       materials: [
         { name: "悬浮大床", spec: "1800×2000mm 科技布静音悬浮床架 (床底内缩 150mm 防碰脚)" },
-        { name: "定制衣柜", spec: "整墙超哑抗指纹 PET 肤感板 (顶天立地反弹器开门)" },
-        { name: "床头背景", spec: "浅灰哑光艺术涂料 + 琥珀洗墙灯带 (Ra>95)" },
+        { name: "整墙衣柜", spec: "整墙超哑抗指纹 PET 肤感门板 (顶天立地反弹器开门，进深 600mm)" },
+        { name: "床头背景", spec: "浅灰哑光艺术涂料 + 2700K 琥珀洗墙灯带 (Ra>95)" },
         { name: "智能窗帘", spec: "Aqara C3 双轨超静音电动开合帘 (220mm 顶面双轨窗帘盒)" }
       ],
       lighting: "2700K 床头斜角防眩洗墙光 + 床底低照度感应起夜微光 (0.5W/米)",
-      focalPoints: ["悬浮床底夜灯", "整墙隐形衣柜", "无边框微水泥背景", "全遮光睡眠舱"],
+      focalPoints: ["1.8m 悬浮科技布床", "0.6m 舒适过道", "整墙隐形衣柜", "2700K 琥珀洗墙光"],
       views: [
         {
           key: "A",
           label: "视角 A: 主视角全景",
-          sublabel: "正对 1.8m 悬浮大床与背景墙",
+          sublabel: "正对 1.8m 悬浮大床与 11.0 ㎡ 卧室全貌",
           imageUrl: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
-          highlight: "悬浮床体呈现脱离地面的轻盈感，床头背景墙上方 2700K 暖光柔和洒下",
-          prompt: "Photorealistic modern minimalist master bedroom interior, 1.8m floating platform bed with light grey tech fabric upholstery, micro-cement feature wall, concealed 2700K warm LED wall-washer strip light above headboard, floor-to-ceiling floor tiles, architectural interior photography, calm serene ambiance, 8k --ar 16:9 --style raw"
+          highlight: "11.0 ㎡ 真实紧凑卧室尺度，1.8m 悬浮床脱离地面轻盈感，床头上方 2700K 暖光柔和洒下",
+          prompt: "Photorealistic compact master bedroom for 60.22 sqm apartment, 11.0 sqm space, 1.8m floating platform bed, 0.6m clear walking space beside bed, floor-to-ceiling seamless white wardrobe, 2700K warm LED wall-washer lighting, soft morning side light --ar 16:9 --style raw"
         },
         {
           key: "B",
           label: "视角 B: 材质与光影特写",
-          sublabel: "床头软包与床底悬浮微光",
+          sublabel: "亲肤科技布缝线与床底悬浮夜灯",
           imageUrl: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80",
-          highlight: "亲肤科技布细腻缝线，床底内缩 150mm 防踢脚结构与微光洗地效果",
-          prompt: "Close up interior detail of a floating designer bed in modern bedroom, warm 2700K toe-kick ambient LED light glowing beneath the bed frame, plush linen bedding, matte wall texture, cozy luxury hotel feel, shallow depth of field, 8k resolution --ar 16:9 --style raw"
+          highlight: "科技布细腻缝线，床底内缩 150mm 防踢脚结构与低照度洗地微光",
+          prompt: "Close up interior detail of a floating designer bed in a compact 11 sqm bedroom, warm 2700K toe-kick ambient LED light glowing beneath the bed frame, plush linen bedding, matte wall texture, depth of field, 8k resolution --ar 16:9 --style raw"
         },
         {
           key: "C",
           label: "视角 C: 反向/侧角视角",
-          sublabel: "门洞望向大床与满墙衣柜",
+          sublabel: "卧室门口望向大床与 600mm 满墙衣柜",
           imageUrl: "https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80",
-          highlight: "西墙整面纯白哑光无把手衣柜，预留 1.1m 宽敞更衣回旋走道",
-          prompt: "Side angle interior photo of a minimalist modern bedroom, showing full-wall matte white seamless floor-to-ceiling wardrobe with integrated vertical recessed handles, floating king bed on right, warm morning side lighting, clean architectural lines, 8k --ar 16:9 --style raw"
-        }
-      ]
-    },
-    {
-      roomId: "bathroom",
-      roomName: "独立卫浴室",
-      enName: "Hotel Suite Bathroom",
-      title: "1.5m 贯穿式悬浮大台面与满墙除雾大镜柜",
-      subtitle: "劳伦白金岩板 · 暗装枪灰瀑布龙头 · 3500K 无影面光",
-      description: "打破传统紧凑小卫浴格局，定制整面 1.5m 贯穿式大理石大台面横向延伸至马桶上方，上方配备满墙触控智能除雾大镜柜，搭配暗装枪灰入墙五金与干湿分离超白长虹玻璃门。",
-      materials: [
-        { name: "贯穿台面", spec: "1500mm 劳伦白金耐污岩板 (横向延伸跨越至马桶上方)" },
-        { name: "满墙镜柜", spec: "通宽 LED 智能恒温除雾镜门 (双向 45° 侧发光，Ra>98)" },
-        { name: "五金龙头", spec: "暗装枪灰拉丝瀑布入墙式冷热龙头 (防溅静音出水)" },
-        { name: "淋浴隔断", spec: "超白极窄长虹防爆钢化玻璃推拉门 (10mm 窄边框)" }
-      ],
-      lighting: "Ra>98 高显色无影美妆面光 + 镜柜上下 3500K 纯净洗墙灯带",
-      focalPoints: ["1.5m 贯穿大台面", "满墙超薄除雾镜柜", "暗装枪灰入墙龙头", "一体成型无缝岩板盆"],
-      views: [
-        {
-          key: "A",
-          label: "视角 A: 主视角全景",
-          sublabel: "正对 1.5m 贯穿大台面与满墙镜柜",
-          imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
-          highlight: "1.5m 整体大台面气势恢宏，满墙镜柜上下透出柔和白金光，彻底消除台面杂乱",
-          prompt: "Luxury modern minimalist bathroom interior design, 1.5m continuous white sintered stone countertop seamlessly extending over wall-hung toilet, full-wall frameless LED fogless mirror cabinet, gunmetal concealed waterfall faucet, 3500K clean wash light, high-end 5-star hotel suite style, photorealistic 8k --ar 16:9 --style raw"
-        },
-        {
-          key: "B",
-          label: "视角 B: 材质与光影特写",
-          sublabel: "枪灰入墙龙头与岩板水波纹",
-          imageUrl: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80",
-          highlight: "暗装入墙龙头金属拉丝质感，流水轻柔抚过岩板一体成型大单盆",
-          prompt: "Macro interior photography of a gunmetal wall-mounted waterfall faucet over a white sintered stone floating basin, ambient 3500K LED lighting reflecting on stone, water droplets, ultra-detailed texture, luxury bathroom craftsmanship, 8k --ar 16:9 --style raw"
-        },
-        {
-          key: "C",
-          label: "视角 C: 反向/侧角视角",
-          sublabel: "透过超白玻回看干区洗漱台",
-          imageUrl: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
-          highlight: "长虹玻璃透光不透影，干湿分区清晰，壁挂马桶上方大平台置物从容",
-          prompt: "Interior perspective looking from the frameless glass shower enclosure towards the luxury vanity and wall-hung toilet, glowing mirror cabinet, clean dry-wet separation, hotel suite bathroom rendering, 8k resolution --ar 16:9 --style raw"
+          highlight: "西墙整面纯白哑光无把手衣柜，预留 600mm 宽敞更衣通行走道",
+          prompt: "Side angle interior photo of a compact 11 sqm modern bedroom, showing full-wall matte white seamless floor-to-ceiling wardrobe with integrated vertical recessed handles, floating king bed on right, warm morning side lighting, 8k --ar 16:9 --style raw"
         }
       ]
     },
@@ -187,9 +195,11 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       roomId: "workstation",
       roomName: "极客工作站 (1+1房)",
       enName: "Geek Workstation Study",
-      title: "2.0m 双电机升降桌与双 32 吋 4K 悬浮屏",
-      subtitle: "实木木作大板 · 隐藏式走线槽 · 行李箱直推高柜",
-      description: "独立静音研发区，2.0m×0.8m 加深升降大板桌配置双 32 吋屏幕机械臂悬浮，桌面 8 组防涌浪插座与千兆网口，侧面 600mm 深度大收纳柜下层直通，可直接推入 28 吋大行李箱。",
+      sqm: 7.8,
+      physicalConstraint: "7.8 ㎡ 独立工位 · 2.0m 升降大板 · 直推 28 吋大行李箱高柜",
+      title: "2.0m 双电机升降桌与 28 吋行李箱直推高柜",
+      subtitle: "7.8 ㎡ 紧凑独立书房 · 隐藏走线槽 · 双 32 吋 4K 悬浮屏",
+      description: "7.8 ㎡ 紧凑独立研发区，2.0m×0.8m 加深升降大板桌紧贴隔墙放置，双 32 吋屏幕机械臂悬浮，侧面 600mm 深度大收纳柜下层直通，可直接推入 28 吋大行李箱。",
       materials: [
         { name: "升降大板", spec: "2000×800mm 天然白橡木实木直拼大板 (厚度 35mm，倒角防压手)" },
         { name: "升降系统", spec: "双电机三节正装静音升降桌腿 (载重 120kg，升降 650-1250mm)" },
@@ -202,15 +212,15 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
         {
           key: "A",
           label: "视角 A: 主视角全景",
-          sublabel: "正对 2.0m 极客双屏工位全貌",
+          sublabel: "正对 2.0m 升降大板桌与双屏悬浮工位",
           imageUrl: "https://images.unsplash.com/photo-1593062096033-9a26b09da705?auto=format&fit=crop&w=1200&q=80",
-          highlight: "2.0m 宽阔大板桌面，双 32 吋屏幕悬浮空中，桌面零杂线，科技感十足",
-          prompt: "High-end minimalist geek home office battlestation, 2.0m solid white oak motorized standing desk, dual 32-inch 4K monitors on floating heavy-duty monitor arms, premium mechanical keyboard, Herman Miller ergonomic chair, clean cable management, ambient cyber blue backlighting, soft natural daylight from side, 8k --ar 16:9 --style raw"
+          highlight: "7.8 ㎡ 紧凑极客空间，2.0m 宽阔大板桌面贴墙放置，双 32 吋屏幕悬浮，桌面零杂线",
+          prompt: "Compact 7.8 sqm developer home study in a 60.22 sqm condo, 2.0m motorized oak standing desk flush against partition wall, dual 32-inch floating monitors, side floor-to-ceiling luggage storage bay, clean cable management, focused architectural photography --ar 16:9 --style raw"
         },
         {
           key: "B",
           label: "视角 B: 材质与光影特写",
-          sublabel: "实木桌面倒角与隐藏走线槽",
+          sublabel: "实木桌面倒角与隐藏走线盒细节",
           imageUrl: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=1200&q=80",
           highlight: "天然橡木温润木纹，圆弧倒角防压手肘，铝合金嵌入式毛刷走线盒细节",
           prompt: "Macro photography of a luxury solid white oak standing desk surface, aluminum wire grommet box with clean woven cables, high-end mechanical keyboard with custom keycaps, studio monitor speakers, matte finish wood grain, depth of field, 8k --ar 16:9 --style raw"
@@ -218,10 +228,10 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
         {
           key: "C",
           label: "视角 C: 反向/侧角视角",
-          sublabel: "门洞望向工位与行李箱高柜",
+          sublabel: "书房门口望向工位与大行李箱高柜",
           imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=80",
           highlight: "侧面定制 600mm 深度通顶储物柜，底部直通推入 28 吋大行李箱，整洁利落",
-          prompt: "Side angle shot of a modern home workstation room in apartment, tall seamless storage cabinets on side with lower open luggage bay, motorized standing desk, clean acoustic wall felt paneling, soft architectural lighting, organized professional developer workspace, 8k --ar 16:9 --style raw"
+          prompt: "Side angle shot of a compact 7.8 sqm home workstation room in apartment, tall seamless storage cabinets on side with lower open luggage bay, motorized standing desk, clean acoustic wall felt paneling, organized workspace, 8k --ar 16:9 --style raw"
         }
       ]
     },
@@ -229,9 +239,11 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       roomId: "kitchen",
       roomName: "开放厨房与中岛吧台",
       enName: "Kitchen & Dining Island",
+      sqm: 10.2,
+      physicalConstraint: "10.2 ㎡ 开放式水吧中岛 · 1.8m 岩板中岛 · 0.9m 环形走道",
       title: "1.8m 太空灰悬浮岩板中岛与一体化水吧",
-      subtitle: "耐污耐刮岩板 · 弹出式隐藏轨道插座 · 高脚吧椅",
-      description: "现代开放式中岛整合手冲咖啡水吧、快节奏就餐与笔记本轻办公，台面内缩 250mm 预留舒适放腿空间，底部内嵌 3000K 暖光漫射，释放公区流畅动线。",
+      subtitle: "10.2 ㎡ 餐厨一体 · 弹出式轨道插座 · 3把高脚吧椅",
+      description: "现代开放式中岛整合手冲咖啡水吧、快节奏就餐与笔记本轻办公，台面内缩 250mm 预留舒适放腿空间，两端预留 900mm 宽敞走道，释放公区流畅动线。",
       materials: [
         { name: "中岛台面", spec: "1800×900mm 太空灰耐污哑光岩板 (莫氏硬度6级，可直接切菜)" },
         { name: "智能电源", spec: "岛台侧面弹出式轨道插座 (带功率统计与手机无线充)" },
@@ -239,31 +251,31 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
         { name: "橱柜系统", spec: "超白抗指纹肤感门板 + 嵌入式静音抽油烟机" }
       ],
       lighting: "中岛上方 3000K 深防眩聚焦吊灯 + 橱柜底部 4000K 手扫无影料理灯",
-      focalPoints: ["1.8m 悬浮中岛", "弹出式轨道插座", "手扫感应料理灯", "高脚吧椅组合"],
+      focalPoints: ["1.8m 悬浮中岛", "弹出式轨道插座", "0.9m 环形走道", "手扫感应料理灯"],
       views: [
         {
           key: "A",
           label: "视角 A: 主视角全景",
           sublabel: "正对 1.8m 悬浮岩板中岛与开放厨房",
           imageUrl: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80",
-          highlight: "1.8m 岩板中岛气势开阔，双侧保留 950mm 通畅走道，与开放厨房形成黄金三角动线",
-          prompt: "Modern open plan kitchen with 1.8m floating grey sintered stone island, minimalist bar stools, sleek flat panel white cabinets, integrated induction cooktop, warm pendant lighting over island, clean architectural photography, 8k resolution --ar 16:9 --style raw"
+          highlight: "60.22 ㎡ 真实紧凑餐厨比例，1.8m 岩板中岛开阔大气，双侧保留 900mm 通畅走道",
+          prompt: "Compact open kitchen in 60.22 sqm apartment, 1.8m sintered stone island with 3 modern bar stools, integrated induction hob, seamless cabinetry, clear 0.9m walkways, realistic condo scale, architectural photography --ar 16:9 --style raw"
         },
         {
           key: "B",
           label: "视角 B: 材质与光影特写",
-          sublabel: "岩板倒角与轨道插座细节",
+          sublabel: "岩板 45° 倒角与弹出式轨道插座细节",
           imageUrl: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80",
           highlight: "岩板 45° 倒角工艺，弹出式黑色金属轨道插座，质感细腻",
-          prompt: "Close-up macro shot of grey sintered stone kitchen island countertop, pop-up black metal power track with coffee maker, soft under-counter LED glow, shallow depth of field, luxury modern interior details, 8k --ar 16:9 --style raw"
+          prompt: "Close-up macro shot of grey sintered stone kitchen island countertop in compact apartment, pop-up black metal power track with coffee maker, soft under-counter LED glow, depth of field, 8k --ar 16:9 --style raw"
         },
         {
           key: "C",
           label: "视角 C: 反向/侧角视角",
-          sublabel: "从中岛回看客厅与阳台全景",
+          sublabel: "从中岛吧椅回望客厅 85 吋巨幕与南向阳台",
           imageUrl: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=80",
           highlight: "坐在吧椅上望向客厅 85 吋电视与南向景观阳台，视野极其开阔通透",
-          prompt: "Perspective interior shot looking from the kitchen island towards the living room and bright sunlit balcony, open layout, airy atmosphere, minimalist furniture arrangement, architectural digest photography, 8k --ar 16:9 --style raw"
+          prompt: "Perspective interior shot looking from the kitchen island towards the living room and bright sunlit balcony in 60.22 sqm condo, open layout, airy atmosphere, realistic scale, 8k --ar 16:9 --style raw"
         }
       ]
     }
@@ -275,8 +287,10 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       roomId: "living",
       roomName: "客厅极简影音区",
       enName: "Living & Media Zone",
+      sqm: 15.2,
+      physicalConstraint: "15.2 ㎡ 暗调公区 · 净开间 3.6m · 2.5m 观影视距",
       title: "劳伦黑金岩板地台与黑胡桃木饰面巨幕墙",
-      subtitle: "2700K 琥珀洗墙光 · 焦糖真皮沙发 · 极客私密感",
+      subtitle: "15.2 ㎡ 奢雅公区 · 2700K 琥珀洗墙光 · 焦糖真皮沙发",
       description: "整面天然黑胡桃木木饰面电视墙内嵌 85 吋大屏，劳伦黑金岩板地台下透出暖金色 2700K 琥珀微光，搭配焦糖色真皮沙发，营造顶级私享雪茄吧与高定会客沉浸氛围。",
       materials: [
         { name: "背景饰面", spec: "天然黑胡桃实木木皮饰面 (哑光开放漆，木纹深邃温润)" },
@@ -292,8 +306,8 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           label: "视角 A: 主视角全景",
           sublabel: "正对黑胡桃木饰面与黑金地台",
           imageUrl: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80",
-          highlight: "深邃沉稳的暗调美学，2700K 琥珀洗墙光勾勒出黑胡桃木天然肌理",
-          prompt: "Luxury Italian dark style living room interior, black walnut wood slat feature wall with 85-inch recessed TV, floating Nero Marquina black marble media console, warm 2700K amber under-glow LED lighting, caramel leather lounge sofa, moody architectural photography, 8k --ar 16:9 --style raw"
+          highlight: "深邃沉稳的暗调美学，2700K 琥珀洗墙光勾勒出黑胡桃木天然肌理，2.5m 黄金观影视距",
+          prompt: "Luxury Italian dark style living room interior, 15.2 sqm space for 60.22 sqm apartment, black walnut wood slat feature wall with 85-inch recessed TV, floating Nero Marquina black marble media console, warm 2700K amber under-glow LED lighting, caramel leather sofa, 2.5m viewing distance, moody architectural photography, 8k --ar 16:9 --style raw"
         },
         {
           key: "B",
@@ -301,7 +315,7 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "黑金岩板金丝纹理与琥珀光",
           imageUrl: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80",
           highlight: "劳伦黑金岩板金色细纹在暖光下熠熠生辉，深色金属收边严丝合缝",
-          prompt: "Macro interior shot of Nero Marquina black marble surface with fine gold veining, concealed 2700K amber warm LED light bar glowing underneath, luxurious textures, ultra-detailed architectural detail, 8k resolution --ar 16:9 --style raw"
+          prompt: "Macro interior shot of Nero Marquina black marble surface with fine gold veining in 15.2 sqm luxury living room, concealed 2700K amber warm LED light bar glowing underneath, luxurious textures, 8k resolution --ar 16:9 --style raw"
         },
         {
           key: "C",
@@ -309,33 +323,35 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "由阳台望向暗调公区全景",
           imageUrl: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80",
           highlight: "深色背景极度吸收杂光，看电影与品酒氛围极佳，通透动线丝毫不显压抑",
-          prompt: "Reverse angle interior photo looking into a moody dark luxury apartment living room from the window, amber warm lighting layers, rich smoked walnut wood finishes, photorealistic 8k --ar 16:9 --style raw"
+          prompt: "Reverse angle interior photo looking into a moody dark luxury 15.2 sqm apartment living room from the balcony window, amber warm lighting layers, rich smoked walnut wood finishes, realistic condo scale, 8k --ar 16:9 --style raw"
         }
       ]
     },
     {
       roomId: "bathroom",
       roomName: "独立卫浴室",
-      enName: "Hotel Suite Bathroom",
-      title: "劳伦黑金贯穿大平台与奢华灰玻除雾镜柜",
-      subtitle: "暗装枪灰瀑布龙头 · 2700K 琥珀洗墙光 · 五星级套房",
-      description: "整面劳伦黑金岩板悬浮大平台贯穿马桶上方，枪灰色暗装瀑布出水龙头，灰玻边框除雾大镜柜下透出 2700K 琥珀暖光，宛如五星级总统套房的极致奢华私密体验。",
+      enName: "Compact Luxury Bathroom",
+      sqm: 4.2,
+      physicalConstraint: "4.2 ㎡ 紧凑卫浴 · 1.8m 劳伦黑金大平台 · 跨越壁挂马桶上方",
+      title: "劳伦黑金 1.8m 贯穿大平台与奢华灰玻除雾镜柜",
+      subtitle: "4.2 ㎡ 空间极致利用 · 暗装枪灰瀑布龙头 · 2700K 琥珀洗墙光",
+      description: "整面 1.8m 劳伦黑金岩板悬浮大平台横向延伸跨越壁挂马桶上方，枪灰色暗装瀑布入墙出水龙头，灰玻边框除雾大镜柜下透出 2700K 琥珀暖光，打造五星级套房的私密奢华体验。",
       materials: [
-        { name: "贯穿大平台", spec: "1500mm 劳伦黑金哑光岩板 (延伸至壁挂马桶上方)" },
-        { name: "除雾镜柜", spec: "灰玻金属窄框智能除雾镜柜 (内嵌 2700K 琥珀背光)" },
-        { name: "暗装五金", spec: "暗装枪灰拉丝瀑布入墙式水龙头 (精铜铸造)" },
+        { name: "贯穿大平台", spec: "1800mm 劳伦黑金哑光岩板 (横向无缝延伸跨越直接位于壁挂马桶上方)" },
+        { name: "除雾镜柜", spec: "灰玻金属窄框智能除雾镜柜 (内嵌 2700K 琥珀背光，Ra>98)" },
+        { name: "暗装五金", spec: "暗装枪灰拉丝瀑布入墙式水龙头 (精铜铸造，防溅静音)" },
         { name: "马桶系统", spec: "壁挂隐藏式水箱智能感应翻盖马桶 (离地悬空好打理)" }
       ],
       lighting: "2700K 琥珀色立面洗墙光 + 镜门磨砂导光条无眩光面光",
-      focalPoints: ["劳伦黑金大平台", "暗装枪灰入墙龙头", "琥珀氛围大镜柜", "壁挂隐藏水箱"],
+      focalPoints: ["1.8m 黑金台面跨越马桶", "暗装枪灰入墙龙头", "琥珀氛围大镜柜", "壁挂隐藏水箱"],
       views: [
         {
           key: "A",
           label: "视角 A: 主视角全景",
-          sublabel: "正对 1.5m 黑金贯穿大台面与灰玻镜柜",
+          sublabel: "正对 1.8m 黑金贯穿大台面与灰玻镜柜",
           imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
-          highlight: "黑金大理石与琥珀暖光交织，1.5m 贯穿大台面气派非凡",
-          prompt: "Luxury Italian dark style bathroom interior design, 1.5m continuous black marble countertop extending over wall-hung toilet, full-wall frameless LED fogless mirror cabinet, gunmetal concealed waterfall faucet, dark walnut wood wall panels, 2700K amber wash light, high-end hotel suite style, photorealistic 8k --ar 16:9 --style raw"
+          highlight: "4.2 ㎡ 紧凑空间，黑金大理石与琥珀暖光交织，1.8m 大台面跨越壁挂马桶上方气派非凡",
+          prompt: "Photorealistic interior render of a compact 4.2 sqm luxury modern bathroom, 1.8m continuous black marble floating countertop seamlessly extending directly ABOVE the wall-hung toilet, frameless LED fogless mirror cabinet, 10mm ultra-thin black frame glass shower partition on the side, concealed gunmetal waterfall faucet, highly realistic space scale for a 60.22 sqm apartment, Hasselblad photography --ar 16:9 --style raw"
         },
         {
           key: "B",
@@ -343,7 +359,7 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "枪灰入墙龙头出水与水波纹",
           imageUrl: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80",
           highlight: "暗装枪灰瀑布龙头水流倾泻于黑金大理石一体盆，光影交错",
-          prompt: "Macro interior photography of a gunmetal wall-mounted waterfall faucet over a Laurent black gold marble floating basin, ambient amber LED lighting reflecting on polished stone, water droplets, ultra-detailed texture, luxury interior detail, 8k --ar 16:9 --style raw"
+          prompt: "Macro interior photography of a gunmetal wall-mounted waterfall faucet over a Laurent black gold marble floating basin in a 4.2 sqm compact bathroom, ambient amber LED lighting reflecting on stone, water droplets, ultra-detailed texture, luxury interior detail, 8k --ar 16:9 --style raw"
         },
         {
           key: "C",
@@ -351,7 +367,7 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "淋浴间望向干区黑金台面",
           imageUrl: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
           highlight: "灰玻淋浴隔断阻绝水汽，干区大台面与壁挂马桶一览无遗",
-          prompt: "Interior perspective looking from the dark-framed glass shower enclosure towards the luxury dark marble vanity and wall-hung toilet, glowing amber mirror cabinet, hotel suite bathroom rendering, 8k resolution --ar 16:9 --style raw"
+          prompt: "Interior perspective looking from the dark-framed glass shower enclosure towards the luxury dark marble vanity and wall-hung toilet in 4.2 sqm bathroom, glowing amber mirror cabinet, hotel suite bathroom rendering, 8k resolution --ar 16:9 --style raw"
         }
       ]
     },
@@ -359,8 +375,10 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       roomId: "bedroom",
       roomName: "主卧深睡区",
       enName: "Master Bedroom Suite",
+      sqm: 11.0,
+      physicalConstraint: "11.0 ㎡ 暗调主卧 · 1.8m 大床 · 0.6m 通行过道",
       title: "五星级奢雅暗调深睡套房与灰玻衣橱",
-      subtitle: "深灰皮质软包 · 2700K 琥珀吊灯 · 彻底包裹感",
+      subtitle: "11.0 ㎡ 沉浸私享 · 深灰皮质软包 · 2700K 琥珀吊灯",
       description: "床头采用深灰皮质软包拼接黑胡桃木饰面，两侧垂挂极细黄铜吊灯，西侧为半透光灰玻发光衣橱，营造彻底松弛的睡眠私密包裹感与顶级酒店质感。",
       materials: [
         { name: "床头软包", spec: "深灰意大利纳帕皮质软包 (拼接黑胡桃木饰面)" },
@@ -376,8 +394,8 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           label: "视角 A: 主视角全景",
           sublabel: "正对深灰软包床头与黑胡桃木墙",
           imageUrl: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=80",
-          highlight: "深色皮质与黑胡桃木质感交融，两侧琥珀色垂线吊灯营造安详静谧",
-          prompt: "Luxury dark modern master bedroom interior, dark grey leather tufted headboard against smoked walnut wood wall, warm amber 2700K pendant lights hanging on both sides, floating king size bed, dark glass wardrobe with interior LED illumination, hotel suite aesthetic, 8k --ar 16:9 --style raw"
+          highlight: "11.0 ㎡ 空间深色皮质与黑胡桃木质感交融，两侧琥珀色垂线吊灯营造安详静谧",
+          prompt: "Luxury dark modern master bedroom interior, 11.0 sqm space for 60.22 sqm apartment, dark grey leather headboard against smoked walnut wood wall, warm amber 2700K pendant lights, floating king bed, 0.6m walkway, dark glass wardrobe with interior LED illumination, hotel suite aesthetic, 8k --ar 16:9 --style raw"
         },
         {
           key: "B",
@@ -393,7 +411,7 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "门洞望向大床与灰玻衣橱",
           imageUrl: "https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80",
           highlight: "灰玻衣橱内部暖光微透，空间深邃而不压抑，动线开阔",
-          prompt: "Side angle view of dark luxury modern bedroom, smoked glass wardrobe with illuminated clothing display, leather platform bed, calm hotel atmosphere, architectural photo, 8k --ar 16:9 --style raw"
+          prompt: "Side angle view of dark luxury modern 11 sqm bedroom, smoked glass wardrobe with illuminated clothing display, leather platform bed, calm hotel atmosphere, architectural photo, 8k --ar 16:9 --style raw"
         }
       ]
     },
@@ -401,8 +419,10 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       roomId: "workstation",
       roomName: "极客工作站 (1+1房)",
       enName: "Geek Workstation Study",
+      sqm: 7.8,
+      physicalConstraint: "7.8 ㎡ 独立工位 · 2.0m 黑胡桃大板 · 灰玻外设展柜",
       title: "暗夜极客作战指挥室与灰玻数码发光展柜",
-      subtitle: "黑胡桃大板台 · 灰玻外设展柜 · 暗调多屏协同",
+      subtitle: "7.8 ㎡ 独立研发舱 · 黑胡桃大板台 · 暗调多屏协同",
       description: "黑胡桃木大板桌面搭配深空灰金属工位，背墙为黑玻手办与数码装备发光展示柜，氛围宛如科技大厂高管独立工位与极客指挥室。",
       materials: [
         { name: "实木大板", spec: "2000×800mm 北美黑胡桃实木直拼大板 (天然木纹深邃)" },
@@ -418,8 +438,8 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           label: "视角 A: 主视角全景",
           sublabel: "正对黑胡桃大板台与发光展柜",
           imageUrl: "https://images.unsplash.com/photo-1593062096033-9a26b09da705?auto=format&fit=crop&w=1200&q=80",
-          highlight: "黑胡桃大板与暗调数码装备相得益彰，背墙发光展柜科技感拉满",
-          prompt: "Stealth dark luxury developer home office, 2.0m solid black walnut wood standing desk, dual 32-inch 4K screens, smoked glass display cabinets with subtle amber internal lighting, premium mechanical keyboard, acoustic felt wall, architectural interior render, 8k --ar 16:9 --style raw"
+          highlight: "7.8 ㎡ 紧凑空间，黑胡桃大板与暗调数码装备相得益彰，背墙发光展柜科技感拉满",
+          prompt: "Stealth dark luxury developer home office, 7.8 sqm space in 60.22 sqm apartment, 2.0m solid black walnut wood standing desk, dual 32-inch 4K screens, smoked glass display cabinets with subtle amber internal lighting, premium mechanical keyboard, acoustic felt wall, architectural render, 8k --ar 16:9 --style raw"
         },
         {
           key: "B",
@@ -435,7 +455,7 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "侧角望向工位与大行李箱高柜",
           imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=80",
           highlight: "侧面定制 600mm 深度通顶暗色大储物柜，底部直通推入 28 吋大行李箱",
-          prompt: "Side angle of a dark modern home workstation, tall seamless dark charcoal cabinets with open bottom luggage slot, black walnut motorized desk, cozy moody lighting, 8k --ar 16:9 --style raw"
+          prompt: "Side angle of a dark modern 7.8 sqm home workstation, tall seamless dark charcoal cabinets with open bottom luggage slot, black walnut motorized desk, cozy moody lighting, 8k --ar 16:9 --style raw"
         }
       ]
     },
@@ -443,9 +463,11 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       roomId: "kitchen",
       roomName: "开放厨房与中岛吧台",
       enName: "Kitchen & Dining Island",
+      sqm: 10.2,
+      physicalConstraint: "10.2 ㎡ 奢雅水吧 · 1.8m 劳伦黑金中岛 · 嵌入式红酒柜",
       title: "劳伦黑金岩板中岛与黑胡桃红酒吧台",
-      subtitle: "劳伦黑金岩板 · 2700K 琥珀悬浮底座 · 恒温红酒柜",
-      description: "整面劳伦黑金岩板中岛下透出暖金色 2700K 微光，侧边整合隐藏式恒温红酒柜与手冲咖啡台，搭配高脚吧椅，尽显奢雅品味与社交魅力。",
+      subtitle: "10.2 ㎡ 社交水吧 · 2700K 琥珀悬浮底座 · 恒温红酒柜",
+      description: "整面 1.8m 劳伦黑金岩板中岛下透出暖金色 2700K 微光，侧边整合隐藏式恒温红酒柜与手冲咖啡台，搭配高脚吧椅，尽显奢雅品味与社交魅力。",
       materials: [
         { name: "中岛台面", spec: "1800×900mm 劳伦黑金岩板 (莫氏硬度6级，耐高温防渗透)" },
         { name: "红酒水吧", spec: "嵌入式静音恒温红酒柜 (双温区 5-18°C，可存 18支)" },
@@ -460,8 +482,8 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           label: "视角 A: 主视角全景",
           sublabel: "正对劳伦黑金中岛与开放厨房",
           imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-          highlight: "黑金岩板中岛沉稳尊贵，底圈 2700K 暖光悬浮轻盈，红酒吧台格调拉满",
-          prompt: "Luxury dark open kitchen with Laurent black gold marble island, under-counter amber 2700K warm LED lighting, dark walnut cabinets, caramel leather bar stools, built-in wine cooler, architectural digest interior, 8k --ar 16:9 --style raw"
+          highlight: "60.22 ㎡ 真实紧凑空间，黑金岩板中岛沉稳尊贵，底圈 2700K 暖光悬浮轻盈",
+          prompt: "Luxury dark open kitchen in 60.22 sqm apartment, 1.8m Laurent black gold marble island, under-counter amber 2700K warm LED lighting, dark walnut cabinets, caramel leather bar stools, built-in wine cooler, realistic scale, 8k --ar 16:9 --style raw"
         },
         {
           key: "B",
@@ -469,7 +491,7 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "黑金岩板金丝与酒杯倒影",
           imageUrl: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80",
           highlight: "黑金大理石台面水波纹倒影，琥珀色光线烘托出红酒杯晶莹剔透",
-          prompt: "Macro close-up of a dark gold veined marble kitchen island counter, crystal wine glass with red wine, soft ambient warm lighting reflection, depth of field, 8k --ar 16:9 --style raw"
+          prompt: "Macro close-up of a dark gold veined marble kitchen island counter in compact luxury condo, crystal wine glass with red wine, soft ambient warm lighting reflection, depth of field, 8k --ar 16:9 --style raw"
         },
         {
           key: "C",
@@ -477,14 +499,14 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "从中岛回望客厅影音巨幕",
           imageUrl: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=80",
           highlight: "坐在吧椅上回看黑胡桃木电视巨幕墙，公区纵深通透，氛围感无敌",
-          prompt: "Perspective shot from dark luxury kitchen island looking towards living room feature wall and sunny window, cohesive dark warm aesthetic, architectural photography, 8k --ar 16:9 --style raw"
+          prompt: "Perspective shot from dark luxury kitchen island looking towards living room feature wall in 60.22 sqm condo, cohesive dark warm aesthetic, architectural photography, 8k --ar 16:9 --style raw"
         }
       ]
     }
   ]
 };
 
-// Fallback to modern-minimalist if style key differs
+// Fallback helper
 const getStyleRooms = (styleId: string): StyleRoomData[] => {
   if (ROOM_RENDERINGS_DATABASE[styleId]) {
     return ROOM_RENDERINGS_DATABASE[styleId];
@@ -526,14 +548,14 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 font-mono">
                 3-VIEW AI PHOTOREALISTIC RENDER STUDIO
               </span>
-              <span className="text-xs text-slate-500 font-semibold">Paragon Gateway A-24-10 (60.22 ㎡ / Type B)</span>
+              <span className="text-xs text-slate-500 font-semibold">Paragon Gateway A-24-10 (60.22 ㎡ / Type B 紧凑 1+1 房)</span>
             </div>
             <h2 className="text-2xl font-black text-slate-900 mt-1 flex items-center">
               <Sparkles className="w-6 h-6 mr-2 text-blue-600" />
-              全屋 3D / AI 室内效果渲染图集 (分房间 × 3 视角工作站)
+              全屋 3D / AI 室内效果渲染图集 (真实 60.22 ㎡ 物理尺度)
             </h2>
             <p className="text-xs text-slate-600 mt-1 max-w-3xl leading-relaxed">
-              严格对应 60.22 ㎡ 真实物理户型，提供 <strong>[📷 视角 A: 主视角全景]</strong>、<strong>[🔍 视角 B: 材质特写]</strong> 与 <strong>[↺ 视角 C: 反向视角]</strong> 高清实景呈现
+              严格约束 60.22 ㎡ 真实物理面积与家具尺度，提供 <strong>[📷 视角 A: 主视角全景]</strong>、<strong>[🔍 视角 B: 材质特写]</strong> 与 <strong>[↺ 视角 C: 反向视角]</strong> 高清实景呈现，拒绝不切实际的大面积豪宅假图
             </p>
           </div>
 
@@ -562,11 +584,11 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
         {/* 2. 5 Core Space Navigation Tabs (Prominent & Clickable) */}
         <div className="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar">
           {[
-            { id: "living", label: "🛋️ 客厅极简影音区" },
-            { id: "bedroom", label: "🛏️ 主卧深睡区" },
-            { id: "bathroom", label: "🚿 独立卫浴室" },
-            { id: "workstation", label: "💻 极客工作站 (1+1)" },
-            { id: "kitchen", label: "🍳 开放厨房与中岛吧台" }
+            { id: "living", label: "🛋️ 客厅极简影音区 (15.2㎡)" },
+            { id: "bathroom", label: "🚿 独立卫浴室 (4.2㎡)" },
+            { id: "bedroom", label: "🛏️ 主卧深睡区 (11.0㎡)" },
+            { id: "workstation", label: "💻 极客工作站 1+1 (7.8㎡)" },
+            { id: "kitchen", label: "🍳 开放厨房与中岛 (10.2㎡)" }
           ].map((tab) => {
             const isActive = activeRoomId === tab.id;
             return (
@@ -606,7 +628,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
             <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
               <span className="bg-black/75 backdrop-blur-md text-white text-xs font-black px-3 py-1 rounded-xl border border-white/20 shadow-md flex items-center space-x-1.5">
                 <Building2 className="w-3.5 h-3.5 text-blue-400" />
-                <span>{currentRoom.roomName}</span>
+                <span>{currentRoom.roomName} ({currentRoom.sqm} ㎡)</span>
               </span>
               <span className="bg-blue-600/90 backdrop-blur-md text-white text-xs font-bold px-3 py-1 rounded-xl shadow-md font-mono">
                 {currentView.label}
@@ -656,7 +678,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
                 <span className="text-[10px] font-mono font-bold text-blue-600 uppercase tracking-widest">
-                  {currentRoom.enName}
+                  {currentRoom.enName} · {currentRoom.physicalConstraint}
                 </span>
                 <h3 className="text-xl font-black text-slate-900 mt-0.5">
                   {currentRoom.title}
@@ -678,11 +700,11 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
               </p>
             </div>
 
-            {/* Material Specifications Table - Fully Expanded Text */}
+            {/* Material Specifications Table - Fully Expanded Text (1:1 with render image) */}
             <div className="mt-4 space-y-2">
               <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center space-x-1.5">
                 <Palette className="w-3.5 h-3.5 text-blue-600" />
-                <span>本案物理材质落地清单 (Materials Spec)</span>
+                <span>本案物理材质落地清单 (Materials Spec 1:1)</span>
               </h4>
               <div className="flex flex-col gap-1.5">
                 {currentRoom.materials.map((mat, idx) => (
@@ -712,7 +734,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
               <div className="flex items-center space-x-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span className="text-[11px] font-bold text-slate-200">
-                  Midjourney v6 / Flux 渲染提示词
+                  Midjourney v6 紧凑户型精确 Prompt
                 </span>
               </div>
               <button
@@ -753,7 +775,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
             <div className="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex items-center justify-between flex-shrink-0">
               <div>
                 <span className="text-xs font-bold text-blue-600 font-mono">
-                  4K AI MULTI-VIEW STUDIO · {currentRoom.roomName}
+                  4K AI MULTI-VIEW STUDIO · {currentRoom.roomName} ({currentRoom.physicalConstraint})
                 </span>
                 <h3 className="text-lg font-black text-slate-900">
                   {currentView.label} — {currentView.sublabel}
@@ -802,7 +824,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
               <div className="bg-slate-900 text-white p-4 rounded-2xl space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-200">
-                    Midjourney v6 / Flux 渲染指令 (Prompt)
+                    Midjourney v6 精准约束 Prompt
                   </span>
                   <button
                     onClick={() => handleCopyPrompt(currentView.prompt)}
