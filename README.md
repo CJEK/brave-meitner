@@ -2,6 +2,8 @@
 
 > **专为马来西亚柔佛新山 Paragon Gateway Tower A 24楼 A-24-10 单元（Type B 右向户型，648 sq ft / 60.22 ㎡）量身打造的高交互 3D BIM 空间推演、多风格横向决策、Aqara 智能家居模拟与新山本地装修造价核算系统。**
 
+🌐 **线上生产环境访问地址 (Live Demo)**: [https://brave-meitner.vercel.app](https://brave-meitner.vercel.app)
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
 
 ---
