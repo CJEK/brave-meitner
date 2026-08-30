@@ -27,7 +27,8 @@ import {
   Pause,
   Moon,
   Sunset,
-  SunMedium
+  SunMedium,
+  Check
 } from "lucide-react";
 import { ZONES_DATA, STYLES_DATA, PROPERTY_DATA, ZoneData } from "@/data/projectData";
 import { getJohorSunData, SOLAR_PRESETS, JB_LOCATION } from "@/utils/solarCalculator";
@@ -206,6 +207,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const currentStyleObj = STYLES_DATA.find((s) => s.id === selectedStyleId) || STYLES_DATA[0];
   
   const [activeZone, setActiveZone] = useState<ZoneData>(ZONES_DATA[3]); // Default to Living Room
+  const [isOverviewMode, setIsOverviewMode] = useState<boolean>(false); // Overview mode vs Zone mode
   const [viewMode, setViewMode] = useState<"3d" | "2.5d">("3d");
   const [cameraPreset, setCameraPreset] = useState<"birds-eye" | "iso-2.5d" | "living" | "workstation" | "bedroom" | "balcony">("birds-eye");
   const [isAutoRotating, setIsAutoRotating] = useState<boolean>(false);
@@ -260,6 +262,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       if (zoneId) {
         const found = ZONES_DATA.find((z) => z.id === zoneId);
         if (found) {
+          setIsOverviewMode(false);
           setActiveZone(found);
           if (ZONE_VIEWBOXES[zoneId]) {
             setSvgViewBox(ZONE_VIEWBOXES[zoneId]);
@@ -271,9 +274,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
   // 1. Initialize Three.js Scene: 6.9m × 9.725m Rectangular Slab, 0.25m Half-Walls (BIM Cutaway with 900mm Doorways), 1:1 Scaled Furniture
   useEffect(() => {
-    if (!mountRef.current || viewMode !== "3d") return;
+    if (!mountRef.current) return;
 
-    const width = mountRef.current.clientWidth;
+    const width = mountRef.current.clientWidth || 720;
     const height = mountRef.current.clientHeight || 560;
 
     // Architectural Studio Background
@@ -619,7 +622,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
     const handleResize = () => {
       if (!mountRef.current || !renderer || !camera) return;
-      const newW = mountRef.current.clientWidth;
+      const newW = mountRef.current.clientWidth || 720;
       const newH = mountRef.current.clientHeight || 560;
       camera.aspect = newW / newH;
       camera.updateProjectionMatrix();
@@ -654,7 +657,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       renderer.dispose();
       renderer.forceContextLoss();
     };
-  }, [viewMode, selectedStyleId, handleCanvasClick, showMEP, showSmartHome, isAutoRotating]);
+  }, [selectedStyleId, handleCanvasClick, showMEP, showSmartHome, isAutoRotating]);
 
   // 2. Update Highlight Mesh Position
   useEffect(() => {
@@ -721,33 +724,38 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     setCameraPreset(preset);
 
     // (A) Dual-Directional Synchronization with Zone Inspector
-    if (preset === "living") {
-      const found = ZONES_DATA.find((z) => z.id === "living");
-      if (found) setActiveZone(found);
-    } else if (preset === "workstation") {
-      const found = ZONES_DATA.find((z) => z.id === "study");
-      if (found) setActiveZone(found);
-    } else if (preset === "bedroom") {
-      const found = ZONES_DATA.find((z) => z.id === "bedroom");
-      if (found) setActiveZone(found);
-    } else if (preset === "balcony") {
-      const found = ZONES_DATA.find((z) => z.id === "balcony");
-      if (found) setActiveZone(found);
-    }
-
-    // (B) 2.5D SVG Isometric & ViewBox Zoom Coordination
-    if (preset === "iso-2.5d") {
-      setIsIsometricPerspective(true);
-      setSvgViewBox("0 0 690 972.5");
-    } else if (preset === "birds-eye") {
+    if (preset === "birds-eye") {
+      setIsOverviewMode(true);
       setIsIsometricPerspective(false);
       setSvgViewBox("0 0 690 972.5");
-    } else if (ZONE_VIEWBOXES[preset]) {
-      setSvgViewBox(ZONE_VIEWBOXES[preset]);
+    } else if (preset === "iso-2.5d") {
+      setIsOverviewMode(true);
+      setIsIsometricPerspective(true);
+      setSvgViewBox("0 0 690 972.5");
+    } else if (preset === "living") {
+      setIsOverviewMode(false);
+      const found = ZONES_DATA.find((z) => z.id === "living");
+      if (found) setActiveZone(found);
+      setSvgViewBox(ZONE_VIEWBOXES["living"]);
+    } else if (preset === "workstation") {
+      setIsOverviewMode(false);
+      const found = ZONES_DATA.find((z) => z.id === "study");
+      if (found) setActiveZone(found);
+      setSvgViewBox(ZONE_VIEWBOXES["workstation"]);
+    } else if (preset === "bedroom") {
+      setIsOverviewMode(false);
+      const found = ZONES_DATA.find((z) => z.id === "bedroom");
+      if (found) setActiveZone(found);
+      setSvgViewBox(ZONE_VIEWBOXES["bedroom"]);
+    } else if (preset === "balcony") {
+      setIsOverviewMode(false);
+      const found = ZONES_DATA.find((z) => z.id === "balcony");
+      if (found) setActiveZone(found);
+      setSvgViewBox(ZONE_VIEWBOXES["balcony"]);
     }
 
-    // (C) 3D Camera Controls Glide Animation
-    if (controlsRef.current && viewMode === "3d") {
+    // (B) 3D Camera Controls Glide Animation
+    if (controlsRef.current) {
       const ctrl = controlsRef.current;
       switch (preset) {
         case "birds-eye":
@@ -1019,16 +1027,30 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <span>当前风格材质: {currentStyleObj.name}</span>
           </div>
 
-          {/* Click Hint */}
-          <div className="absolute bottom-16 left-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl flex items-center space-x-1.5 shadow-sm text-[11px] text-slate-700 pointer-events-none">
-            <MousePointerClick className="w-3.5 h-3.5 text-blue-600 animate-bounce" />
-            <span>点击任意房间即刻高亮检视</span>
-          </div>
+          {/* 3D WebGL Status Badge */}
+          {viewMode === "3d" && (
+            <div className="absolute bottom-16 left-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl flex items-center space-x-1.5 shadow-sm text-[11px] text-slate-700 pointer-events-none">
+              <Box className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
+              <span>Three.js 1:1 WebGL 渲染引擎已激活 · 鼠标/触控 360° 旋转</span>
+            </div>
+          )}
 
-          {/* 3D WebGL Canvas Container */}
-          {viewMode === "3d" ? (
-            <div className="relative w-full flex-1 h-full min-h-[520px] overflow-hidden bg-slate-100">
-              <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+          {/* 2.5D Click Hint */}
+          {viewMode === "2.5d" && (
+            <div className="absolute bottom-16 left-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl flex items-center space-x-1.5 shadow-sm text-[11px] text-slate-700 pointer-events-none">
+              <MousePointerClick className="w-3.5 h-3.5 text-blue-600 animate-bounce" />
+              <span>点击任意房间即刻平滑放大检视</span>
+            </div>
+          )}
+
+          {/* DUAL RENDER CONTAINER: 3D WebGL Canvas & 2.5D SVG Isometric Plan (Zero Delay Switching) */}
+          <div className="relative w-full flex-1 h-full min-h-[520px] overflow-hidden">
+            {/* 3D WebGL Canvas Layer */}
+            <div 
+              style={{ display: viewMode === "3d" ? "block" : "none" }}
+              className="w-full h-full min-h-[520px] bg-slate-100 relative"
+            >
+              <div ref={mountRef} className="w-full h-full min-h-[520px] cursor-grab active:cursor-grabbing" />
 
               {/* 3D Projected Screen UI Labels */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -1064,10 +1086,12 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                 })}
               </div>
             </div>
-          ) : (
-            /* 2.5D ISOMETRIC ARCHITECTURAL BIM BLUEPRINT (Isometric 3D Axonometric Matrix, Style Colors, Dynamic Sunlight Filter) */
-            <div className="w-full flex-1 min-h-[520px] p-6 bg-slate-950 relative overflow-hidden flex items-center justify-center perspective-[1200px]">
-              
+
+            {/* 2.5D Isometric BIM Blueprint Layer */}
+            <div 
+              style={{ display: viewMode === "2.5d" ? "flex" : "none" }}
+              className="w-full h-full min-h-[520px] p-6 bg-slate-950 relative overflow-hidden items-center justify-center perspective-[1200px]"
+            >
               {/* Dynamic Sunlight / Microclimate Filter Overlay */}
               <div 
                 className={`absolute inset-0 pointer-events-none transition-all duration-700 z-10 ${
@@ -1090,7 +1114,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                 }}
                 className="relative w-full max-w-[580px] aspect-[690/972.5] rounded-3xl border-4 border-slate-700/80 p-4 shadow-2xl overflow-hidden flex flex-col justify-between"
               >
-                
                 {/* SVG Isometric Architectural Floor Plan with Dynamic ViewBox Transition & CSS Variables */}
                 <svg 
                   ref={svgRef}
@@ -1109,13 +1132,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
                   {/* (1) 生活阳台 YARD */}
                   <g onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(ZONES_DATA[5]);
                     setSvgViewBox(ZONE_VIEWBOXES["yard"]);
                   }} className="cursor-pointer group">
                     <rect
                       x="12" y="12" width="312" height="154"
-                      fill={activeZone.id === "yard" ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "yard" ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
+                      fill={activeZone.id === "yard" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
+                      stroke={activeZone.id === "yard" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
                       strokeWidth="2.5" rx="8"
                       className="transition-all"
                     />
@@ -1130,13 +1154,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
                   {/* (2) 独立卫浴室 BATH 1 */}
                   <g onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(ZONES_DATA[7]);
                     setSvgViewBox(ZONE_VIEWBOXES["bathroom"]);
                   }} className="cursor-pointer group">
                     <rect
                       x="12" y="175" width="312" height="220"
-                      fill={activeZone.id === "bathroom" ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "bathroom" ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
+                      fill={activeZone.id === "bathroom" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
+                      stroke={activeZone.id === "bathroom" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
                       strokeWidth="2.5" rx="8"
                       className="transition-all"
                     />
@@ -1155,13 +1180,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
                   {/* (3) 极客多功能书房 STUDY */}
                   <g onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(ZONES_DATA[6]);
                     setSvgViewBox(ZONE_VIEWBOXES["study"]);
                   }} className="cursor-pointer group">
                     <rect
                       x="12" y="410" width="312" height="180"
-                      fill={activeZone.id === "study" ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "study" ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
+                      fill={activeZone.id === "study" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
+                      stroke={activeZone.id === "study" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
                       strokeWidth="2.5" rx="8"
                       className="transition-all"
                     />
@@ -1177,13 +1203,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
                   {/* (4) 主卧深睡空间 BEDROOM */}
                   <g onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(ZONES_DATA[8]);
                     setSvgViewBox(ZONE_VIEWBOXES["bedroom"]);
                   }} className="cursor-pointer group">
                     <rect
                       x="12" y="600" width="312" height="360"
-                      fill={activeZone.id === "bedroom" ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "bedroom" ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
+                      fill={activeZone.id === "bedroom" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
+                      stroke={activeZone.id === "bedroom" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
                       strokeWidth="2.5" rx="8"
                       className="transition-all"
                     />
@@ -1201,13 +1228,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
                   {/* (5) 入户玄关 ENTRANCE */}
                   <g onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(ZONES_DATA[0]);
                     setSvgViewBox(ZONE_VIEWBOXES["entrance"]);
                   }} className="cursor-pointer group">
                     <rect
                       x="335" y="12" width="343" height="142"
-                      fill={activeZone.id === "entrance" ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "entrance" ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
+                      fill={activeZone.id === "entrance" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
+                      stroke={activeZone.id === "entrance" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
                       strokeWidth="2.5" rx="8"
                       className="transition-all"
                     />
@@ -1218,13 +1246,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
                   {/* (6) 开放式厨房 KITCHEN */}
                   <g onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(ZONES_DATA[1]);
                     setSvgViewBox(ZONE_VIEWBOXES["kitchen"]);
                   }} className="cursor-pointer group">
                     <rect
                       x="335" y="162" width="343" height="145"
-                      fill={activeZone.id === "kitchen" ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "kitchen" ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
+                      fill={activeZone.id === "kitchen" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
+                      stroke={activeZone.id === "kitchen" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
                       strokeWidth="2.5" rx="8"
                       className="transition-all"
                     />
@@ -1237,13 +1266,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
                   {/* (7) 核心餐厅与中岛 DINING */}
                   <g onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(ZONES_DATA[2]);
                     setSvgViewBox(ZONE_VIEWBOXES["dining"]);
                   }} className="cursor-pointer group">
                     <rect
                       x="335" y="315" width="343" height="175"
-                      fill={activeZone.id === "dining" ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "dining" ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
+                      fill={activeZone.id === "dining" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
+                      stroke={activeZone.id === "dining" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
                       strokeWidth="2.5" rx="8"
                       className="transition-all"
                     />
@@ -1257,13 +1287,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
                   {/* (8) 景观客厅 LIVING */}
                   <g onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(ZONES_DATA[3]);
                     setSvgViewBox(ZONE_VIEWBOXES["living"]);
                   }} className="cursor-pointer group">
                     <rect
                       x="335" y="495" width="343" height="325"
-                      fill={activeZone.id === "living" ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "living" ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
+                      fill={activeZone.id === "living" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
+                      stroke={activeZone.id === "living" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
                       strokeWidth="2.5" rx="8"
                       className="transition-all"
                     />
@@ -1277,13 +1308,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
                   {/* (9) 南向休闲阳台 BALCONY */}
                   <g onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(ZONES_DATA[4]);
                     setSvgViewBox(ZONE_VIEWBOXES["balcony"]);
                   }} className="cursor-pointer group">
                     <rect
                       x="335" y="830" width="343" height="130"
-                      fill={activeZone.id === "balcony" ? "#e0f2fe" : "#f0f9ff"}
-                      stroke={activeZone.id === "balcony" ? "#0284c7" : "#38bdf8"}
+                      fill={activeZone.id === "balcony" && !isOverviewMode ? "#e0f2fe" : "#f0f9ff"}
+                      stroke={activeZone.id === "balcony" && !isOverviewMode ? "#0284c7" : "#38bdf8"}
                       strokeWidth="2.5" rx="8"
                       className="transition-all"
                     />
@@ -1342,7 +1374,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                 </svg>
               </div>
             </div>
-          )}
+          </div>
 
           {/* Bottom 9 Zones Selector: Spacious flex-shrink-0 buttons */}
           <div className="relative p-2.5 bg-white border-t border-slate-200 flex items-center">
@@ -1360,30 +1392,36 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             >
               <button
                 onClick={() => {
+                  setIsOverviewMode(true);
                   setSvgViewBox("0 0 690 972.5");
-                  if (controlsRef.current && viewMode === "3d") {
+                  if (controlsRef.current) {
                     controlsRef.current.setLookAt(0, 9.5, 7.5, 0, 0, 0, true);
                   }
                 }}
-                className="flex-shrink-0 whitespace-nowrap min-w-max px-3.5 py-2 rounded-2xl text-xs font-black bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-all"
+                className={`flex-shrink-0 whitespace-nowrap min-w-max px-3.5 py-2 rounded-2xl text-xs font-black transition-all ${
+                  isOverviewMode
+                    ? "bg-blue-600 text-white shadow-sm ring-2 ring-blue-500/30"
+                    : "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100"
+                }`}
               >
-                🔍 全屋俯瞰
+                🔍 全屋工程总览
               </button>
               {ZONES_DATA.map((z) => (
                 <button
                   key={z.id}
                   onClick={() => {
+                    setIsOverviewMode(false);
                     setActiveZone(z);
                     if (ZONE_VIEWBOXES[z.id]) {
                       setSvgViewBox(ZONE_VIEWBOXES[z.id]);
                     }
                     const coord = ZONE_3D_COORDS[z.id];
-                    if (coord && controlsRef.current && viewMode === "3d") {
+                    if (coord && controlsRef.current) {
                       controlsRef.current.setLookAt(coord.x, 4.5, coord.z + 4, coord.x, 0.3, coord.z, true);
                     }
                   }}
                   className={`flex-shrink-0 whitespace-nowrap min-w-max px-4 py-2.5 rounded-2xl text-xs font-bold transition-all ${
-                    activeZone.id === z.id
+                    !isOverviewMode && activeZone.id === z.id
                       ? "bg-slate-900 text-white shadow-sm ring-2 ring-blue-500/30"
                       : "bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-100"
                   }`}
@@ -1405,76 +1443,163 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           </div>
         </div>
 
-        {/* Side Inspector (4 Columns) */}
+        {/* Side Inspector (4 Columns): Handles Both Whole-House Overview & Zone Detail */}
         <div className="lg:col-span-4 space-y-4">
-          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div>
-                <span className="text-[10px] text-blue-600 uppercase tracking-widest font-mono font-bold">
-                  ZONE INSPECTOR
-                </span>
-                <h3 className="text-xl font-black text-slate-900 flex items-center mt-0.5">
-                  {activeZone.name}
-                  <span className="ml-2 text-xs font-normal text-slate-500 font-mono">
-                    {activeZone.enName}
+          {isOverviewMode ? (
+            /* WHOLE-HOUSE OVERVIEW INSPECTOR (全屋工程底账与概况) */
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 animate-fadeIn">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                  <span className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded font-mono font-bold">
+                    WHOLE-HOUSE OVERVIEW
                   </span>
-                </h3>
-              </div>
-              <div className="text-right">
-                <div className="text-lg font-black text-slate-900 font-mono">
-                  {activeZone.sqm} ㎡
+                  <h3 className="text-xl font-black text-slate-900 flex items-center mt-1">
+                    全屋工程底账概况
+                    <span className="ml-2 text-xs font-normal text-slate-500 font-mono">
+                      Type B · A-24-10
+                    </span>
+                  </h3>
                 </div>
-                <div className="text-[10px] text-slate-500">
-                  {activeZone.sqft} sq ft
+                <div className="text-right">
+                  <div className="text-lg font-black text-blue-700 font-mono">
+                    60.22 ㎡
+                  </div>
+                  <div className="text-[10px] text-slate-500 font-mono">
+                    648 sq ft
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 bg-blue-50/50 p-3.5 rounded-2xl border border-blue-200/70 text-xs">
+                <div>
+                  <div className="text-[10px] text-slate-500 font-medium">外围物理轴网</div>
+                  <div className="font-mono font-bold text-slate-900 text-sm mt-0.5">6,900 × 9,725 mm</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-slate-500 font-medium">层高与地契</div>
+                  <div className="font-mono font-bold text-blue-700 text-sm mt-0.5">3.0m · 永久地契</div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+                  <span>9 大功能分区面积分布</span>
+                  <span className="text-[10px] text-slate-500 font-mono">100% 严谨总和</span>
+                </div>
+                <div className="grid grid-cols-3 gap-1.5 text-[11px]">
+                  {ZONES_DATA.map((z) => (
+                    <button
+                      key={z.id}
+                      onClick={() => {
+                        setIsOverviewMode(false);
+                        setActiveZone(z);
+                        if (ZONE_VIEWBOXES[z.id]) setSvgViewBox(ZONE_VIEWBOXES[z.id]);
+                      }}
+                      className="p-2 bg-slate-50 hover:bg-blue-50 hover:border-blue-200 border border-slate-200 rounded-xl text-left transition-all"
+                    >
+                      <div className="font-bold text-slate-800 truncate text-[10px]">{z.name}</div>
+                      <div className="font-mono font-bold text-blue-600 text-xs mt-0.5">{z.sqm} ㎡</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-800">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>全屋硬性交付机电总配置</span>
+                </div>
+                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-1 text-xs text-slate-700">
+                  <div className="flex items-center space-x-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                    <span>入户 DB 配电箱与独立光纤入户 (FTTH)</span>
+                  </div>
+                  <div className="flex items-center space-x-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                    <span>3组 15A 空调专用独立动力回路预埋</span>
+                  </div>
+                  <div className="flex items-center space-x-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                    <span>全屋三道健康水循环链条 (前置+RO直饮+除氯花洒)</span>
+                  </div>
+                  <div className="flex items-center space-x-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                    <span>Aqara Hub M3 旗舰中枢 + 全屋 Matter / Thread 覆盖</span>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/70 text-xs">
-              <div>
-                <div className="text-[10px] text-slate-500 font-medium">净开间进深尺寸</div>
-                <div className="font-mono font-bold text-slate-900 text-sm mt-0.5">{activeZone.dimensionsMm}</div>
-              </div>
-              <div>
-                <div className="text-[10px] text-slate-500 font-medium">吊顶后净高 (Clear Height)</div>
-                <div className="font-mono font-bold text-blue-600 text-sm mt-0.5">{activeZone.clearHeightMm} mm</div>
-              </div>
-            </div>
-
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {activeZone.description}
-            </p>
-
-            <div className="space-y-2">
-              <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-800">
-                <Zap className="w-3.5 h-3.5 text-amber-500" />
-                <span>交付机电底账预埋 (MEP Baseline)</span>
-              </div>
-              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-1.5">
-                {activeZone.mepPoints.map((mep, idx) => (
-                  <div key={idx} className="flex items-start space-x-2 text-xs text-slate-700">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0" />
-                    <span>{mep}</span>
+          ) : (
+            /* SINGLE-ZONE INSPECTOR (单房间深度检查器) */
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 animate-fadeIn">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                  <span className="text-[10px] text-blue-600 uppercase tracking-widest font-mono font-bold">
+                    ZONE INSPECTOR
+                  </span>
+                  <h3 className="text-xl font-black text-slate-900 flex items-center mt-0.5">
+                    {activeZone.name}
+                    <span className="ml-2 text-xs font-normal text-slate-500 font-mono">
+                      {activeZone.enName}
+                    </span>
+                  </h3>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-black text-slate-900 font-mono">
+                    {activeZone.sqm} ㎡
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-800">
-                <Cpu className="w-3.5 h-3.5 text-purple-500" />
-                <span>Aqara / 米家智能设备规划</span>
-              </div>
-              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-1.5">
-                {activeZone.smartDevices.map((dev, idx) => (
-                  <div key={idx} className="flex items-start space-x-2 text-xs text-slate-700">
-                    <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 flex-shrink-0" />
-                    <span>{dev}</span>
+                  <div className="text-[10px] text-slate-500">
+                    {activeZone.sqft} sq ft
                   </div>
-                ))}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/70 text-xs">
+                <div>
+                  <div className="text-[10px] text-slate-500 font-medium">净开间进深尺寸</div>
+                  <div className="font-mono font-bold text-slate-900 text-sm mt-0.5">{activeZone.dimensionsMm}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] text-slate-500 font-medium">吊顶后净高 (Clear Height)</div>
+                  <div className="font-mono font-bold text-blue-600 text-sm mt-0.5">{activeZone.clearHeightMm} mm</div>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed">
+                {activeZone.description}
+              </p>
+
+              <div className="space-y-2">
+                <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-800">
+                  <Zap className="w-3.5 h-3.5 text-amber-500" />
+                  <span>交付机电底账预埋 (MEP Baseline)</span>
+                </div>
+                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-1.5">
+                  {activeZone.mepPoints.map((mep, idx) => (
+                    <div key={idx} className="flex items-start space-x-2 text-xs text-slate-700">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0" />
+                      <span>{mep}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-800">
+                  <Cpu className="w-3.5 h-3.5 text-purple-500" />
+                  <span>Aqara / 米家智能设备规划</span>
+                </div>
+                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-1.5">
+                  {activeZone.smartDevices.map((dev, idx) => (
+                    <div key={idx} className="flex items-start space-x-2 text-xs text-slate-700">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 flex-shrink-0" />
+                      <span>{dev}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
           <div className="bg-blue-50/70 p-4 rounded-2xl border border-blue-200 text-xs space-y-2">
             <div className="flex items-center space-x-2 text-blue-900 font-bold">

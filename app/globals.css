@@ -54,3 +54,14 @@ body {
     linear-gradient(to right, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
 }
+
+/* Print Styles for Clean Decision Report Export */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+  header, nav, button:not(.printable-btn), .no-print {
+    display: none !important;
+  }
+}
