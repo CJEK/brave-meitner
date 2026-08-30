@@ -392,7 +392,7 @@ export const ZONES_DATA: ZoneData[] = [
     dimensionsMm: "1400 × 2700 mm",
     clearHeightMm: 2700,
     description: "入户缓冲与落尘区，配备全高悬浮鞋柜、洞洞板拓展架、智能门锁与归家自动感应迎宾灯。",
-    coordinates: { x: 48, y: 0, w: 52, h: 18 },
+    coordinates: { x: 45, y: 0, w: 55, h: 16 },
     ergonomicHighlights: [
       "鞋柜进深 350mm（黄金容量，不侵占走道净宽）",
       "底部悬空 160mm（常穿鞋无需弯腰开门即可踢入）",
@@ -410,7 +410,7 @@ export const ZONES_DATA: ZoneData[] = [
     dimensionsMm: "2500 × 2480 mm",
     clearHeightMm: 2650,
     description: "高效单人 L 型开放式料理区，配备嵌入式静音大吸力抽油烟机、双口电磁灶、微蒸烤一体机与厨下净水系统。",
-    coordinates: { x: 48, y: 18, w: 52, h: 18 },
+    coordinates: { x: 45, y: 16, w: 55, h: 16 },
     ergonomicHighlights: [
       "洗涤切菜台面 880mm / 烹饪灶台 820mm 双高度高低差",
       "吊柜底部离台面 550mm（防碰头同时伸手可触）",
@@ -428,7 +428,7 @@ export const ZONES_DATA: ZoneData[] = [
     dimensionsMm: "2000 × 2000 mm",
     clearHeightMm: 2700,
     description: "现代悬浮岩板中岛，兼具手冲咖啡水吧、快节奏简餐、品酒社交与轻量笔记本办公，释放公区走道动线。",
-    coordinates: { x: 48, y: 36, w: 52, h: 18 },
+    coordinates: { x: 45, y: 32, w: 55, h: 18 },
     ergonomicHighlights: [
       "吧台高度 900mm + 650mm 吧椅（手肘 90° 最佳伏案姿态）",
       "台面内缩 250mm 预留舒适放腿空间",
@@ -446,7 +446,7 @@ export const ZONES_DATA: ZoneData[] = [
     dimensionsMm: "3800 × 4000 mm",
     clearHeightMm: 2750,
     description: "南向采光核心活动区，配备 85寸悬浮超薄电视、杜比全景声隐藏回音壁、直排科技布沙发与悬浮地台，极简利落。",
-    coordinates: { x: 48, y: 54, w: 52, h: 30 },
+    coordinates: { x: 45, y: 50, w: 55, h: 35 },
     ergonomicHighlights: [
       "85寸电视中心高 1100mm（平视沙发视线中心，不仰头）",
       "视距 3.4m（4K 超高清最佳沉浸视野角 40°）",
@@ -464,7 +464,7 @@ export const ZONES_DATA: ZoneData[] = [
     dimensionsMm: "3100 × 1350 mm",
     clearHeightMm: 2850,
     description: "南偏东 165° 黄金朝向，24楼无遮挡俯瞰新山城市天际线与低密洋房，配置高空吧台椅、绿植与微风景观休闲角。",
-    coordinates: { x: 48, y: 84, w: 52, h: 16 },
+    coordinates: { x: 45, y: 85, w: 55, h: 15 },
     ergonomicHighlights: [
       "栏杆高度 1250mm（高层安全感充足同时不阻挡坐姿远眺视野）",
       "推拉门地轨 10mm 极窄平嵌（无障碍步入无绊脚）"
@@ -481,7 +481,7 @@ export const ZONES_DATA: ZoneData[] = [
     dimensionsMm: "2300 × 3400 mm",
     clearHeightMm: 2700,
     description: "保留完整硬性隔墙的高性能极客独立工位，配置 2.0m×0.8m 电动升降大板桌、满墙 600mm 深度大件收纳高柜（可推入 28寸行李箱）与隐藏走线系统。",
-    coordinates: { x: 0, y: 22, w: 48, h: 18 },
+    coordinates: { x: 0, y: 18, w: 45, h: 18 },
     ergonomicHighlights: [
       "桌面进深 800mm（双32寸屏最佳视距 65cm）",
       "升降范围 650-1250mm（坐立交替办公）",
@@ -499,7 +499,7 @@ export const ZONES_DATA: ZoneData[] = [
     dimensionsMm: "3800 × 2900 mm",
     clearHeightMm: 2700,
     description: "南向大采光窗主卧，配置 1.8m 悬浮静音大床、满墙一字型哑光抗指纹衣柜、悬浮床头柜与 2700K 舒缓深睡照明。",
-    coordinates: { x: 0, y: 64, w: 48, h: 36 },
+    coordinates: { x: 0, y: 61, w: 45, h: 39 },
     ergonomicHighlights: [
       "床面高度 500mm（起卧轻松，膝关节无负担）",
       "床头柜悬浮离地 200mm（起夜防磕碰）",
@@ -517,7 +517,7 @@ export const ZONES_DATA: ZoneData[] = [
     dimensionsMm: "1500 × 2800 mm",
     clearHeightMm: 2550,
     description: "五星级酒店奢雅卫浴！定制 1.5m 贯穿式悬浮大平台（横跨延伸至马桶上方形成超长大理石台阶）+ 满墙通体 LED 触控除雾无框大镜柜 + 上下隐藏悬浮 3000K 洗墙漫射光。",
-    coordinates: { x: 0, y: 40, w: 48, h: 24 },
+    coordinates: { x: 0, y: 36, w: 45, h: 25 },
     ergonomicHighlights: [
       "悬浮大台面高度 860-880mm（黄金人体工学，洗脸不弯腰）",
       "满墙大镜柜 1100-1950mm（上下双向无影柔光，除雾恒温）",
@@ -536,7 +536,7 @@ export const ZONES_DATA: ZoneData[] = [
     dimensionsMm: "1300 × 2900 mm",
     clearHeightMm: 2850,
     description: "北向通风生活阳台，整合洗衣烘干一体机、扫地机器人自动上下水基站、拖把水池与 3 组空调外机专用放置机位。",
-    coordinates: { x: 0, y: 0, w: 48, h: 22 },
+    coordinates: { x: 0, y: 0, w: 45, h: 18 },
     ergonomicHighlights: [
       "洗烘一体机抬高 200mm（取放衣物免深度弯腰）",
       "扫地机器人专用进出槽与专用上下水管路"
