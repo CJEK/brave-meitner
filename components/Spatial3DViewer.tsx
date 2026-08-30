@@ -326,21 +326,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       ctx.moveTo(980, 2450);
       ctx.lineTo(2048, 2450);
       ctx.stroke();
-
-      // 4. Blueprint Room Labels & Dimension Indicators (Crisp, Perfectly Centered)
-      ctx.fillStyle = "#475569";
-      ctx.font = "bold 38px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("生活阳台 YARD (3.3×1.66m)", 490, 275);
-      ctx.fillText("极客工作站 STUDY (3.3×1.7m)", 490, 765);
-      ctx.fillText("独立卫浴 BATH (3.3×2.5m)", 490, 1390);
-      ctx.fillText("主卧深睡 BEDROOM (3.3×3.86m)", 490, 2350);
-
-      ctx.fillText("入户玄关 ENTRANCE (3.6×1.66m)", 1514, 250);
-      ctx.fillText("开放厨房 KITCHEN (3.6×1.4m)", 1514, 745);
-      ctx.fillText("多功能中岛 DINING (3.6×1.8m)", 1514, 1250);
-      ctx.fillText("客厅极简影音 LIVING (3.6×3.4m)", 1514, 1850);
-      ctx.fillText("景观阳台 BALCONY (3.6×1.46m)", 1514, 2690);
     }
 
     const blueprintTexture = new THREE.CanvasTexture(canvas);
@@ -486,8 +471,8 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const tvStand = createFurniture(0.35, 0.25, 2.4, 3.125, 0.125, 1.8, 0xcbd5e1, 0x475569);
     const tvStandShadow = createContactShadow(0.5, 2.6, 3.125, 1.8, 0.3);
 
-    // 85" Ultra-Thin TV Screen (flush on East wall at X=3.25): W=0.04 (X), H=0.65, D=1.9 (Z), Color: matte slate #334155
-    const tvScreen = createFurniture(0.04, 0.65, 1.9, 3.25, 0.55, 1.8, 0x334155, 0x64748b);
+    // 85" Floating TV Screen (flush on East wall at X=3.25, height 1.2m level, neutral matte slate gray):
+    const tvScreen = createFurniture(0.04, 0.55, 1.8, 3.25, 0.45, 1.8, 0x64748b, 0x94a3b8);
 
     // Coffee Table (centered in wide 1.85m aisle between Sofa and TV): W=0.55, H=0.22, D=0.90
     const coffeeTable = createFurniture(0.55, 0.22, 0.9, 1.85, 0.11, 1.8, 0xf1f5f9, 0x94a3b8);
