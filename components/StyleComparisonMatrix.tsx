@@ -16,7 +16,10 @@ import {
   Maximize,
   Moon,
   SunMedium,
-  CheckCircle2
+  CheckCircle2,
+  Layers,
+  Box,
+  Image as ImageIcon
 } from "lucide-react";
 import { STYLES_DATA, StyleData } from "@/data/projectData";
 
@@ -62,6 +65,104 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
 
   const rankedStyles = [...STYLES_DATA].sort((a, b) => calculateScore(b) - calculateScore(a));
 
+  // Helper: Render Rich Architectural Vector Illustration for a given Style & Room
+  const renderRoomIllustration = (style: StyleData, roomIdx: number, isRight = false) => {
+    const isDark = style.id === "dark-luxury";
+    const isJapandi = style.id === "japandi-wood";
+    const isCyber = style.id === "industrial-cyber";
+
+    const wallBg = isDark ? "#1c1917" : isJapandi ? "#fef3c7" : isCyber ? "#334155" : "#f1f5f9";
+    const floorBg = isDark ? "#292524" : isJapandi ? "#e2cfb5" : isCyber ? "#1e293b" : "#e2e8f0";
+    const sofaColor = isDark ? "#451a03" : isJapandi ? "#d6d3d1" : isCyber ? "#0284c7" : "#cbd5e1";
+    const accentLight = isDark ? "#f59e0b" : isJapandi ? "#fbbf24" : isCyber ? "#00f0ff" : "#3b82f6";
+    const tvBorder = isDark ? "#78350f" : isJapandi ? "#b45309" : isCyber ? "#00f0ff" : "#2563eb";
+
+    return (
+      <svg viewBox="0 0 800 500" className="w-full h-full object-cover">
+        {/* Background Wall Cladding */}
+        <rect x="0" y="0" width="800" height="360" fill={wallBg} />
+        
+        {/* Wall Texture Patterns */}
+        {isDark && (
+          <g opacity="0.3">
+            {[...Array(40)].map((_, i) => (
+              <line key={i} x1={i * 20} y1="0" x2={i * 20} y2="360" stroke="#44403c" strokeWidth="2" />
+            ))}
+          </g>
+        )}
+        {isJapandi && (
+          <g opacity="0.4">
+            {[...Array(50)].map((_, i) => (
+              <line key={i} x1={i * 16} y1="0" x2={i * 16} y2="360" stroke="#fcd34d" strokeWidth="1.5" />
+            ))}
+          </g>
+        )}
+
+        {/* Ceiling Drop with Hidden LED Wash Light */}
+        <rect x="0" y="0" width="800" height="40" fill={isDark ? "#0c0a09" : "#ffffff"} />
+        <line x1="0" y1="42" x2="800" y2="42" stroke={accentLight} strokeWidth="6" opacity="0.8" />
+
+        {/* Flooring */}
+        <rect x="0" y="360" width="800" height="140" fill={floorBg} />
+        {/* Floor Herringbone / Tile Grout Lines */}
+        <g opacity="0.35">
+          <line x1="0" y1="400" x2="800" y2="400" stroke="#94a3b8" strokeWidth="1.5" />
+          <line x1="0" y1="450" x2="800" y2="450" stroke="#94a3b8" strokeWidth="1.5" />
+          {[...Array(16)].map((_, i) => (
+            <line key={i} x1={i * 50} y1="360" x2={i * 50 + 30} y2="500" stroke="#94a3b8" strokeWidth="1" />
+          ))}
+        </g>
+
+        {/* 85" Ultra-Slim Floating TV Screen with LED Ambient Halo */}
+        <rect x="180" y="70" width="440" height="210" rx="8" fill="#0f172a" stroke={tvBorder} strokeWidth="3" />
+        {/* TV Screen Display Mockup */}
+        <rect x="188" y="78" width="424" height="194" rx="4" fill={isDark ? "#1e1b4b" : isJapandi ? "#451a03" : isCyber ? "#082f49" : "#0f172a"} />
+        <text x="400" y="180" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="bold" opacity="0.9">
+          {style.roomRenderings[roomIdx].title}
+        </text>
+        <text x="400" y="210" textAnchor="middle" fill={accentLight} fontSize="12" fontWeight="bold" fontFamily="monospace">
+          {style.roomRenderings[roomIdx].visualStyle}
+        </text>
+
+        {/* Floating TV Console & Dolby Atmos Soundbar */}
+        <rect x="140" y="300" width="520" height="35" rx="6" fill={isDark ? "#292524" : isJapandi ? "#d4a373" : isCyber ? "#0284c7" : "#ffffff"} stroke="#64748b" strokeWidth="1.5" />
+        <rect x="280" y="288" width="240" height="10" rx="3" fill="#0f172a" />
+
+        {/* Main Furniture: Ergonomic Linen/Leather Sofa (Left / Front Perspective) */}
+        <g transform="translate(100, 320)">
+          {/* Base */}
+          <rect x="0" y="20" width="320" height="60" rx="8" fill={sofaColor} stroke="#475569" strokeWidth="2" />
+          {/* Backrest */}
+          <rect x="10" y="0" width="300" height="30" rx="6" fill={sofaColor} stroke="#475569" strokeWidth="1.5" />
+          {/* Cushions */}
+          <rect x="25" y="15" width="80" height="25" rx="4" fill={accentLight} opacity="0.9" />
+          <rect x="120" y="15" width="80" height="25" rx="4" fill="#ffffff" opacity="0.8" />
+        </g>
+
+        {/* Monolithic Sintered Stone Island Dining Bar (Right Perspective) */}
+        <g transform="translate(520, 270)">
+          <rect x="0" y="0" width="220" height="110" rx="8" fill={isDark ? "#09090b" : isJapandi ? "#e8d5b5" : isCyber ? "#cbd5e1" : "#ffffff"} stroke="#64748b" strokeWidth="2" />
+          <line x1="0" y1="18" x2="220" y2="18" stroke={accentLight} strokeWidth="3" />
+          <text x="110" y="65" textAnchor="middle" fill={isDark ? "#ffffff" : "#0f172a"} fontSize="11" fontWeight="bold">
+            {isDark ? "劳伦黑金岩板中岛" : isJapandi ? "原木一体挑台" : "可丽耐无缝中岛"}
+          </text>
+        </g>
+
+        {/* Spotlight Beams from Ceiling */}
+        <polygon points="220,42 160,300 280,300" fill="url(#spotlight-grad)" opacity="0.15" />
+        <polygon points="580,42 500,270 660,270" fill="url(#spotlight-grad)" opacity="0.15" />
+
+        {/* Gradients */}
+        <defs>
+          <linearGradient id="spotlight-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+      </svg>
+    );
+  };
+
   return (
     <div className="space-y-8">
       {/* 4 Style Selection Grid Cards */}
@@ -101,10 +202,10 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                     : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
                 }`}
               >
-                {/* Top Badge */}
-                <div className="flex items-center justify-between mb-3">
+                {/* Top Badge & Score */}
+                <div className="flex items-center justify-between mb-2.5">
                   <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md ${
-                    isSelected ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 border border-slate-200"
+                    isSelected ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-700 border border-slate-200"
                   }`}>
                     {style.badge}
                   </span>
@@ -116,64 +217,77 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 </div>
 
                 {/* Style Title & Tagline */}
-                <div>
+                <div className="space-y-1 mb-3">
                   <h3 className="text-lg font-black text-slate-900">{style.name}</h3>
-                  <div className="text-[11px] font-semibold text-blue-600 font-mono mb-2">
+                  <div className="text-[11px] font-semibold text-blue-600 font-mono">
                     {style.enName}
                   </div>
-                  <p className="text-xs text-slate-700 font-medium mb-2.5">
+                  <p className="text-xs text-slate-700 font-medium leading-snug">
                     {style.tagline}
-                  </p>
-                  <p className="text-[11px] text-slate-500 line-clamp-3 mb-4 leading-relaxed">
-                    {style.description}
                   </p>
                 </div>
 
-                {/* Palette Swatches */}
-                <div>
-                  <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-1.5 font-semibold">
-                    核心色系与材质
+                {/* Rich Material & Atmosphere Visual Banner (No empty boxes) */}
+                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200/80 space-y-2 mb-4">
+                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider flex items-center justify-between">
+                    <span>核心主材与质感</span>
+                    <span className="font-mono text-blue-600">4大选材</span>
                   </div>
-                  <div className="flex items-center space-x-1.5 mb-4">
+
+                  {/* Palette Swatches with Name Tooltips */}
+                  <div className="grid grid-cols-4 gap-1.5">
                     {style.palette.map((p, idx) => (
-                      <div
-                        key={idx}
-                        style={{ backgroundColor: p.hex }}
-                        className="w-6 h-6 rounded-lg border border-slate-300 shadow-2xs flex-shrink-0"
-                        title={`${p.name}: ${p.role}`}
-                      />
+                      <div key={idx} className="flex flex-col items-center space-y-1">
+                        <div
+                          style={{ backgroundColor: p.hex }}
+                          className="w-full h-7 rounded-lg border border-slate-300 shadow-2xs"
+                          title={`${p.name} (${p.role})`}
+                        />
+                        <span className="text-[9px] text-slate-600 truncate w-full text-center font-medium">
+                          {p.name}
+                        </span>
+                      </div>
                     ))}
                   </div>
 
-                  {/* Select Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedStyleId(style.id);
-                    }}
-                    className={`w-full py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 ${
-                      isSelected
-                        ? "bg-blue-600 text-white shadow-sm"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    }`}
-                  >
-                    {isSelected ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        <span>已锁定为主推演风格</span>
-                      </>
-                    ) : (
-                      <span>选择此风格推演</span>
-                    )}
-                  </button>
+                  {/* Key Tech & Ergonomic Highlight Chips */}
+                  <div className="flex flex-wrap gap-1 pt-1 border-t border-slate-200/60">
+                    {style.keyMaterials.slice(0, 2).map((m, idx) => (
+                      <span key={idx} className="text-[9px] bg-white text-slate-700 px-1.5 py-0.5 rounded border border-slate-200 font-mono truncate">
+                        {m.item}
+                      </span>
+                    ))}
+                  </div>
                 </div>
+
+                {/* Select Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedStyleId(style.id);
+                  }}
+                  className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 ${
+                    isSelected
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  {isSelected ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      <span>已选定此风格为主推演</span>
+                    </>
+                  ) : (
+                    <span>切换至此风格</span>
+                  )}
+                </button>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Split-Screen Interactive Comparison Slider */}
+      {/* Split-Screen Interactive Comparison Slider (Architectural Vector Renderings) */}
       <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -192,9 +306,9 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
               <button
                 key={idx}
                 onClick={() => setCompareRoomIndex(idx)}
-                className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+                className={`px-3.5 py-1.5 rounded-lg font-bold transition-all ${
                   compareRoomIndex === idx
-                    ? "bg-slate-900 text-white font-bold shadow-2xs"
+                    ? "bg-slate-900 text-white shadow-2xs"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -206,101 +320,93 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
 
         {/* Style A & B Selectors */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex items-center space-x-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+          <div className="flex items-center space-x-2 bg-slate-50 p-3 rounded-2xl border border-slate-200">
             <span className="text-xs font-bold text-blue-700">左侧风格 (A):</span>
             <select
               value={compareStyleA}
               onChange={(e) => setCompareStyleA(e.target.value)}
-              className="bg-transparent text-xs text-slate-800 font-semibold focus:outline-none cursor-pointer flex-1"
+              className="bg-transparent text-xs text-slate-900 font-bold focus:outline-none cursor-pointer flex-1"
             >
               {STYLES_DATA.map((s) => (
-                <option key={s.id} value={s.id} className="bg-white text-slate-800">
-                  {s.name}
+                <option key={s.id} value={s.id} className="bg-white text-slate-900 font-semibold">
+                  {s.name} ({s.enName})
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="flex items-center space-x-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+          <div className="flex items-center space-x-2 bg-slate-50 p-3 rounded-2xl border border-slate-200">
             <span className="text-xs font-bold text-amber-700">右侧风格 (B):</span>
             <select
               value={compareStyleB}
               onChange={(e) => setCompareStyleB(e.target.value)}
-              className="bg-transparent text-xs text-slate-800 font-semibold focus:outline-none cursor-pointer flex-1"
+              className="bg-transparent text-xs text-slate-900 font-bold focus:outline-none cursor-pointer flex-1"
             >
               {STYLES_DATA.map((s) => (
-                <option key={s.id} value={s.id} className="bg-white text-slate-800">
-                  {s.name}
+                <option key={s.id} value={s.id} className="bg-white text-slate-900 font-semibold">
+                  {s.name} ({s.enName})
                 </option>
               ))}
             </select>
           </div>
         </div>
 
-        {/* Interactive Comparison Canvas Container */}
-        <div className="relative w-full h-[440px] rounded-3xl overflow-hidden border border-slate-200 select-none shadow-sm">
+        {/* Interactive Comparison Canvas Container (Rich SVG Vector Elevation) */}
+        <div className="relative w-full aspect-[16/9] min-h-[380px] rounded-3xl overflow-hidden border-2 border-slate-200 select-none shadow-md bg-slate-100">
           {/* Style B Layer (Right / Background) */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${styleB.roomRenderings[compareRoomIndex].gradientPreview} p-8 flex flex-col justify-between text-right`}>
-            <div className="flex justify-end">
-              <span className="bg-white/90 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm backdrop-blur-md">
-                风格 B: {styleB.name}
+          <div className="absolute inset-0 w-full h-full">
+            {renderRoomIllustration(styleB, compareRoomIndex, true)}
+
+            {/* Style B Floating Info Card */}
+            <div className="absolute top-4 right-4 z-10 flex flex-col items-end space-y-2">
+              <span className="bg-slate-900/90 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-md backdrop-blur-md border border-slate-700">
+                右侧风格 B: {styleB.name}
               </span>
-            </div>
-            <div className="max-w-md ml-auto bg-white/90 p-5 rounded-2xl border border-slate-200 shadow-lg backdrop-blur-md space-y-2">
-              <h4 className="text-lg font-black text-slate-900">
-                {styleB.roomRenderings[compareRoomIndex].title}
-              </h4>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                {styleB.roomRenderings[compareRoomIndex].description}
-              </p>
-              <div className="flex flex-wrap justify-end gap-1.5 pt-2">
-                {styleB.roomRenderings[compareRoomIndex].focalPoints.map((f, i) => (
-                  <span key={i} className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
-                    {f}
-                  </span>
-                ))}
+              <div className="max-w-xs bg-white/95 p-3 rounded-xl border border-slate-200 shadow-lg backdrop-blur-md space-y-1 text-right">
+                <div className="text-xs font-black text-slate-900">
+                  {styleB.roomRenderings[compareRoomIndex].title}
+                </div>
+                <div className="text-[11px] text-slate-600 line-clamp-2">
+                  {styleB.roomRenderings[compareRoomIndex].description}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Style A Layer (Left / Foreground Clipped) */}
+          {/* Style A Layer (Left / Foreground Clipped via Slider) */}
           <div
             style={{ clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)` }}
-            className={`absolute inset-0 bg-gradient-to-br ${styleA.roomRenderings[compareRoomIndex].gradientPreview} p-8 flex flex-col justify-between`}
+            className="absolute inset-0 w-full h-full"
           >
-            <div>
-              <span className="bg-white/90 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm backdrop-blur-md">
-                风格 A: {styleA.name}
+            {renderRoomIllustration(styleA, compareRoomIndex, false)}
+
+            {/* Style A Floating Info Card */}
+            <div className="absolute top-4 left-4 z-10 flex flex-col items-start space-y-2">
+              <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow-md backdrop-blur-md">
+                左侧风格 A: {styleA.name}
               </span>
-            </div>
-            <div className="max-w-md bg-white/90 p-5 rounded-2xl border border-slate-200 shadow-lg backdrop-blur-md space-y-2">
-              <h4 className="text-lg font-black text-slate-900">
-                {styleA.roomRenderings[compareRoomIndex].title}
-              </h4>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                {styleA.roomRenderings[compareRoomIndex].description}
-              </p>
-              <div className="flex flex-wrap gap-1.5 pt-2">
-                {styleA.roomRenderings[compareRoomIndex].focalPoints.map((f, i) => (
-                  <span key={i} className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
-                    {f}
-                  </span>
-                ))}
+              <div className="max-w-xs bg-white/95 p-3 rounded-xl border border-slate-200 shadow-lg backdrop-blur-md space-y-1 text-left">
+                <div className="text-xs font-black text-slate-900">
+                  {styleA.roomRenderings[compareRoomIndex].title}
+                </div>
+                <div className="text-[11px] text-slate-600 line-clamp-2">
+                  {styleA.roomRenderings[compareRoomIndex].description}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Divider Line & Handle */}
+          {/* Divider Line & Interactive Handle */}
           <div
             style={{ left: `${sliderPos}%` }}
-            className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_12px_rgba(0,0,0,0.5)] cursor-ew-resize flex items-center justify-center"
+            className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_15px_rgba(0,0,0,0.6)] cursor-ew-resize flex items-center justify-center pointer-events-none"
           >
-            <div className="w-8 h-8 rounded-full bg-white border-2 border-slate-400 shadow-lg flex items-center justify-center text-slate-800 text-xs font-black">
+            <div className="w-10 h-10 rounded-full bg-white border-2 border-slate-900 shadow-2xl flex items-center justify-center text-slate-900 text-sm font-black transform -translate-x-1/2 pointer-events-auto">
               ↔
             </div>
           </div>
 
-          {/* Invisible Range Slider for Dragging */}
+          {/* Invisible Range Slider for Smooth Dragging */}
           <input
             type="range"
             min="0"
@@ -475,7 +581,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
             </p>
           </div>
 
-          {/* SVG Radar Chart Visualization (Light Modern) */}
+          {/* SVG Radar Chart Visualization */}
           <div className="relative w-full aspect-[16/10] bg-slate-50 rounded-2xl border border-slate-200 p-4 flex items-center justify-center overflow-hidden">
             <svg viewBox="0 0 400 320" className="w-full h-full max-w-[460px]">
               {/* Concentric Hexagonal Grids */}
@@ -511,7 +617,6 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 const s = STYLES_DATA.find((x) => x.id === selectedStyleId) || STYLES_DATA[0];
                 const r = s.radarScores;
                 
-                // Calculate vertex coordinates based on scores (0-100)
                 const p1 = [200, 160 - (r.openness / 100) * 130];
                 const p2 = [200 + (r.maintenance / 100) * 130 * Math.cos(Math.PI / 6), 160 - (r.maintenance / 100) * 130 * Math.sin(Math.PI / 6)];
                 const p3 = [200 + (r.costEfficiency / 100) * 130 * Math.cos(Math.PI / 6), 160 + (r.costEfficiency / 100) * 130 * Math.sin(Math.PI / 6)];
