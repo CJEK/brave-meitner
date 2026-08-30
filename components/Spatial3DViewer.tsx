@@ -184,13 +184,21 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     cameraRef.current = camera;
     camera.position.set(0, 9, 7);
 
-    // WebGL Renderer
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-      preserveDrawingBuffer: true,
-      powerPreference: "high-performance"
-    });
+    // WebGL Renderer with graceful fallback
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        preserveDrawingBuffer: true,
+        powerPreference: "high-performance"
+      });
+    } catch (err) {
+      console.warn("WebGL Renderer creation failed, falling back to 2.5D mode:", err);
+      setViewMode("2.5d");
+      return;
+    }
+
     rendererRef.current = renderer;
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -212,9 +220,16 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     // Clean 45-degree Isometric Bird's-eye Perspective
     controls.setLookAt(0, 9, 7, 0, 0, 0, false);
 
-    // Attach Raycasting Click Handler
+    // Attach Raycasting Click Handler & Context Lost Handler
     const domElem = renderer.domElement;
     domElem.addEventListener("click", handleCanvasClick);
+
+    const handleContextLost = (e: Event) => {
+      e.preventDefault();
+      console.warn("WebGL context lost, switching to 2.5D view");
+      setViewMode("2.5d");
+    };
+    domElem.addEventListener("webglcontextlost", handleContextLost);
 
     // Calibrated Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);

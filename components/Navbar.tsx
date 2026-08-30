@@ -103,7 +103,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   title={item.label}
                 >
                   <Icon className={`w-3.5 h-3.5 ${isActive ? "text-blue-400" : "text-slate-500"}`} />
-                  <span>{item.label.split(" ")[0]}</span>
+                  <span>{item.label?.split(" ")?.[0] || item.label}</span>
                 </button>
               );
             })}

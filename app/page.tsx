@@ -27,6 +27,8 @@ import {
   Droplets
 } from "lucide-react";
 
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState<string>("3d-bim");
   const [selectedStyleId, setSelectedStyleId] = useState<string>("tech-minimal");
@@ -95,39 +97,53 @@ export default function Home() {
 
       {/* Main Tabbed Interactive Workspace */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
-        {activeTab === "3d-bim" && (
-          <Spatial3DViewer selectedStyleId={selectedStyleId} />
-        )}
+        <ErrorBoundary fallbackTitle="3D 空间推演视口隔离保护" fallbackMessage="检测到显卡资源或 WebGL 上下文初始化异常，已启动故障隔离保护。您可以点击重新加载，或切换至上方其它功能面板。">
+          {activeTab === "3d-bim" && (
+            <Spatial3DViewer selectedStyleId={selectedStyleId} />
+          )}
+        </ErrorBoundary>
 
-        {activeTab === "style-matrix" && (
-          <StyleComparisonMatrix
-            selectedStyleId={selectedStyleId}
-            setSelectedStyleId={setSelectedStyleId}
-          />
-        )}
+        <ErrorBoundary>
+          {activeTab === "style-matrix" && (
+            <StyleComparisonMatrix
+              selectedStyleId={selectedStyleId}
+              setSelectedStyleId={setSelectedStyleId}
+            />
+          )}
+        </ErrorBoundary>
 
-        {activeTab === "ergo-lighting" && (
-          <ErgonomicsAndLighting />
-        )}
+        <ErrorBoundary>
+          {activeTab === "ergo-lighting" && (
+            <ErgonomicsAndLighting />
+          )}
+        </ErrorBoundary>
 
-        {activeTab === "material-matrix" && (
-          <MaterialComparison />
-        )}
+        <ErrorBoundary>
+          {activeTab === "material-matrix" && (
+            <MaterialComparison />
+          )}
+        </ErrorBoundary>
 
-        {activeTab === "visual-gallery" && (
-          <VisualGallery
-            selectedStyleId={selectedStyleId}
-            setSelectedStyleId={setSelectedStyleId}
-          />
-        )}
+        <ErrorBoundary>
+          {activeTab === "visual-gallery" && (
+            <VisualGallery
+              selectedStyleId={selectedStyleId}
+              setSelectedStyleId={setSelectedStyleId}
+            />
+          )}
+        </ErrorBoundary>
 
-        {activeTab === "smart-home" && (
-          <SmartHomeSimulator />
-        )}
+        <ErrorBoundary>
+          {activeTab === "smart-home" && (
+            <SmartHomeSimulator />
+          )}
+        </ErrorBoundary>
 
-        {activeTab === "budget-bom" && (
-          <BudgetCalculator />
-        )}
+        <ErrorBoundary>
+          {activeTab === "budget-bom" && (
+            <BudgetCalculator />
+          )}
+        </ErrorBoundary>
       </main>
 
       {/* Decision Summary Modal */}
