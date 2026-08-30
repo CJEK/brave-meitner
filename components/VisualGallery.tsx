@@ -60,6 +60,50 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
   // 1. 现代极简科技风 (Modern Minimalist Tech)
   "modern-minimalist": [
     {
+      roomId: "bathroom",
+      roomName: "独立卫浴室",
+      enName: "Compact Luxury Bathroom",
+      sqm: 4.2,
+      physicalConstraint: "4.2 ㎡ 紧凑干湿分离 · 1.8m 贯穿大台面 · 跨越壁挂马桶上方",
+      title: "1.8m 贯穿式岩板大台面直接跨越马桶上方",
+      subtitle: "4.2 ㎡ 空间极致利用 · 满墙除雾大镜柜 · 暗装枪灰瀑布龙头",
+      description: "针对 4.2 ㎡ 紧凑卫浴，定制 1.8m 劳伦白金耐污岩板台面横向贯穿，直接延伸至壁挂马桶上方形成整体置物平台；搭配满墙触控智能除雾镜柜与 10mm 极窄黑框长虹玻璃淋浴隔断。",
+      materials: [
+        { name: "贯穿大台面", spec: "1800mm 劳伦白金岩板 (横向无缝延伸跨越直接位于壁挂马桶上方)" },
+        { name: "满墙大镜柜", spec: "通宽 LED 智能恒温除雾镜门 (双向 45° 侧发光，上下 3000K 洗墙)" },
+        { name: "暗装五金", spec: "暗装枪灰拉丝瀑布入墙式冷热龙头 (防溅静音出水，精铜主体)" },
+        { name: "淋浴隔断", spec: "10mm 超窄黑框超白长虹防爆钢化玻璃推拉门 (干湿严格分离)" }
+      ],
+      lighting: "Ra>98 高显色无影美妆面光 + 镜柜上下 3000K 纯净洗墙氛围灯带",
+      focalPoints: ["1.8m 台面跨越马桶上方", "满墙超薄除雾镜柜", "暗装枪灰瀑布龙头", "10mm极窄长虹玻门"],
+      views: [
+        {
+          key: "A",
+          label: "视角 A: 主视角全景",
+          sublabel: "正对 1.8m 贯穿大台面跨越马桶上方",
+          imageUrl: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1200&q=80",
+          highlight: "4.2 ㎡ 紧凑卫浴极致收纳，1.8m 白色岩板台面横向无缝延伸跨越壁挂马桶上方形成连体置物台，满墙镜柜透出 3000K 纯净洗墙光",
+          prompt: "Photorealistic interior design rendering of a compact 4.2 sqm modern bathroom in a 60 sqm apartment, 1.8m continuous white sintered stone floating countertop seamlessly extending directly ABOVE the wall-hung GEBERIT toilet creating a unified shelf, full-width frameless LED fogless mirror cabinet with top and bottom 3000K soft wash lighting, 10mm ultra-thin black frame reed glass shower partition on the left, concealed gunmetal waterfall faucet, realistic compact spatial proportion, architectural photography, Hasselblad --ar 16:9 --style raw"
+        },
+        {
+          key: "B",
+          label: "视角 B: 材质与光影特写",
+          sublabel: "枪灰入墙龙头与岩板水波纹特写",
+          imageUrl: "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1200&q=80",
+          highlight: "暗装枪灰拉丝瀑布入墙式水龙头出水细节，水流轻柔抚过一体成型大单盆，3000K 暖光映衬岩板天然肌理",
+          prompt: "Macro interior photography of a concealed gunmetal wall-mounted waterfall faucet flowing water onto a matte white sintered stone basin, warm 3000K LED glow reflecting on stone texture, seamless countertop edge extending over wall-hung toilet, luxury architectural detail, 8k resolution --ar 16:9"
+        },
+        {
+          key: "C",
+          label: "视角 C: 反向/侧角视角",
+          sublabel: "干湿分离长虹玻璃反看大台面",
+          imageUrl: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
+          highlight: "从淋浴湿区透过 10mm 超窄黑框长虹玻璃推拉门回看干区，通体发光除雾镜柜柔和漫射，干湿分离一目了然",
+          prompt: "Reverse angle shot looking from inside the wet shower area through 10mm fluted reed glass door towards the compact dry vanity area, frameless illuminated mirror cabinet reflecting subtle warm light, clean minimalist aesthetic, realistic 4.2 sqm bathroom scale --ar 16:9"
+        }
+      ]
+    },
+    {
       roomId: "living",
       roomName: "客厅极简影音区",
       enName: "Living & Media Zone",
@@ -83,67 +127,23 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "入户俯瞰 15.2 ㎡ 客厅全貌与 85 吋巨幕",
           imageUrl: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
           highlight: "真实 60.22 ㎡ 户型比例，85 吋电视贴墙安装，沙发至屏幕 2.5m 黄金视距，南向落地窗洒入清晨阳光",
-          prompt: "Minimalist living room interior photography, 15.2 sqm compact space, 85-inch flat TV mounted flush on wall, 1.8m kitchen island on the side, compact sofa with 2.5m viewing distance, clear walkway to south-facing balcony with morning sunlight, realistic 60.22 sqm condo scale, Hasselblad photography --ar 16:9 --style raw"
+          prompt: "Photorealistic interior render of a 15.2 sqm minimalist living room, 3.8m wall-to-wall distance with a comfortable 2.5m viewing distance, 85-inch flat screen TV flush-mounted on micro-cement feature wall, low-profile straight sofa, adjacent 1.8m floating kitchen island bar on the left, full-height glass sliding door to south balcony on the right with morning sunlight, architectural digest style --ar 16:9 --style raw"
         },
         {
           key: "B",
           label: "视角 B: 材质与光影特写",
-          sublabel: "微水泥地面与悬浮电视柜接缝微光",
+          sublabel: "1.8m 哑光灰岩板中岛与客厅地面微光",
           imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
-          highlight: "微水泥细腻哑光肌理，悬浮地台内嵌 3000K 暖光漫射，触感温润无指纹",
-          prompt: "Macro interior shot of a minimalist living room floating media console in a 15.2 sqm apartment, under-cabinet warm 3000K LED lighting strip casting soft glow on micro-cement floor, subtle wall texture details, luxury architectural design, depth of field, 8k resolution --ar 16:9 --style raw"
+          highlight: "1.8m 哑光灰岩板中岛台与客厅交接处，悬浮地台内嵌 3000K 暖光漫射，触感温润无指纹",
+          prompt: "Close-up of a 1.8m matte grey sintered stone kitchen island connecting to living room area, linear ambient LED strip lighting underneath, micro-cement floor texture, ultra-clean line design --ar 16:9"
         },
         {
           key: "C",
           label: "视角 C: 反向/侧角视角",
           sublabel: "由南向阳台回望客厅与中岛动线",
           imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
-          highlight: "站在阳台移门处望向公区，开阔通畅的 1.1m 走道动线与 1.8m 中岛吧台一览无遗",
-          prompt: "Reverse angle interior photo looking from the sunlit balcony into a sleek modern minimalist open-plan apartment, 15.2 sqm living space, floating media unit, 1.8m island, ultra-clean wide walkway, diffused architectural lighting, realistic scale --ar 16:9 --style raw"
-        }
-      ]
-    },
-    {
-      roomId: "bathroom",
-      roomName: "独立卫浴室",
-      enName: "Compact Luxury Bathroom",
-      sqm: 4.2,
-      physicalConstraint: "4.2 ㎡ 紧凑干湿分离 · 1.8m 贯穿大台面 · 跨越壁挂马桶上方",
-      title: "1.8m 贯穿式岩板大台面直接跨越马桶上方",
-      subtitle: "4.2 ㎡ 空间极致利用 · 满墙除雾大镜柜 · 暗装枪灰瀑布龙头",
-      description: "针对 4.2 ㎡ 紧凑卫浴，定制 1.8m 劳伦白金耐污岩板台面横向贯穿，直接延伸至壁挂马桶上方形成整体置物平台；搭配满墙触控智能除雾镜柜与 10mm 极窄黑框长虹玻璃淋浴隔断。",
-      materials: [
-        { name: "贯穿大台面", spec: "1800mm 劳伦白金岩板 (横向无缝延伸跨越直接位于壁挂马桶上方)" },
-        { name: "满墙大镜柜", spec: "通宽 LED 智能恒温除雾镜门 (双向 45° 侧发光，上下 3000K 洗墙)" },
-        { name: "暗装五金", spec: "暗装枪灰拉丝瀑布入墙式冷热龙头 (防溅静音出水，精铜主体)" },
-        { name: "淋浴隔断", spec: "10mm 超窄黑框超白长虹防爆钢化玻璃推拉门 (干湿严格分离)" }
-      ],
-      lighting: "Ra>98 高显色无影美妆面光 + 镜柜上下 3000K 纯净洗墙氛围灯带",
-      focalPoints: ["1.8m 台面跨越马桶上方", "满墙超薄除雾镜柜", "暗装枪灰瀑布龙头", "10mm极窄长虹玻门"],
-      views: [
-        {
-          key: "A",
-          label: "视角 A: 主视角全景",
-          sublabel: "正对 1.8m 贯穿大台面与马桶上方置物台",
-          imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
-          highlight: "4.2 ㎡ 紧凑空间极致收纳，1.8m 白色岩板台面横跨延伸至壁挂马桶上方，满墙镜柜上下透出柔和洗墙光",
-          prompt: "Photorealistic interior render of a compact 4.2 sqm luxury modern bathroom, 1.8m continuous white sintered stone floating countertop seamlessly extending directly ABOVE the wall-hung toilet, frameless LED fogless mirror cabinet, 10mm ultra-thin black frame glass shower partition on the side, concealed gunmetal waterfall faucet, highly realistic space scale for a 60.22 sqm apartment, Hasselblad photography --ar 16:9 --style raw"
-        },
-        {
-          key: "B",
-          label: "视角 B: 材质与光影特写",
-          sublabel: "枪灰入墙龙头出水与岩板水波纹微距",
-          imageUrl: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80",
-          highlight: "暗装入墙龙头金属拉丝质感，流水轻柔抚过一体成型大单盆，触感极其细腻",
-          prompt: "Macro interior photography of a gunmetal wall-mounted waterfall faucet over a white sintered stone floating basin in a 4.2 sqm compact bathroom, ambient 3000K LED lighting reflecting on stone, water droplets, ultra-detailed texture, luxury craftsmanship, 8k --ar 16:9 --style raw"
-        },
-        {
-          key: "C",
-          label: "视角 C: 反向/侧角视角",
-          sublabel: "淋浴区透过 10mm 长虹玻望向干区大台面",
-          imageUrl: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
-          highlight: "长虹玻璃透光不透影，干湿分区清晰，壁挂马桶上方 1.8m 大台面置物从容",
-          prompt: "Interior perspective looking from the frameless glass shower enclosure towards the compact 4.2 sqm bathroom vanity and wall-hung toilet, glowing mirror cabinet, clean dry-wet separation, hotel suite bathroom rendering, 8k resolution --ar 16:9 --style raw"
+          highlight: "站在阳台移门处望向公区，开阔通畅的 900mm~1100mm 走道动线与 1.8m 中岛吧台一览无遗",
+          prompt: "Interior photo taken from the south balcony door looking back into the open-plan living and dining space of a 60 sqm apartment, clear 900mm walkway, floating media console, natural morning lighting streaming in --ar 16:9"
         }
       ]
     },
@@ -171,23 +171,23 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "正对 1.8m 悬浮大床与 11.0 ㎡ 卧室全貌",
           imageUrl: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
           highlight: "11.0 ㎡ 真实紧凑卧室尺度，1.8m 悬浮床脱离地面轻盈感，床头上方 2700K 暖光柔和洒下",
-          prompt: "Photorealistic compact master bedroom for 60.22 sqm apartment, 11.0 sqm space, 1.8m floating platform bed, 0.6m clear walking space beside bed, floor-to-ceiling seamless white wardrobe, 2700K warm LED wall-washer lighting, soft morning side light --ar 16:9 --style raw"
+          prompt: "Interior photo of an 11.0 sqm master bedroom in a modern 60 sqm apartment, 1.8m floating upholstered bed positioned against a seamless micro-cement headboard with indirect LED strip backlighting, floor-to-ceiling wardrobe with integrated vertical handles on the side, 600mm clear walking space around bed, cozy minimal atmosphere --ar 16:9 --style raw"
         },
         {
           key: "B",
           label: "视角 B: 材质与光影特写",
-          sublabel: "亲肤科技布缝线与床底悬浮夜灯",
+          sublabel: "2700K 床头洗墙微光与橡木床头板",
           imageUrl: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80",
-          highlight: "科技布细腻缝线，床底内缩 150mm 防踢脚结构与低照度洗地微光",
-          prompt: "Close up interior detail of a floating designer bed in a compact 11 sqm bedroom, warm 2700K toe-kick ambient LED light glowing beneath the bed frame, plush linen bedding, matte wall texture, depth of field, 8k resolution --ar 16:9 --style raw"
+          highlight: "2700K 暖色线性光带漫射于浅色木饰面与亚麻床品上，悬浮床头板细节精致",
+          prompt: "Close-up shot of headboard warm 2700K ambient LED lighting casting soft glow onto light oak wood veneer wall panel and linen bedding, floating bedside shelf details --ar 16:9"
         },
         {
           key: "C",
           label: "视角 C: 反向/侧角视角",
-          sublabel: "卧室门口望向大床与 600mm 满墙衣柜",
+          sublabel: "卧室门口望向 1.8m 大床与电动纱帘窗",
           imageUrl: "https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80",
-          highlight: "西墙整面纯白哑光无把手衣柜，预留 600mm 宽敞更衣通行走道",
-          prompt: "Side angle interior photo of a compact 11 sqm modern bedroom, showing full-wall matte white seamless floor-to-ceiling wardrobe with integrated vertical recessed handles, floating king bed on right, warm morning side lighting, 8k --ar 16:9 --style raw"
+          highlight: "从卧室门口望向大床与大窗，电动双轨纱帘在晨光中透出柔和漫射光，整洁利落",
+          prompt: "Wide-angle shot from bedroom doorway looking at the 1.8m floating bed and window with sheer electric curtains, clean storage closet lines, realistic room scale --ar 16:9"
         }
       ]
     },
@@ -214,24 +214,24 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           label: "视角 A: 主视角全景",
           sublabel: "正对 2.0m 升降大板桌与双屏悬浮工位",
           imageUrl: "https://images.unsplash.com/photo-1593062096033-9a26b09da705?auto=format&fit=crop&w=1200&q=80",
-          highlight: "7.8 ㎡ 紧凑极客空间，2.0m 宽阔大板桌面贴墙放置，双 32 吋屏幕悬浮，桌面零杂线",
-          prompt: "Compact 7.8 sqm developer home study in a 60.22 sqm condo, 2.0m motorized oak standing desk flush against partition wall, dual 32-inch floating monitors, side floor-to-ceiling luggage storage bay, clean cable management, focused architectural photography --ar 16:9 --style raw"
+          highlight: "7.8 ㎡ 独立极客书房，2.0m 宽阔双电机升降大板桌，双屏机械臂悬浮，吸音毛毡护墙板极具科技感",
+          prompt: "Modern geek home office setup in a 7.8 sqm dedicated nook of a 60 sqm apartment, 2.0m dual-motor standing desk with dual monitors, acoustic felt pegboard wall, cable management tray, warm task lighting, clean tech minimalist aesthetic --ar 16:9 --style raw"
         },
         {
           key: "B",
           label: "视角 B: 材质与光影特写",
-          sublabel: "实木桌面倒角与隐藏走线盒细节",
+          sublabel: "黑胡桃木升降桌面与机械键盘特写",
           imageUrl: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=1200&q=80",
-          highlight: "天然橡木温润木纹，圆弧倒角防压手肘，铝合金嵌入式毛刷走线盒细节",
-          prompt: "Macro photography of a luxury solid white oak standing desk surface, aluminum wire grommet box with clean woven cables, high-end mechanical keyboard with custom keycaps, studio monitor speakers, matte finish wood grain, depth of field, 8k --ar 16:9 --style raw"
+          highlight: "实木桌面温润木纹，客制化机械键盘，嵌入式隐藏电源插座盒与环境氛围微光",
+          prompt: "Close-up shot of a 2.0m dark walnut standing desk surface with minimalist mechanical keyboard, desk pad, hidden desk power strip, subtle ambient LED glow --ar 16:9"
         },
         {
           key: "C",
           label: "视角 C: 反向/侧角视角",
-          sublabel: "书房门口望向工位与大行李箱高柜",
+          sublabel: "工位椅回望中央过道与中岛吧台",
           imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=80",
-          highlight: "侧面定制 600mm 深度通顶储物柜，底部直通推入 28 吋大行李箱，整洁利落",
-          prompt: "Side angle shot of a compact 7.8 sqm home workstation room in apartment, tall seamless storage cabinets on side with lower open luggage bay, motorized standing desk, clean acoustic wall felt paneling, organized workspace, 8k --ar 16:9 --style raw"
+          highlight: "坐在人体工学椅上望向中央过道与中岛，开阔通畅，办公与生活场景自然衔接",
+          prompt: "Reverse angle shot from the desk chair looking towards the central hallway corridor and island, showing open layout integration without blocking walkways --ar 16:9"
         }
       ]
     },
@@ -258,16 +258,16 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           label: "视角 A: 主视角全景",
           sublabel: "正对 1.8m 悬浮岩板中岛与开放厨房",
           imageUrl: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=80",
-          highlight: "60.22 ㎡ 真实紧凑餐厨比例，1.8m 岩板中岛开阔大气，双侧保留 900mm 通畅走道",
-          prompt: "Compact open kitchen in 60.22 sqm apartment, 1.8m sintered stone island with 3 modern bar stools, integrated induction hob, seamless cabinetry, clear 0.9m walkways, realistic condo scale, architectural photography --ar 16:9 --style raw"
+          highlight: "60.22 ㎡ 真实紧凑餐厨比例，1.8m 岩板中岛开阔大气，双侧保留 900mm 通畅走道，嵌入式电磁灶与大单槽",
+          prompt: "Modern open-plan kitchen and 1.8m floating sintered stone island bar in a 60 sqm apartment, L-shaped matte white cabinetry with embedded induction cooktop and sink, 900mm clearance aisle, minimalist high bar stools, architectural interior photography --ar 16:9 --style raw"
         },
         {
           key: "B",
           label: "视角 B: 材质与光影特写",
-          sublabel: "岩板 45° 倒角与弹出式轨道插座细节",
+          sublabel: "中岛 3把吧椅与电磁灶台面特写",
           imageUrl: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80",
-          highlight: "岩板 45° 倒角工艺，弹出式黑色金属轨道插座，质感细腻",
-          prompt: "Close-up macro shot of grey sintered stone kitchen island countertop in compact apartment, pop-up black metal power track with coffee maker, soft under-counter LED glow, depth of field, 8k --ar 16:9 --style raw"
+          highlight: "现代中岛吧台搭配 3 把高脚吧椅，嵌入式电磁灶台，哑光黑五金与台底暖光氛围",
+          prompt: "Close-up of modern kitchen island with 3 bar stools, induction cooktop, matte black fixtures, warm under-counter lighting, 8k --ar 16:9"
         },
         {
           key: "C",
@@ -275,7 +275,7 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           sublabel: "从中岛吧椅回望客厅 85 吋巨幕与南向阳台",
           imageUrl: "https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?auto=format&fit=crop&w=1200&q=80",
           highlight: "坐在吧椅上望向客厅 85 吋电视与南向景观阳台，视野极其开阔通透",
-          prompt: "Perspective interior shot looking from the kitchen island towards the living room and bright sunlit balcony in 60.22 sqm condo, open layout, airy atmosphere, realistic scale, 8k --ar 16:9 --style raw"
+          prompt: "View looking from kitchen across dining island into living room and bright balcony in 60 sqm modern flat --ar 16:9"
         }
       ]
     }
@@ -283,6 +283,50 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
 
   // 2. 意式暗调高级黑 (Italian Dark Luxury)
   "dark-luxury": [
+    {
+      roomId: "bathroom",
+      roomName: "独立卫浴室",
+      enName: "Compact Luxury Bathroom",
+      sqm: 4.2,
+      physicalConstraint: "4.2 ㎡ 紧凑卫浴 · 1.8m 劳伦黑金大平台 · 跨越壁挂马桶上方",
+      title: "劳伦黑金 1.8m 贯穿大平台与奢华灰玻除雾镜柜",
+      subtitle: "4.2 ㎡ 空间极致利用 · 暗装枪灰瀑布龙头 · 2700K 琥珀洗墙光",
+      description: "整面 1.8m 劳伦黑金岩板悬浮大平台横向延伸跨越壁挂马桶上方，枪灰色暗装瀑布入墙出水龙头，灰玻边框除雾大镜柜下透出 2700K 琥珀暖光，打造五星级套房的私密奢华体验。",
+      materials: [
+        { name: "贯穿大平台", spec: "1800mm 劳伦黑金哑光岩板 (横向无缝延伸跨越直接位于壁挂马桶上方)" },
+        { name: "除雾镜柜", spec: "灰玻金属窄框智能除雾镜柜 (内嵌 2700K 琥珀背光，Ra>98)" },
+        { name: "暗装五金", spec: "暗装枪灰拉丝瀑布入墙式水龙头 (精铜铸造，防溅静音)" },
+        { name: "马桶系统", spec: "壁挂隐藏式水箱智能感应翻盖马桶 (离地悬空好打理)" }
+      ],
+      lighting: "2700K 琥珀色立面洗墙光 + 镜门磨砂导光条无眩光面光",
+      focalPoints: ["1.8m 黑金台面跨越马桶", "暗装枪灰入墙龙头", "琥珀氛围大镜柜", "壁挂隐藏水箱"],
+      views: [
+        {
+          key: "A",
+          label: "视角 A: 主视角全景",
+          sublabel: "正对 1.8m 黑金贯穿大台面跨越马桶上方",
+          imageUrl: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=1200&q=80",
+          highlight: "4.2 ㎡ 紧凑空间，黑金大理石与琥珀暖光交织，1.8m 大台面跨越壁挂马桶上方气派非凡",
+          prompt: "Photorealistic interior design rendering of a compact 4.2 sqm modern dark luxury bathroom in a 60 sqm apartment, 1.8m continuous black marble floating countertop seamlessly extending directly ABOVE the wall-hung toilet, full-width frameless LED fogless mirror cabinet, 10mm ultra-thin black frame glass shower partition, concealed gunmetal waterfall faucet, realistic spatial scale, 8k --ar 16:9 --style raw"
+        },
+        {
+          key: "B",
+          label: "视角 B: 材质与光影特写",
+          sublabel: "枪灰入墙龙头出水与黑金岩板微距",
+          imageUrl: "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1200&q=80",
+          highlight: "暗装枪灰瀑布龙头水流倾泻于黑金大理石一体盆，琥珀色光影交错",
+          prompt: "Macro interior photography of a gunmetal wall-mounted waterfall faucet over a Laurent black gold marble floating basin in a 4.2 sqm compact bathroom, ambient amber LED lighting reflecting on stone, water droplets, ultra-detailed texture, luxury interior detail, 8k --ar 16:9 --style raw"
+        },
+        {
+          key: "C",
+          label: "视角 C: 反向/侧角视角",
+          sublabel: "淋浴间望向干区黑金台面与镜柜",
+          imageUrl: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
+          highlight: "灰玻淋浴隔断阻绝水汽，干区 1.8m 大台面与壁挂马桶一览无遗",
+          prompt: "Interior perspective looking from the dark-framed glass shower enclosure towards the luxury dark marble vanity and wall-hung toilet in 4.2 sqm bathroom, glowing amber mirror cabinet, hotel suite bathroom rendering, 8k resolution --ar 16:9 --style raw"
+        }
+      ]
+    },
     {
       roomId: "living",
       roomName: "客厅极简影音区",
@@ -324,50 +368,6 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
           imageUrl: "https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1200&q=80",
           highlight: "深色背景极度吸收杂光，看电影与品酒氛围极佳，通透动线丝毫不显压抑",
           prompt: "Reverse angle interior photo looking into a moody dark luxury 15.2 sqm apartment living room from the balcony window, amber warm lighting layers, rich smoked walnut wood finishes, realistic condo scale, 8k --ar 16:9 --style raw"
-        }
-      ]
-    },
-    {
-      roomId: "bathroom",
-      roomName: "独立卫浴室",
-      enName: "Compact Luxury Bathroom",
-      sqm: 4.2,
-      physicalConstraint: "4.2 ㎡ 紧凑卫浴 · 1.8m 劳伦黑金大平台 · 跨越壁挂马桶上方",
-      title: "劳伦黑金 1.8m 贯穿大平台与奢华灰玻除雾镜柜",
-      subtitle: "4.2 ㎡ 空间极致利用 · 暗装枪灰瀑布龙头 · 2700K 琥珀洗墙光",
-      description: "整面 1.8m 劳伦黑金岩板悬浮大平台横向延伸跨越壁挂马桶上方，枪灰色暗装瀑布入墙出水龙头，灰玻边框除雾大镜柜下透出 2700K 琥珀暖光，打造五星级套房的私密奢华体验。",
-      materials: [
-        { name: "贯穿大平台", spec: "1800mm 劳伦黑金哑光岩板 (横向无缝延伸跨越直接位于壁挂马桶上方)" },
-        { name: "除雾镜柜", spec: "灰玻金属窄框智能除雾镜柜 (内嵌 2700K 琥珀背光，Ra>98)" },
-        { name: "暗装五金", spec: "暗装枪灰拉丝瀑布入墙式水龙头 (精铜铸造，防溅静音)" },
-        { name: "马桶系统", spec: "壁挂隐藏式水箱智能感应翻盖马桶 (离地悬空好打理)" }
-      ],
-      lighting: "2700K 琥珀色立面洗墙光 + 镜门磨砂导光条无眩光面光",
-      focalPoints: ["1.8m 黑金台面跨越马桶", "暗装枪灰入墙龙头", "琥珀氛围大镜柜", "壁挂隐藏水箱"],
-      views: [
-        {
-          key: "A",
-          label: "视角 A: 主视角全景",
-          sublabel: "正对 1.8m 黑金贯穿大台面与灰玻镜柜",
-          imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
-          highlight: "4.2 ㎡ 紧凑空间，黑金大理石与琥珀暖光交织，1.8m 大台面跨越壁挂马桶上方气派非凡",
-          prompt: "Photorealistic interior render of a compact 4.2 sqm luxury modern bathroom, 1.8m continuous black marble floating countertop seamlessly extending directly ABOVE the wall-hung toilet, frameless LED fogless mirror cabinet, 10mm ultra-thin black frame glass shower partition on the side, concealed gunmetal waterfall faucet, highly realistic space scale for a 60.22 sqm apartment, Hasselblad photography --ar 16:9 --style raw"
-        },
-        {
-          key: "B",
-          label: "视角 B: 材质与光影特写",
-          sublabel: "枪灰入墙龙头出水与水波纹",
-          imageUrl: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80",
-          highlight: "暗装枪灰瀑布龙头水流倾泻于黑金大理石一体盆，光影交错",
-          prompt: "Macro interior photography of a gunmetal wall-mounted waterfall faucet over a Laurent black gold marble floating basin in a 4.2 sqm compact bathroom, ambient amber LED lighting reflecting on stone, water droplets, ultra-detailed texture, luxury interior detail, 8k --ar 16:9 --style raw"
-        },
-        {
-          key: "C",
-          label: "视角 C: 反向/侧角视角",
-          sublabel: "淋浴间望向干区黑金台面",
-          imageUrl: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
-          highlight: "灰玻淋浴隔断阻绝水汽，干区大台面与壁挂马桶一览无遗",
-          prompt: "Interior perspective looking from the dark-framed glass shower enclosure towards the luxury dark marble vanity and wall-hung toilet in 4.2 sqm bathroom, glowing amber mirror cabinet, hotel suite bathroom rendering, 8k resolution --ar 16:9 --style raw"
         }
       ]
     },
@@ -522,7 +522,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
   setSelectedStyleId
 }) => {
   const currentRooms = getStyleRooms(selectedStyleId);
-  const [activeRoomId, setActiveRoomId] = useState<"living" | "bedroom" | "bathroom" | "workstation" | "kitchen">("living");
+  const [activeRoomId, setActiveRoomId] = useState<"living" | "bedroom" | "bathroom" | "workstation" | "kitchen">("bathroom"); // Default to bathroom to highlight calibrated topology
   const [activeAngleKey, setActiveAngleKey] = useState<"A" | "B" | "C">("A");
   const [copiedPrompt, setCopiedPrompt] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -584,8 +584,8 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
         {/* 2. 5 Core Space Navigation Tabs (Prominent & Clickable) */}
         <div className="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar">
           {[
-            { id: "living", label: "🛋️ 客厅极简影音区 (15.2㎡)" },
             { id: "bathroom", label: "🚿 独立卫浴室 (4.2㎡)" },
+            { id: "living", label: "🛋️ 客厅极简影音区 (15.2㎡)" },
             { id: "bedroom", label: "🛏️ 主卧深睡区 (11.0㎡)" },
             { id: "workstation", label: "💻 极客工作站 1+1 (7.8㎡)" },
             { id: "kitchen", label: "🍳 开放厨房与中岛 (10.2㎡)" }
@@ -616,7 +616,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
         {/* Left Col: High-Definition Photorealistic Image Viewport (7 Columns) */}
         <div className="lg:col-span-7 bg-slate-950 p-4 sm:p-6 flex flex-col justify-between space-y-4">
           {/* Main Rendering Image Container */}
-          <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden shadow-2xl bg-black border border-white/10 group cursor-pointer"
+          <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-2xl bg-black border border-white/10 group cursor-pointer"
                onClick={() => setIsModalOpen(true)}>
             <img
               src={currentView.imageUrl}
@@ -624,7 +624,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
               className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             
-            {/* Top Room & View Badges */}
+            {/* Top Room & View Badges (Clear and Unmistakable) */}
             <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
               <span className="bg-black/75 backdrop-blur-md text-white text-xs font-black px-3 py-1 rounded-xl border border-white/20 shadow-md flex items-center space-x-1.5">
                 <Building2 className="w-3.5 h-3.5 text-blue-400" />
@@ -734,7 +734,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
               <div className="flex items-center space-x-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span className="text-[11px] font-bold text-slate-200">
-                  Midjourney v6 紧凑户型精确 Prompt
+                  Midjourney v6 紧凑户型 1:1 约束 Prompt
                 </span>
               </div>
               <button
@@ -791,7 +791,7 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
 
             {/* Modal Image Viewport */}
             <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4">
-              <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-black">
+              <div className="relative aspect-video w-full rounded-2xl overflow-hidden shadow-lg border border-slate-200 bg-black">
                 <img
                   src={currentView.imageUrl}
                   alt={currentView.label}
