@@ -21,7 +21,8 @@ import {
   MousePointerClick,
   ChevronLeft,
   ChevronRight,
-  RotateCcw
+  RotateCcw,
+  Box
 } from "lucide-react";
 import { ZONES_DATA, STYLES_DATA, PROPERTY_DATA, ZoneData } from "@/data/projectData";
 import { getJohorSunData, SOLAR_PRESETS, JB_LOCATION } from "@/utils/solarCalculator";
@@ -110,7 +111,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const currentStyle = STYLES_DATA.find((s) => s.id === selectedStyleId) || STYLES_DATA[0];
   const [activeZone, setActiveZone] = useState<ZoneData>(ZONES_DATA[3]); // Default to Living Room
   const [viewMode, setViewMode] = useState<"3d" | "2.5d">("3d");
-  const [cameraPreset, setCameraPreset] = useState<"birds-eye" | "living" | "workstation" | "bedroom" | "balcony">("birds-eye");
+  const [cameraPreset, setCameraPreset] = useState<"birds-eye" | "iso-2.5d" | "living" | "workstation" | "bedroom" | "balcony">("birds-eye");
   
   // Layer Toggles - ALL DEFAULT FALSE for a crystal-clean, uncluttered 3D experience
   const [showDimensions, setShowDimensions] = useState<boolean>(false);
@@ -201,7 +202,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const controls = new CameraControls(camera, renderer.domElement);
     controls.smoothTime = 0.35;
     controls.draggingSmoothTime = 0.12;
-    controls.maxDistance = 22;
+    controls.maxDistance = 24;
     controls.minDistance = 3.5;
     controls.maxPolarAngle = Math.PI / 2.2; // ~81.8 degrees, prevents clipping below ground
     controlsRef.current = controls;
@@ -717,6 +718,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       case "birds-eye":
         ctrl.setLookAt(0, 10, 8, 0, 0, 0, true);
         break;
+      case "iso-2.5d":
+        ctrl.setLookAt(9.5, 9.5, 9.5, 0, 0, 0, true);
+        break;
       case "living":
         ctrl.setLookAt(1.725, 5.5, 4.5, 1.725, 0.4, 1.7, true);
         break;
@@ -766,7 +770,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            2.5D 户型平面图
+            2.5D 等轴测户型图 (Isometric BIM)
           </button>
         </div>
 
@@ -842,7 +846,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
       {/* Main 3D Viewport & Side Inspection Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* 3D Viewport (8 Columns) */}
+        {/* 3D / 2.5D Viewport (8 Columns) */}
         <div className="lg:col-span-8 relative rounded-3xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm flex flex-col min-h-[560px]">
           {/* Top Camera Presets Overlay */}
           <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-1.5 bg-white/95 backdrop-blur-md p-1.5 rounded-xl border border-slate-200 shadow-sm">
@@ -851,9 +855,12 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               视角:
             </span>
             <button
-              onClick={() => setCameraPreset("birds-eye")}
+              onClick={() => {
+                setViewMode("3d");
+                setCameraPreset("birds-eye");
+              }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
-                cameraPreset === "birds-eye"
+                viewMode === "3d" && cameraPreset === "birds-eye"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
                   : "text-slate-600 hover:text-slate-900"
               }`}
@@ -861,7 +868,23 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               俯瞰全景
             </button>
             <button
-              onClick={() => setCameraPreset("living")}
+              onClick={() => {
+                setViewMode("3d");
+                setCameraPreset("iso-2.5d");
+              }}
+              className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
+                viewMode === "3d" && cameraPreset === "iso-2.5d"
+                  ? "bg-blue-600 text-white font-semibold shadow-2xs"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              45° 等轴测 3D
+            </button>
+            <button
+              onClick={() => {
+                setViewMode("3d");
+                setCameraPreset("living");
+              }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "living"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
@@ -871,7 +894,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               客厅影音
             </button>
             <button
-              onClick={() => setCameraPreset("workstation")}
+              onClick={() => {
+                setViewMode("3d");
+                setCameraPreset("workstation");
+              }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "workstation"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
@@ -881,7 +907,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               极客工位
             </button>
             <button
-              onClick={() => setCameraPreset("bedroom")}
+              onClick={() => {
+                setViewMode("3d");
+                setCameraPreset("bedroom");
+              }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "bedroom"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
@@ -891,7 +920,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               主卧深睡
             </button>
             <button
-              onClick={() => setCameraPreset("balcony")}
+              onClick={() => {
+                setViewMode("3d");
+                setCameraPreset("balcony");
+              }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "balcony"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
@@ -917,10 +949,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           </div>
 
-          {/* Direct 3D Raycasting Hint Badge */}
+          {/* Direct Raycasting / Click Hint Badge */}
           <div className="absolute bottom-16 left-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl flex items-center space-x-1.5 shadow-sm text-[11px] text-slate-700 pointer-events-none">
             <MousePointerClick className="w-3.5 h-3.5 text-blue-600 animate-bounce" />
-            <span>点击 3D 任意房间即刻拾取</span>
+            <span>点击任意房间即刻高亮检视</span>
           </div>
 
           {/* 3D WebGL Canvas Container */}
@@ -963,74 +995,231 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               </div>
             </div>
           ) : (
-            /* 2.5D BIM Vector Floor Plan */
+            /* 2.5D ISOMETRIC ARCHITECTURAL BIM BLUEPRINT (Complete 9 Zones, 0.25m Walls, 900mm Doors with Opening Arcs, 1:1 Furniture Line Art) */
             <div className="w-full flex-1 min-h-[520px] p-6 bg-slate-100 relative overflow-hidden flex items-center justify-center">
-              <div className="relative w-full max-w-[560px] aspect-[690/972.5] bg-white rounded-2xl border-2 border-slate-300 p-3 shadow-md">
-                {/* Longitudinal Spine Wall Divider Line in 2.5D at X = 50% */}
-                <div className="absolute left-[50%] top-0 bottom-0 w-1 bg-slate-300 pointer-events-none z-0" />
+              <div className="relative w-full max-w-[620px] aspect-[690/972.5] bg-[#ede8df] rounded-3xl border-4 border-slate-300 p-4 shadow-xl overflow-hidden flex flex-col justify-between">
+                
+                {/* SVG Isometric Architectural Floor Plan */}
+                <svg viewBox="0 0 690 972.5" className="w-full h-full">
+                  {/* Subtle 600mm Floor Tile Grid */}
+                  <pattern id="iso-tile-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#d1d5db" strokeWidth="1" opacity="0.6" />
+                  </pattern>
+                  <rect x="0" y="0" width="690" height="972.5" fill="url(#iso-tile-grid)" rx="16" />
 
-                {ZONES_DATA.map((zone) => {
-                  const isSelected = activeZone.id === zone.id;
-                  return (
-                    <div
-                      key={zone.id}
-                      onClick={() => setActiveZone(zone)}
-                      style={{
-                        position: "absolute",
-                        left: `${zone.coordinates.x}%`,
-                        top: `${zone.coordinates.y}%`,
-                        width: `${zone.coordinates.w}%`,
-                        height: `${zone.coordinates.h}%`,
-                      }}
-                      className={`rounded-xl border transition-all duration-150 cursor-pointer p-2 flex flex-col justify-between ${
-                        isSelected
-                          ? "bg-blue-50 border-blue-500 shadow-md scale-[1.02] z-10 text-blue-950 ring-2 ring-blue-400/30"
-                          : "bg-slate-50/80 border-slate-200 hover:bg-slate-100 hover:border-slate-300"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className={`text-[11px] font-bold ${isSelected ? "text-blue-700" : "text-slate-800"}`}>
-                          {zone.name}
-                        </span>
-                        <span className="text-[9px] text-slate-500 bg-white px-1.5 py-0.5 rounded border border-slate-200 font-mono font-medium">
-                          {zone.sqm} ㎡
-                        </span>
-                      </div>
+                  {/* Outer Architectural Perimeter Wall (200mm) */}
+                  <rect x="6" y="6" width="678" height="960.5" fill="none" stroke="#1e293b" strokeWidth="12" rx="14" />
 
-                      {showDimensions && (
-                        <div className="text-[9px] font-mono font-semibold text-slate-500">
-                          {zone.dimensionsMm}
-                        </div>
-                      )}
+                  {/* Longitudinal Main Spine Wall at X = 345px (150mm thickness, divides Left 3.45m & Right 3.45m) */}
+                  <line x1="345" y1="6" x2="345" y2="966.5" stroke="#1e293b" strokeWidth="10" strokeLinecap="round" />
 
-                      {showMEP && (
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          <span className="text-[8px] bg-amber-50 text-amber-700 border border-amber-200 px-1 rounded font-medium">
-                            ⚡ {zone.mepPoints.length} 点位
-                          </span>
-                        </div>
-                      )}
+                  {/* ========================================================================= */}
+                  {/* 1. [LEFT PRIVATE ZONE] (X: 0 to 345px) */}
+                  {/* ========================================================================= */}
+                  
+                  {/* (1) 生活阳台 YARD (Top Left, Z: 0 ~ 166px) */}
+                  <g onClick={() => setActiveZone(ZONES_DATA[5])} className="cursor-pointer group">
+                    <rect
+                      x="12" y="12" width="327" height="154"
+                      fill={activeZone.id === "yard" ? "#dbeafe" : "#f8fafc"}
+                      stroke={activeZone.id === "yard" ? "#2563eb" : "#94a3b8"}
+                      strokeWidth="2.5" rx="8"
+                      className="transition-all"
+                    />
+                    {/* Washer Appliance Line Art */}
+                    <rect x="25" y="25" width="70" height="65" fill="#e2e8f0" stroke="#475569" strokeWidth="2" rx="4" />
+                    <circle cx="60" cy="57" r="18" fill="none" stroke="#64748b" strokeWidth="2" />
+                    {/* Auto Water Station */}
+                    <rect x="110" y="25" width="45" height="40" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5" rx="3" />
+                    <text x="132" y="50" fill="#2563eb" fontSize="11" fontWeight="bold" textAnchor="middle">扫拖机</text>
+                    <text x="175" y="120" fill="#1e293b" fontSize="18" fontWeight="bold" textAnchor="middle">生活阳台 YARD (3.3×1.66m)</text>
+                  </g>
 
-                      {showSmartHome && (
-                        <div className="flex flex-wrap gap-1 mt-0.5">
-                          <span className="text-[8px] bg-purple-50 text-purple-700 border border-purple-200 px-1 rounded font-medium">
-                            🤖 {zone.smartDevices.length} 智能
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
+                  {/* Transverse Wall 1 (Yard / Study at Y = 170px) */}
+                  <line x1="12" y1="170" x2="345" y2="170" stroke="#1e293b" strokeWidth="8" />
 
-                {/* Southwest Monsoon Microclimate Flow */}
-                {showMicroclimate && (
-                  <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                    <div className="absolute bottom-2 right-4 flex items-center space-x-1 text-emerald-700 text-[10px] font-semibold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 shadow-2xs">
-                      <Wind className="w-3 h-3 animate-spin text-emerald-600" />
-                      <span>西南季风对流 (SSE 165° → NNW 345°)</span>
-                    </div>
-                  </div>
-                )}
+                  {/* (2) 极客工作站 STUDY (Mid-Left 1, Z: 175 ~ 345px) */}
+                  <g onClick={() => setActiveZone(ZONES_DATA[6])} className="cursor-pointer group">
+                    <rect
+                      x="12" y="175" width="327" height="165"
+                      fill={activeZone.id === "study" ? "#dbeafe" : "#f8fafc"}
+                      stroke={activeZone.id === "study" ? "#2563eb" : "#94a3b8"}
+                      strokeWidth="2.5" rx="8"
+                      className="transition-all"
+                    />
+                    {/* 2.0m Lifting Desk Line Art */}
+                    <rect x="65" y="205" width="200" height="70" fill="#fed7aa" stroke="#c2410c" strokeWidth="2" rx="4" />
+                    {/* Dual 32" Monitors */}
+                    <rect x="90" y="185" width="70" height="12" fill="#0f172a" stroke="#2563eb" strokeWidth="2" rx="2" />
+                    <rect x="170" y="185" width="70" height="12" fill="#0f172a" stroke="#2563eb" strokeWidth="2" rx="2" />
+                    {/* Ergonomic Chair */}
+                    <circle cx="165" cy="305" r="22" fill="#e2e8f0" stroke="#475569" strokeWidth="2" />
+                    <text x="175" y="260" fill="#1e293b" fontSize="18" fontWeight="bold" textAnchor="middle">极客工位 STUDY (3.3×1.7m)</text>
+                  </g>
+
+                  {/* Transverse Wall 2 (Study / Bath at Y = 345px) */}
+                  <line x1="12" y1="345" x2="345" y2="345" stroke="#1e293b" strokeWidth="8" />
+
+                  {/* (3) 独立卫浴室 BATHROOM (Mid-Left 2, Z: 350 ~ 595px) */}
+                  <g onClick={() => setActiveZone(ZONES_DATA[7])} className="cursor-pointer group">
+                    <rect
+                      x="12" y="350" width="327" height="240"
+                      fill={activeZone.id === "bathroom" ? "#dbeafe" : "#f8fafc"}
+                      stroke={activeZone.id === "bathroom" ? "#2563eb" : "#94a3b8"}
+                      strokeWidth="2.5" rx="8"
+                      className="transition-all"
+                    />
+                    {/* 1.5m Hotel Vanity Counter */}
+                    <rect x="25" y="365" width="150" height="60" fill="#ffffff" stroke="#2563eb" strokeWidth="2" rx="3" />
+                    <ellipse cx="100" cy="395" rx="35" ry="20" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5" />
+                    {/* Smart Toilet */}
+                    <rect x="245" y="365" width="55" height="75" fill="#ffffff" stroke="#64748b" strokeWidth="2" rx="16" />
+                    {/* Shower Screen */}
+                    <line x1="25" y1="465" x2="160" y2="465" stroke="#38bdf8" strokeWidth="3" strokeDasharray="4 2" />
+                    <text x="175" y="520" fill="#1e293b" fontSize="18" fontWeight="bold" textAnchor="middle">独立卫浴 BATH (3.3×2.5m)</text>
+                  </g>
+
+                  {/* 900mm Bath Door Opening & Swing Arc at Z = 570px */}
+                  <path d="M 345 540 A 55 55 0 0 0 290 595" fill="none" stroke="#2563eb" strokeWidth="2" strokeDasharray="4 4" />
+                  <line x1="345" y1="540" x2="290" y2="595" stroke="#1e293b" strokeWidth="3" />
+
+                  {/* Transverse Wall 3 (Bath / Bedroom at Y = 595px) */}
+                  <line x1="12" y1="595" x2="260" y2="595" stroke="#1e293b" strokeWidth="8" />
+                  <line x1="330" y1="595" x2="345" y2="595" stroke="#1e293b" strokeWidth="8" />
+
+                  {/* (4) 主卧深睡空间 MASTER BEDROOM (Bottom Left, Z: 600 ~ 960px) */}
+                  <g onClick={() => setActiveZone(ZONES_DATA[8])} className="cursor-pointer group">
+                    <rect
+                      x="12" y="600" width="327" height="360"
+                      fill={activeZone.id === "bedroom" ? "#dbeafe" : "#f8fafc"}
+                      stroke={activeZone.id === "bedroom" ? "#2563eb" : "#94a3b8"}
+                      strokeWidth="2.5" rx="8"
+                      className="transition-all"
+                    />
+                    {/* King Bed 1.8m × 2.0m Line Art */}
+                    <rect x="75" y="650" width="180" height="210" fill="#ffffff" stroke="#1e293b" strokeWidth="2.5" rx="6" />
+                    {/* Pillows */}
+                    <rect x="90" y="660" width="65" height="40" fill="#cbd5e1" rx="4" />
+                    <rect x="175" y="660" width="65" height="40" fill="#cbd5e1" rx="4" />
+                    {/* Headboard */}
+                    <rect x="65" y="635" width="200" height="15" fill="#64748b" rx="2" />
+                    {/* Wardrobe along West Wall */}
+                    <rect x="18" y="650" width="40" height="260" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.5" rx="2" />
+                    <text x="38" y="780" fill="#64748b" fontSize="12" fontWeight="bold" transform="rotate(-90 38 780)">通顶定制衣柜 (深600mm)</text>
+                    <text x="175" y="900" fill="#1e293b" fontSize="20" fontWeight="bold" textAnchor="middle">主卧深睡 BEDROOM (3.3×3.86m)</text>
+                  </g>
+
+                  {/* 900mm Bedroom Door Opening & Swing Arc at Z = 600px */}
+                  <path d="M 345 610 A 65 65 0 0 1 280 675" fill="none" stroke="#2563eb" strokeWidth="2" strokeDasharray="4 4" />
+                  <line x1="345" y1="610" x2="280" y2="675" stroke="#1e293b" strokeWidth="3" />
+
+                  {/* ========================================================================= */}
+                  {/* 2. [RIGHT PUBLIC ZONE] (X: 345px to 690px) */}
+                  {/* ========================================================================= */}
+
+                  {/* (5) 入户玄关 ENTRANCE FOYER (Top Right, Z: 0 ~ 155px) */}
+                  <g onClick={() => setActiveZone(ZONES_DATA[0])} className="cursor-pointer group">
+                    <rect
+                      x="350" y="12" width="328" height="142"
+                      fill={activeZone.id === "entrance" ? "#dbeafe" : "#f8fafc"}
+                      stroke={activeZone.id === "entrance" ? "#2563eb" : "#94a3b8"}
+                      strokeWidth="2.5" rx="8"
+                      className="transition-all"
+                    />
+                    {/* Shoe Cabinet */}
+                    <rect x="580" y="20" width="85" height="40" fill="#e2e8f0" stroke="#475569" strokeWidth="2" rx="3" />
+                    {/* D200 Face Lock Icon */}
+                    <circle cx="660" cy="40" r="8" fill="#2563eb" />
+                    <text x="514" y="95" fill="#1e293b" fontSize="18" fontWeight="bold" textAnchor="middle">入户玄关 ENTRANCE (3.3×1.56m)</text>
+                  </g>
+
+                  {/* Transverse Wall (Entrance / Kitchen at Y = 158px) */}
+                  <line x1="350" y1="158" x2="678" y2="158" stroke="#cbd5e1" strokeWidth="3" strokeDasharray="6 4" />
+
+                  {/* (6) 开放式厨房 OPEN KITCHEN (Mid-Right 1, Z: 160 ~ 310px) */}
+                  <g onClick={() => setActiveZone(ZONES_DATA[1])} className="cursor-pointer group">
+                    <rect
+                      x="350" y="162" width="328" height="145"
+                      fill={activeZone.id === "kitchen" ? "#dbeafe" : "#f8fafc"}
+                      stroke={activeZone.id === "kitchen" ? "#2563eb" : "#94a3b8"}
+                      strokeWidth="2.5" rx="8"
+                      className="transition-all"
+                    />
+                    {/* L-Shape Countertop */}
+                    <rect x="360" y="170" width="308" height="50" fill="#ffffff" stroke="#475569" strokeWidth="2" rx="3" />
+                    {/* Dual Induction Hob */}
+                    <circle cx="430" cy="195" r="14" fill="#334155" />
+                    <circle cx="470" cy="195" r="14" fill="#334155" />
+                    {/* Kitchen Sink */}
+                    <rect x="550" y="180" width="60" height="30" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5" rx="3" />
+                    <text x="514" y="270" fill="#1e293b" fontSize="18" fontWeight="bold" textAnchor="middle">开放厨房 KITCHEN (3.3×1.5m)</text>
+                  </g>
+
+                  {/* (7) 多功能中岛吧台 DINING ISLAND (Mid-Right 2, Z: 315 ~ 490px) */}
+                  <g onClick={() => setActiveZone(ZONES_DATA[2])} className="cursor-pointer group">
+                    <rect
+                      x="350" y="315" width="328" height="175"
+                      fill={activeZone.id === "dining" ? "#dbeafe" : "#f8fafc"}
+                      stroke={activeZone.id === "dining" ? "#2563eb" : "#94a3b8"}
+                      strokeWidth="2.5" rx="8"
+                      className="transition-all"
+                    />
+                    {/* 2.0m Sintered Stone Island Line Art */}
+                    <rect x="414" y="350" width="200" height="90" fill="#ffffff" stroke="#1e293b" strokeWidth="2.5" rx="6" />
+                    {/* Pop-up Track Socket */}
+                    <rect x="425" y="390" width="20" height="10" fill="#f59e0b" rx="2" />
+                    {/* Bar Stools */}
+                    <circle cx="460" cy="460" r="14" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
+                    <circle cx="514" cy="460" r="14" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
+                    <circle cx="568" cy="460" r="14" fill="#cbd5e1" stroke="#475569" strokeWidth="1.5" />
+                    <text x="514" y="405" fill="#1e293b" fontSize="18" fontWeight="bold" textAnchor="middle">多功能中岛 DINING (3.3×1.8m)</text>
+                  </g>
+
+                  {/* (8) 客厅极简影音区 LIVING & AV (Mid-Right 3, Z: 495 ~ 825px) */}
+                  <g onClick={() => setActiveZone(ZONES_DATA[3])} className="cursor-pointer group">
+                    <rect
+                      x="350" y="495" width="328" height="325"
+                      fill={activeZone.id === "living" ? "#dbeafe" : "#f8fafc"}
+                      stroke={activeZone.id === "living" ? "#2563eb" : "#94a3b8"}
+                      strokeWidth="2.5" rx="8"
+                      className="transition-all"
+                    />
+                    {/* 2.6m Straight Sofa Line Art */}
+                    <rect x="370" y="600" width="85" height="180" fill="#ffffff" stroke="#1e293b" strokeWidth="2.5" rx="8" />
+                    {/* 85" Ultra-Thin TV Screen on East Wall */}
+                    <rect x="660" y="540" width="10" height="200" fill="#0f172a" stroke="#0284c7" strokeWidth="2" rx="2" />
+                    {/* Floating TV Stand */}
+                    <rect x="640" y="520" width="22" height="240" fill="#e2e8f0" stroke="#475569" strokeWidth="1.5" rx="3" />
+                    {/* Coffee Table */}
+                    <rect x="490" y="650" width="70" height="80" fill="#fed7aa" stroke="#c2410c" strokeWidth="1.5" rx="6" />
+                    <text x="514" y="570" fill="#1e293b" fontSize="20" fontWeight="bold" textAnchor="middle">客厅极简影音 LIVING (3.3×3.4m)</text>
+                  </g>
+
+                  {/* South Balcony Glass Sliding Door at Z = 825px */}
+                  <line x1="350" y1="825" x2="678" y2="825" stroke="#0284c7" strokeWidth="6" />
+
+                  {/* (9) 南向景观阳台 LANDSCAPE BALCONY (Bottom Right, Z: 830 ~ 960px) */}
+                  <g onClick={() => setActiveZone(ZONES_DATA[4])} className="cursor-pointer group">
+                    <rect
+                      x="350" y="830" width="328" height="130"
+                      fill={activeZone.id === "balcony" ? "#e0f2fe" : "#f0f9ff"}
+                      stroke={activeZone.id === "balcony" ? "#0284c7" : "#38bdf8"}
+                      strokeWidth="2.5" rx="8"
+                      className="transition-all"
+                    />
+                    {/* High Bar Table & Chairs */}
+                    <rect x="380" y="855" width="180" height="35" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" rx="4" />
+                    <circle cx="430" cy="910" r="14" fill="#bae6fd" stroke="#0284c7" strokeWidth="1.5" />
+                    <circle cx="510" cy="910" r="14" fill="#bae6fd" stroke="#0284c7" strokeWidth="1.5" />
+                    <text x="514" y="935" fill="#0369a1" fontSize="18" fontWeight="bold" textAnchor="middle">南向阳台 BALCONY (SSE 165°)</text>
+                  </g>
+                </svg>
+
+                {/* 2.5D Isometric Status Overlay */}
+                <div className="absolute top-6 left-6 z-10 flex items-center space-x-2 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm text-xs font-bold text-slate-800">
+                  <Box className="w-4 h-4 text-blue-600" />
+                  <span>2.5D 等轴测 BIM 户型图 · 9 大分区全量渲染 (6.90m × 9.725m)</span>
+                </div>
               </div>
             </div>
           )}
@@ -1060,7 +1249,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   onClick={() => {
                     setActiveZone(z);
                     const coord = ZONE_3D_COORDS[z.id];
-                    if (coord && controlsRef.current) {
+                    if (coord && controlsRef.current && viewMode === "3d") {
                       controlsRef.current.setLookAt(coord.x, 5.0, coord.z + 4, coord.x, 0.4, coord.z, true);
                     }
                   }}
