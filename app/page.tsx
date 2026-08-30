@@ -35,7 +35,7 @@ export default function Home() {
   const currentStyle = STYLES_DATA.find((s) => s.id === selectedStyleId) || STYLES_DATA[0];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col selection:bg-cyan-500 selection:text-black">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-blue-600 selection:text-white">
       {/* Top Navbar */}
       <Navbar
         activeTab={activeTab}
@@ -46,17 +46,17 @@ export default function Home() {
       />
 
       {/* Hero Overview & Quick Metric Strip */}
-      <section className="border-b border-slate-800/80 bg-gradient-to-b from-slate-900/60 to-transparent py-3 sm:py-4">
+      <section className="border-b border-slate-200 bg-white py-3 sm:py-4 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
             {/* Left Property Identity */}
             <div className="flex items-center space-x-3">
-              <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+              <div className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
               <div className="text-xs sm:text-sm">
-                <span className="font-bold text-slate-200">
+                <span className="font-bold text-slate-900">
                   {PROPERTY_DATA.projectName}
                 </span>
-                <span className="text-slate-400 ml-2">
+                <span className="text-slate-500 ml-2">
                   Tower A · 24楼 · <strong>{PROPERTY_DATA.unitNo}</strong> (Type B 6,900×9,725mm)
                 </span>
               </div>
@@ -64,23 +64,23 @@ export default function Home() {
 
             {/* Right Microclimate & Value KPI Chips */}
             <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
-              <div className="flex items-center space-x-1.5 bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-xl text-slate-300">
-                <Compass className="w-3.5 h-3.5 text-amber-400" />
+              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-xl text-slate-700">
+                <Compass className="w-3.5 h-3.5 text-amber-600" />
                 <span>SSE 165° (零西晒·全天漫射)</span>
               </div>
 
-              <div className="flex items-center space-x-1.5 bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-xl text-slate-300">
-                <Building2 className="w-3.5 h-3.5 text-cyan-400" />
+              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-xl text-slate-700">
+                <Building2 className="w-3.5 h-3.5 text-blue-600" />
                 <span>648 sq ft (60.22 ㎡)</span>
               </div>
 
-              <div className="flex items-center space-x-1.5 bg-slate-900/90 border border-slate-800 px-3 py-1 rounded-xl text-slate-300">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-xl text-slate-700">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 <span>永久地契 Freehold</span>
               </div>
 
-              <div className="flex items-center space-x-1.5 bg-cyan-500/10 border border-cyan-500/30 px-3 py-1 rounded-xl text-cyan-300 font-bold">
-                <Sparkles className="w-3.5 h-3.5" />
+              <div className="flex items-center space-x-1.5 bg-blue-50 border border-blue-200 px-3 py-1 rounded-xl text-blue-800 font-bold">
+                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                 <span>当前风格: {currentStyle.name}</span>
               </div>
             </div>
@@ -133,22 +133,22 @@ export default function Home() {
       />
 
       {/* Footer */}
-      <footer className="glass-panel border-t border-slate-800/80 py-6 mt-12 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-400">
+      <footer className="border-t border-slate-200 py-6 mt-12 bg-white text-xs text-slate-500 shadow-2xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center space-x-2">
-            <div className="w-6 h-6 rounded-lg bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center text-[10px]">
+            <div className="w-6 h-6 rounded-lg bg-blue-50 text-blue-700 border border-blue-200 font-bold flex items-center justify-center text-[10px]">
               PG
             </div>
-            <span>Paragon Gateway (A-24-10) 3D 空间与室内风格决策 SaaS 平台</span>
+            <span className="text-slate-700 font-medium">Paragon Gateway (A-24-10) 3D 空间与室内风格决策 SaaS 平台</span>
           </div>
 
           <div className="flex items-center space-x-4">
-            <span className="text-slate-500">
-              Vercel Ready · Next.js 14 · Three.js BIM Engine
+            <span>
+              Vercel Ready · Next.js 14 · Three.js Architectural Engine
             </span>
             <button
               onClick={() => setIsReportOpen(true)}
-              className="text-cyan-400 hover:text-cyan-300 font-bold underline underline-offset-4"
+              className="text-blue-600 hover:text-blue-800 font-bold underline underline-offset-4"
             >
               查看决策终审报告 →
             </button>

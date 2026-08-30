@@ -63,24 +63,24 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
   const rankedStyles = [...STYLES_DATA].sort((a, b) => calculateScore(b) - calculateScore(a));
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8">
       {/* 4 Style Selection Grid Cards */}
       <div>
         <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
           <div>
-            <h2 className="text-2xl font-black text-slate-100 tracking-tight flex items-center">
-              <Palette className="w-6 h-6 mr-2 text-cyan-400" />
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center">
+              <Palette className="w-6 h-6 mr-2 text-blue-600" />
               4 大室内设计风格横向决策舱
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               针对 Paragon Gateway 648 sq ft 单人极致高效生活，深度对比 4 种不同美学路线与材质体系
             </p>
           </div>
 
-          <div className="flex items-center space-x-2 text-xs bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="text-slate-400">当前激活风格:</span>
-            <span className="font-bold text-cyan-300">
+          <div className="flex items-center space-x-2 text-xs bg-white px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+            <span className="text-slate-500">当前激活风格:</span>
+            <span className="font-bold text-slate-900">
               {STYLES_DATA.find((s) => s.id === selectedStyleId)?.name}
             </span>
           </div>
@@ -95,21 +95,21 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
               <div
                 key={style.id}
                 onClick={() => setSelectedStyleId(style.id)}
-                className={`relative rounded-3xl p-5 border transition-all duration-300 cursor-pointer flex flex-col justify-between overflow-hidden ${
+                className={`relative rounded-3xl p-5 border transition-all duration-200 cursor-pointer flex flex-col justify-between overflow-hidden ${
                   isSelected
-                    ? "bg-slate-900 border-cyan-400 shadow-xl shadow-cyan-500/20 scale-[1.02] ring-2 ring-cyan-500/30"
-                    : "glass-card border-slate-800 hover:border-slate-700 hover:bg-slate-900/60"
+                    ? "bg-blue-50/40 border-blue-600 shadow-md ring-2 ring-blue-500/20 scale-[1.02]"
+                    : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
                 }`}
               >
                 {/* Top Badge */}
                 <div className="flex items-center justify-between mb-3">
-                  <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
-                    isSelected ? "bg-cyan-500 text-slate-950" : "bg-slate-800 text-slate-300 border border-slate-700"
+                  <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md ${
+                    isSelected ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-600 border border-slate-200"
                   }`}>
                     {style.badge}
                   </span>
 
-                  <div className="flex items-center space-x-1 text-xs font-mono font-bold text-cyan-400">
+                  <div className="flex items-center space-x-1 text-xs font-mono font-bold text-blue-600">
                     <Award className="w-3.5 h-3.5" />
                     <span>{score} 分</span>
                   </div>
@@ -117,21 +117,21 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
 
                 {/* Style Title & Tagline */}
                 <div>
-                  <h3 className="text-lg font-black text-slate-100">{style.name}</h3>
-                  <div className="text-[11px] font-medium text-cyan-400 font-mono mb-2">
+                  <h3 className="text-lg font-black text-slate-900">{style.name}</h3>
+                  <div className="text-[11px] font-semibold text-blue-600 font-mono mb-2">
                     {style.enName}
                   </div>
-                  <p className="text-xs text-slate-300 font-medium mb-3">
+                  <p className="text-xs text-slate-700 font-medium mb-2.5">
                     {style.tagline}
                   </p>
-                  <p className="text-[11px] text-slate-400 line-clamp-3 mb-4 leading-relaxed">
+                  <p className="text-[11px] text-slate-500 line-clamp-3 mb-4 leading-relaxed">
                     {style.description}
                   </p>
                 </div>
 
                 {/* Palette Swatches */}
                 <div>
-                  <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1.5 font-semibold">
+                  <div className="text-[10px] text-slate-400 uppercase tracking-wider mb-1.5 font-semibold">
                     核心色系与材质
                   </div>
                   <div className="flex items-center space-x-1.5 mb-4">
@@ -139,7 +139,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                       <div
                         key={idx}
                         style={{ backgroundColor: p.hex }}
-                        className="w-6 h-6 rounded-lg border border-white/20 shadow-sm flex-shrink-0"
+                        className="w-6 h-6 rounded-lg border border-slate-300 shadow-2xs flex-shrink-0"
                         title={`${p.name}: ${p.role}`}
                       />
                     ))}
@@ -153,14 +153,14 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                     }}
                     className={`w-full py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 ${
                       isSelected
-                        ? "bg-cyan-500 text-slate-950 shadow-md shadow-cyan-500/20"
-                        : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                        ? "bg-blue-600 text-white shadow-sm"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                     }`}
                   >
                     {isSelected ? (
                       <>
                         <Check className="w-3.5 h-3.5 stroke-[3]" />
-                        <span>已锁定为决策主风格</span>
+                        <span>已锁定为主推演风格</span>
                       </>
                     ) : (
                       <span>选择此风格推演</span>
@@ -173,29 +173,29 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
         </div>
       </div>
 
-      {/* Split-Screen Interactive Comparison Slider (分屏对比) */}
-      <div className="glass-panel p-6 rounded-3xl border border-slate-800 space-y-6">
+      {/* Split-Screen Interactive Comparison Slider */}
+      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h3 className="text-xl font-black text-slate-100 flex items-center">
-              <Eye className="w-5 h-5 mr-2 text-cyan-400" />
+            <h3 className="text-xl font-black text-slate-900 flex items-center">
+              <Eye className="w-5 h-5 mr-2 text-blue-600" />
               分屏滑块视觉比对 (Split-Screen Comparison)
             </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               左右拖动中缝滑块，在同一空间视角下直接对比两种设计风格的材质质感与氛围
             </p>
           </div>
 
           {/* Room Perspective Switcher */}
-          <div className="flex items-center bg-slate-900 border border-slate-800 rounded-xl p-1 text-xs">
+          <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 text-xs">
             {["客厅与中岛", "极客工作站", "主卧深睡", "卫浴与阳台"].map((room, idx) => (
               <button
                 key={idx}
                 onClick={() => setCompareRoomIndex(idx)}
                 className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
                   compareRoomIndex === idx
-                    ? "bg-cyan-500 text-slate-950 font-bold"
-                    : "text-slate-400 hover:text-slate-200"
+                    ? "bg-slate-900 text-white font-bold shadow-2xs"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 {room}
@@ -206,30 +206,30 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
 
         {/* Style A & B Selectors */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex items-center space-x-2 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-            <span className="text-xs font-bold text-cyan-400">左侧风格 (A):</span>
+          <div className="flex items-center space-x-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <span className="text-xs font-bold text-blue-700">左侧风格 (A):</span>
             <select
               value={compareStyleA}
               onChange={(e) => setCompareStyleA(e.target.value)}
-              className="bg-transparent text-xs text-slate-200 font-medium focus:outline-none cursor-pointer flex-1"
+              className="bg-transparent text-xs text-slate-800 font-semibold focus:outline-none cursor-pointer flex-1"
             >
               {STYLES_DATA.map((s) => (
-                <option key={s.id} value={s.id} className="bg-slate-900 text-slate-200">
+                <option key={s.id} value={s.id} className="bg-white text-slate-800">
                   {s.name}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="flex items-center space-x-2 bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-            <span className="text-xs font-bold text-amber-400">右侧风格 (B):</span>
+          <div className="flex items-center space-x-2 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+            <span className="text-xs font-bold text-amber-700">右侧风格 (B):</span>
             <select
               value={compareStyleB}
               onChange={(e) => setCompareStyleB(e.target.value)}
-              className="bg-transparent text-xs text-slate-200 font-medium focus:outline-none cursor-pointer flex-1"
+              className="bg-transparent text-xs text-slate-800 font-semibold focus:outline-none cursor-pointer flex-1"
             >
               {STYLES_DATA.map((s) => (
-                <option key={s.id} value={s.id} className="bg-slate-900 text-slate-200">
+                <option key={s.id} value={s.id} className="bg-white text-slate-800">
                   {s.name}
                 </option>
               ))}
@@ -237,25 +237,25 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
           </div>
         </div>
 
-        {/* Interactive Comparison Canvas / Visual Container */}
-        <div className="relative w-full h-[440px] rounded-3xl overflow-hidden border border-slate-700/80 select-none shadow-2xl">
+        {/* Interactive Comparison Canvas Container */}
+        <div className="relative w-full h-[440px] rounded-3xl overflow-hidden border border-slate-200 select-none shadow-sm">
           {/* Style B Layer (Right / Background) */}
           <div className={`absolute inset-0 bg-gradient-to-br ${styleB.roomRenderings[compareRoomIndex].gradientPreview} p-8 flex flex-col justify-between text-right`}>
             <div className="flex justify-end">
-              <span className="bg-slate-950/80 text-amber-300 text-xs font-bold px-3 py-1.5 rounded-xl border border-amber-500/30 backdrop-blur-md">
+              <span className="bg-white/90 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm backdrop-blur-md">
                 风格 B: {styleB.name}
               </span>
             </div>
-            <div className="max-w-md ml-auto bg-slate-950/80 p-5 rounded-2xl border border-slate-800 backdrop-blur-md space-y-2">
-              <h4 className="text-lg font-black text-amber-300">
+            <div className="max-w-md ml-auto bg-white/90 p-5 rounded-2xl border border-slate-200 shadow-lg backdrop-blur-md space-y-2">
+              <h4 className="text-lg font-black text-slate-900">
                 {styleB.roomRenderings[compareRoomIndex].title}
               </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-600 leading-relaxed">
                 {styleB.roomRenderings[compareRoomIndex].description}
               </p>
               <div className="flex flex-wrap justify-end gap-1.5 pt-2">
                 {styleB.roomRenderings[compareRoomIndex].focalPoints.map((f, i) => (
-                  <span key={i} className="text-[10px] bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded border border-amber-500/20">
+                  <span key={i} className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
                     {f}
                   </span>
                 ))}
@@ -269,20 +269,20 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
             className={`absolute inset-0 bg-gradient-to-br ${styleA.roomRenderings[compareRoomIndex].gradientPreview} p-8 flex flex-col justify-between`}
           >
             <div>
-              <span className="bg-slate-950/80 text-cyan-300 text-xs font-bold px-3 py-1.5 rounded-xl border border-cyan-500/30 backdrop-blur-md">
+              <span className="bg-white/90 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm backdrop-blur-md">
                 风格 A: {styleA.name}
               </span>
             </div>
-            <div className="max-w-md bg-slate-950/80 p-5 rounded-2xl border border-slate-800 backdrop-blur-md space-y-2">
-              <h4 className="text-lg font-black text-cyan-300">
+            <div className="max-w-md bg-white/90 p-5 rounded-2xl border border-slate-200 shadow-lg backdrop-blur-md space-y-2">
+              <h4 className="text-lg font-black text-slate-900">
                 {styleA.roomRenderings[compareRoomIndex].title}
               </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
+              <p className="text-xs text-slate-600 leading-relaxed">
                 {styleA.roomRenderings[compareRoomIndex].description}
               </p>
               <div className="flex flex-wrap gap-1.5 pt-2">
                 {styleA.roomRenderings[compareRoomIndex].focalPoints.map((f, i) => (
-                  <span key={i} className="text-[10px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/20">
+                  <span key={i} className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
                     {f}
                   </span>
                 ))}
@@ -293,9 +293,9 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
           {/* Divider Line & Handle */}
           <div
             style={{ left: `${sliderPos}%` }}
-            className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_15px_rgba(255,255,255,0.8)] cursor-ew-resize flex items-center justify-center"
+            className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_12px_rgba(0,0,0,0.5)] cursor-ew-resize flex items-center justify-center"
           >
-            <div className="w-9 h-9 rounded-full bg-slate-950 border-2 border-white shadow-xl flex items-center justify-center text-white text-xs font-black">
+            <div className="w-8 h-8 rounded-full bg-white border-2 border-slate-400 shadow-lg flex items-center justify-center text-slate-800 text-xs font-black">
               ↔
             </div>
           </div>
@@ -315,16 +315,16 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
       {/* Six-Dimensional Decision Radar & Custom Preference Engine */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: Custom Weights Engine (5 Columns) */}
-        <div className="lg:col-span-5 glass-panel p-6 rounded-3xl border border-slate-800 space-y-5">
+        <div className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-5">
           <div>
-            <span className="text-[10px] text-cyan-400 font-mono tracking-widest uppercase">
+            <span className="text-[10px] text-blue-600 font-mono tracking-widest uppercase font-bold">
               AI DECISION ENGINE
             </span>
-            <h3 className="text-lg font-black text-slate-100 flex items-center">
-              <Sliders className="w-4 h-4 mr-2 text-cyan-400" />
+            <h3 className="text-lg font-black text-slate-900 flex items-center mt-0.5">
+              <Sliders className="w-4 h-4 mr-2 text-blue-600" />
               自定义偏好加权推荐系统
             </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               调整您对生活维度的考量权重，系统将实时计算最符合您本心的设计风格排名
             </p>
           </div>
@@ -332,12 +332,14 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
           <div className="space-y-4">
             {/* Weight Sliders */}
             <div>
-              <div className="flex justify-between text-xs font-bold text-slate-300 mb-1">
+              <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
                 <span className="flex items-center">
-                  <Zap className="w-3.5 h-3.5 mr-1 text-cyan-400" />
+                  <Zap className="w-3.5 h-3.5 mr-1 text-blue-600" />
                   极客工位与科技契合度
                 </span>
-                <span className="font-mono text-cyan-400">{weightGeek} / 10</span>
+                <span className="font-mono font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-100">
+                  {weightGeek} / 10
+                </span>
               </div>
               <input
                 type="range"
@@ -345,17 +347,19 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 max="10"
                 value={weightGeek}
                 onChange={(e) => setWeightGeek(Number(e.target.value))}
-                className="w-full accent-cyan-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+                className="w-full accent-blue-600 bg-slate-200 h-2 rounded-lg cursor-pointer"
               />
             </div>
 
             <div>
-              <div className="flex justify-between text-xs font-bold text-slate-300 mb-1">
+              <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
                 <span className="flex items-center">
-                  <Maximize className="w-3.5 h-3.5 mr-1 text-sky-400" />
+                  <Maximize className="w-3.5 h-3.5 mr-1 text-sky-600" />
                   空间通透采光与视觉放大
                 </span>
-                <span className="font-mono text-sky-400">{weightOpenness} / 10</span>
+                <span className="font-mono font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-100">
+                  {weightOpenness} / 10
+                </span>
               </div>
               <input
                 type="range"
@@ -363,17 +367,19 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 max="10"
                 value={weightOpenness}
                 onChange={(e) => setWeightOpenness(Number(e.target.value))}
-                className="w-full accent-sky-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+                className="w-full accent-sky-600 bg-slate-200 h-2 rounded-lg cursor-pointer"
               />
             </div>
 
             <div>
-              <div className="flex justify-between text-xs font-bold text-slate-300 mb-1">
+              <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
                 <span className="flex items-center">
-                  <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-400" />
+                  <Sparkles className="w-3.5 h-3.5 mr-1 text-emerald-600" />
                   极简耐脏与低打理维护
                 </span>
-                <span className="font-mono text-emerald-400">{weightMaintenance} / 10</span>
+                <span className="font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                  {weightMaintenance} / 10
+                </span>
               </div>
               <input
                 type="range"
@@ -381,17 +387,19 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 max="10"
                 value={weightMaintenance}
                 onChange={(e) => setWeightMaintenance(Number(e.target.value))}
-                className="w-full accent-emerald-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+                className="w-full accent-emerald-600 bg-slate-200 h-2 rounded-lg cursor-pointer"
               />
             </div>
 
             <div>
-              <div className="flex justify-between text-xs font-bold text-slate-300 mb-1">
+              <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
                 <span className="flex items-center">
-                  <DollarSign className="w-3.5 h-3.5 mr-1 text-amber-400" />
+                  <DollarSign className="w-3.5 h-3.5 mr-1 text-amber-600" />
                   造价性价比与预算控制
                 </span>
-                <span className="font-mono text-amber-400">{weightBudget} / 10</span>
+                <span className="font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-100">
+                  {weightBudget} / 10
+                </span>
               </div>
               <input
                 type="range"
@@ -399,17 +407,19 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 max="10"
                 value={weightBudget}
                 onChange={(e) => setWeightBudget(Number(e.target.value))}
-                className="w-full accent-amber-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+                className="w-full accent-amber-600 bg-slate-200 h-2 rounded-lg cursor-pointer"
               />
             </div>
 
             <div>
-              <div className="flex justify-between text-xs font-bold text-slate-300 mb-1">
+              <div className="flex justify-between text-xs font-bold text-slate-700 mb-1">
                 <span className="flex items-center">
-                  <Moon className="w-3.5 h-3.5 mr-1 text-purple-400" />
+                  <Moon className="w-3.5 h-3.5 mr-1 text-purple-600" />
                   睡眠静音与治愈放松感
                 </span>
-                <span className="font-mono text-purple-400">{weightSleep} / 10</span>
+                <span className="font-mono font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-100">
+                  {weightSleep} / 10
+                </span>
               </div>
               <input
                 type="range"
@@ -417,14 +427,14 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 max="10"
                 value={weightSleep}
                 onChange={(e) => setWeightSleep(Number(e.target.value))}
-                className="w-full accent-purple-400 bg-slate-800 h-2 rounded-lg cursor-pointer"
+                className="w-full accent-purple-600 bg-slate-200 h-2 rounded-lg cursor-pointer"
               />
             </div>
           </div>
 
-          {/* Real-time Dynamic Recommendation Ranking */}
-          <div className="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-2">
-            <div className="text-[11px] font-bold text-slate-400 uppercase">
+          {/* Dynamic Ranking */}
+          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               基于权重的智能推荐排名
             </div>
             {rankedStyles.map((style, idx) => {
@@ -433,19 +443,19 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 <div
                   key={style.id}
                   onClick={() => setSelectedStyleId(style.id)}
-                  className={`flex items-center justify-between p-2 rounded-xl text-xs cursor-pointer transition-all ${
+                  className={`flex items-center justify-between p-2.5 rounded-xl text-xs cursor-pointer transition-all ${
                     selectedStyleId === style.id
-                      ? "bg-cyan-500/20 border border-cyan-500/40 text-cyan-300"
-                      : "hover:bg-slate-900 text-slate-300"
+                      ? "bg-blue-600 text-white font-bold shadow-sm"
+                      : "hover:bg-white text-slate-700 border border-transparent hover:border-slate-200"
                   }`}
                 >
                   <div className="flex items-center space-x-2">
                     <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold text-[10px] ${
-                      idx === 0 ? "bg-amber-400 text-black" : "bg-slate-800 text-slate-400"
+                      idx === 0 ? "bg-amber-400 text-slate-900" : "bg-slate-200 text-slate-600"
                     }`}>
                       {idx + 1}
                     </span>
-                    <span className="font-bold">{style.name}</span>
+                    <span>{style.name}</span>
                   </div>
                   <span className="font-mono font-bold">{score} 分</span>
                 </div>
@@ -455,18 +465,18 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
         </div>
 
         {/* Right: 6-Dimensional Radar Chart & Metrics Breakdown (7 Columns) */}
-        <div className="lg:col-span-7 glass-panel p-6 rounded-3xl border border-slate-800 space-y-6">
+        <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
           <div>
-            <h3 className="text-lg font-black text-slate-100">
+            <h3 className="text-lg font-black text-slate-900">
               六维综合雷达量化评分
             </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 mt-1">
               对比各风格在通透度、耐脏度、性价比、极客契合度、睡眠舒缓与保值率上的客观量化表现
             </p>
           </div>
 
-          {/* SVG Radar Chart Visualization */}
-          <div className="relative w-full aspect-[16/10] bg-slate-950/80 rounded-2xl border border-slate-800/80 p-4 flex items-center justify-center overflow-hidden">
+          {/* SVG Radar Chart Visualization (Light Modern) */}
+          <div className="relative w-full aspect-[16/10] bg-slate-50 rounded-2xl border border-slate-200 p-4 flex items-center justify-center overflow-hidden">
             <svg viewBox="0 0 400 320" className="w-full h-full max-w-[460px]">
               {/* Concentric Hexagonal Grids */}
               {[0.2, 0.4, 0.6, 0.8, 1.0].map((level, i) => (
@@ -475,26 +485,26 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                   points="200,30 330,95 330,225 200,290 70,225 70,95"
                   transform={`scale(${level}) translate(${200 * (1 - level) / level}, ${160 * (1 - level) / level})`}
                   fill="none"
-                  stroke="rgba(148, 163, 184, 0.15)"
+                  stroke="#cbd5e1"
                   strokeWidth="1"
                 />
               ))}
 
               {/* Axis Lines */}
-              <line x1="200" y1="160" x2="200" y2="30" stroke="rgba(148, 163, 184, 0.2)" strokeWidth="1" />
-              <line x1="200" y1="160" x2="330" y2="95" stroke="rgba(148, 163, 184, 0.2)" strokeWidth="1" />
-              <line x1="200" y1="160" x2="330" y2="225" stroke="rgba(148, 163, 184, 0.2)" strokeWidth="1" />
-              <line x1="200" y1="160" x2="200" y2="290" stroke="rgba(148, 163, 184, 0.2)" strokeWidth="1" />
-              <line x1="200" y1="160" x2="70" y2="225" stroke="rgba(148, 163, 184, 0.2)" strokeWidth="1" />
-              <line x1="200" y1="160" x2="70" y2="95" stroke="rgba(148, 163, 184, 0.2)" strokeWidth="1" />
+              <line x1="200" y1="160" x2="200" y2="30" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="200" y1="160" x2="330" y2="95" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="200" y1="160" x2="330" y2="225" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="200" y1="160" x2="200" y2="290" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="200" y1="160" x2="70" y2="225" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="200" y1="160" x2="70" y2="95" stroke="#cbd5e1" strokeWidth="1" />
 
               {/* Dimension Labels */}
-              <text x="200" y="20" textAnchor="middle" fill="#38bdf8" fontSize="11" fontWeight="bold">空间通透采光 (Openness)</text>
-              <text x="340" y="95" textAnchor="start" fill="#f59e0b" fontSize="11" fontWeight="bold">耐脏低打理 (Maintenance)</text>
-              <text x="340" y="235" textAnchor="start" fill="#10b981" fontSize="11" fontWeight="bold">造价性价比 (Cost)</text>
-              <text x="200" y="310" textAnchor="middle" fill="#a855f7" fontSize="11" fontWeight="bold">极客工位契合 (Geek)</text>
-              <text x="60" y="235" textAnchor="end" fill="#ec4899" fontSize="11" fontWeight="bold">睡眠舒缓感 (Sleep)</text>
-              <text x="60" y="95" textAnchor="end" fill="#6366f1" fontSize="11" fontWeight="bold">资产保值率 (Resale)</text>
+              <text x="200" y="20" textAnchor="middle" fill="#0284c7" fontSize="11" fontWeight="bold">空间通透采光 (Openness)</text>
+              <text x="340" y="95" textAnchor="start" fill="#d97706" fontSize="11" fontWeight="bold">耐脏低打理 (Maintenance)</text>
+              <text x="340" y="235" textAnchor="start" fill="#059669" fontSize="11" fontWeight="bold">造价性价比 (Cost)</text>
+              <text x="200" y="310" textAnchor="middle" fill="#7c3aed" fontSize="11" fontWeight="bold">极客工位契合 (Geek)</text>
+              <text x="60" y="235" textAnchor="end" fill="#db2777" fontSize="11" fontWeight="bold">睡眠舒缓感 (Sleep)</text>
+              <text x="60" y="95" textAnchor="end" fill="#4f46e5" fontSize="11" fontWeight="bold">资产保值率 (Resale)</text>
 
               {/* Render Active Selected Style Radar Polygon */}
               {(() => {
@@ -515,12 +525,12 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                   <>
                     <polygon
                       points={pointsStr}
-                      fill="rgba(56, 189, 248, 0.35)"
-                      stroke="#38bdf8"
+                      fill="rgba(37, 99, 235, 0.18)"
+                      stroke="#2563eb"
                       strokeWidth="2.5"
                     />
                     {[p1, p2, p3, p4, p5, p6].map((p, i) => (
-                      <circle key={i} cx={p[0]} cy={p[1]} r="4" fill="#00f0ff" stroke="#0f172a" strokeWidth="2" />
+                      <circle key={i} cx={p[0]} cy={p[1]} r="4.5" fill="#2563eb" stroke="#ffffff" strokeWidth="2" />
                     ))}
                   </>
                 );
@@ -534,15 +544,15 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
             return (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Pros */}
-                <div className="bg-slate-950/80 p-4 rounded-2xl border border-emerald-500/20 space-y-2">
-                  <div className="flex items-center space-x-2 text-emerald-400 font-bold text-xs">
-                    <CheckCircle2 className="w-4 h-4" />
+                <div className="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-200 space-y-2">
+                  <div className="flex items-center space-x-2 text-emerald-800 font-bold text-xs">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                     <span>核心设计优势 (Pros)</span>
                   </div>
-                  <ul className="space-y-1.5 text-xs text-slate-300">
+                  <ul className="space-y-1.5 text-xs text-slate-700">
                     {s.pros.map((p, idx) => (
                       <li key={idx} className="flex items-start space-x-1.5">
-                        <span className="text-emerald-400 font-bold">✓</span>
+                        <span className="text-emerald-600 font-bold">✓</span>
                         <span>{p}</span>
                       </li>
                     ))}
@@ -550,15 +560,15 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 </div>
 
                 {/* Cons / Attention */}
-                <div className="bg-slate-950/80 p-4 rounded-2xl border border-amber-500/20 space-y-2">
-                  <div className="flex items-center space-x-2 text-amber-400 font-bold text-xs">
-                    <ShieldAlert className="w-4 h-4" />
+                <div className="bg-amber-50/60 p-4 rounded-2xl border border-amber-200 space-y-2">
+                  <div className="flex items-center space-x-2 text-amber-800 font-bold text-xs">
+                    <ShieldAlert className="w-4 h-4 text-amber-600" />
                     <span>施工与维护注意事项 (Notes)</span>
                   </div>
-                  <ul className="space-y-1.5 text-xs text-slate-300">
+                  <ul className="space-y-1.5 text-xs text-slate-700">
                     {s.cons.map((c, idx) => (
                       <li key={idx} className="flex items-start space-x-1.5">
-                        <span className="text-amber-400 font-bold">!</span>
+                        <span className="text-amber-600 font-bold">!</span>
                         <span>{c}</span>
                       </li>
                     ))}

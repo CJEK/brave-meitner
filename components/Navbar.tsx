@@ -9,7 +9,6 @@ import {
   Cpu, 
   Calculator, 
   Download, 
-  Sun, 
   Sparkles, 
   Ruler, 
   Droplets 
@@ -42,30 +41,30 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full glass-panel border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo & Property Meta */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/20 text-white font-black tracking-wider">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/10 text-white font-black tracking-wider">
               PG
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-bold text-slate-100 text-sm sm:text-base tracking-wide">
+                <span className="font-bold text-slate-900 text-sm sm:text-base tracking-wide">
                   Paragon Gateway
                 </span>
-                <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-mono">
+                <span className="px-2 py-0.5 text-xs font-semibold rounded-md bg-blue-50 text-blue-700 border border-blue-200 font-mono">
                   {PROPERTY_DATA.unitNo}
                 </span>
               </div>
-              <p className="text-xs text-slate-400 hidden sm:block">
+              <p className="text-xs text-slate-500 hidden sm:block">
                 Type B 右向 · 648 sq ft (60.22 ㎡) · 24F 高层无遮挡
               </p>
             </div>
           </div>
 
-          {/* Navigation Links */}
+          {/* Desktop Navigation Links */}
           <nav className="hidden xl:flex items-center space-x-1">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -74,13 +73,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 ${
                     isActive
-                      ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
-                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                      ? "bg-slate-900 text-white shadow-sm font-semibold"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-cyan-400" : "text-slate-400"}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? "text-blue-400" : "text-slate-500"}`} />
                   <span>{item.label}</span>
                 </button>
               );
@@ -90,17 +89,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Style Selector & Actions */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Quick Style Switcher */}
-            <div className="relative flex items-center bg-slate-900 border border-slate-700/60 rounded-lg p-1">
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider px-1.5 hidden md:inline-block">
+            <div className="relative flex items-center bg-slate-50 border border-slate-200 rounded-lg p-1">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider px-1.5 hidden md:inline-block font-semibold">
                 风格:
               </span>
               <select
                 value={selectedStyleId}
                 onChange={(e) => setSelectedStyleId(e.target.value)}
-                className="bg-transparent text-xs font-medium text-slate-200 focus:outline-none cursor-pointer pr-1"
+                className="bg-transparent text-xs font-semibold text-slate-800 focus:outline-none cursor-pointer pr-1"
               >
                 {STYLES_DATA.map((s) => (
-                  <option key={s.id} value={s.id} className="bg-slate-900 text-slate-200">
+                  <option key={s.id} value={s.id} className="bg-white text-slate-800">
                     {s.name}
                   </option>
                 ))}
@@ -110,7 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Export Decision Report Button */}
             <button
               onClick={onOpenReport}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-semibold text-xs transition-all shadow-md shadow-cyan-500/20 active:scale-95"
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-all shadow-sm shadow-blue-500/20 active:scale-95"
             >
               <Download className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">导出决策报告</span>
@@ -121,7 +120,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Mobile / Medium Screen Sub-Navigation */}
-      <div className="flex xl:hidden overflow-x-auto px-4 py-2 bg-slate-900/90 border-t border-slate-800/60 space-x-2 no-scrollbar">
+      <div className="flex xl:hidden overflow-x-auto px-4 py-2 bg-slate-50 border-t border-slate-200 space-x-2 no-scrollbar">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -129,10 +128,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`flex-shrink-0 flex items-center space-x-1 px-3 py-1.5 rounded-md text-xs font-medium ${
+              className={`flex-shrink-0 flex items-center space-x-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                 isActive
-                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/30"
-                  : "text-slate-400 hover:bg-slate-800"
+                  ? "bg-slate-900 text-white shadow-sm font-semibold"
+                  : "text-slate-600 hover:bg-slate-200/60"
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
