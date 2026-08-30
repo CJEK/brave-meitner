@@ -22,7 +22,9 @@ import {
   ChevronLeft,
   ChevronRight,
   RotateCcw,
-  Box
+  Box,
+  Play,
+  Pause
 } from "lucide-react";
 import { ZONES_DATA, STYLES_DATA, PROPERTY_DATA, ZoneData } from "@/data/projectData";
 import { getJohorSunData, SOLAR_PRESETS, JB_LOCATION } from "@/utils/solarCalculator";
@@ -114,6 +116,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const [activeZone, setActiveZone] = useState<ZoneData>(ZONES_DATA[3]); // Default to Living Room
   const [viewMode, setViewMode] = useState<"3d" | "2.5d">("3d");
   const [cameraPreset, setCameraPreset] = useState<"birds-eye" | "iso-2.5d" | "living" | "workstation" | "bedroom" | "balcony">("birds-eye");
+  const [isAutoRotating, setIsAutoRotating] = useState<boolean>(false);
   
   // Layer Toggles - ALL DEFAULT FALSE for a crystal-clean, uncluttered 3D experience
   const [showDimensions, setShowDimensions] = useState<boolean>(false);
@@ -182,7 +185,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     // Perspective Camera: fov 45, near 0.1, far 1000
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     cameraRef.current = camera;
-    camera.position.set(0, 9, 7);
+    camera.position.set(0, 9.5, 7.5);
 
     // WebGL Renderer with graceful fallback
     let renderer: THREE.WebGLRenderer;
@@ -208,17 +211,17 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     mountRef.current.innerHTML = "";
     mountRef.current.appendChild(renderer.domElement);
 
-    // Initialize CameraControls with maxPolarAngle limit
+    // Initialize CameraControls with maxPolarAngle limit & smooth inertia
     const controls = new CameraControls(camera, renderer.domElement);
     controls.smoothTime = 0.35;
     controls.draggingSmoothTime = 0.12;
     controls.maxDistance = 24;
     controls.minDistance = 3.5;
-    controls.maxPolarAngle = Math.PI / 2.2; // ~81.8 degrees, prevents clipping below ground
+    controls.maxPolarAngle = Math.PI / 2.15; // prevents clipping below ground
     controlsRef.current = controls;
 
     // Clean 45-degree Isometric Bird's-eye Perspective
-    controls.setLookAt(0, 9, 7, 0, 0, 0, false);
+    controls.setLookAt(0, 9.5, 7.5, 0, 0, 0, false);
 
     // Attach Raycasting Click Handler & Context Lost Handler
     const domElem = renderer.domElement;
@@ -572,6 +575,11 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       const delta = clock.getDelta();
       const elapsedTime = clock.getElapsedTime();
 
+      // Auto-rotation if enabled
+      if (isAutoRotating && controlsRef.current) {
+        controlsRef.current.azimuthAngle += delta * 0.25;
+      }
+
       // Update CameraControls
       controls.update(delta);
 
@@ -627,6 +635,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     // Strict Memory Cleanup on Unmount
     return () => {
       domElem.removeEventListener("click", handleCanvasClick);
+      domElem.removeEventListener("webglcontextlost", handleContextLost);
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameId);
 
@@ -655,7 +664,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       renderer.dispose();
       renderer.forceContextLoss();
     };
-  }, [viewMode, selectedStyleId, handleCanvasClick, showMEP, showSmartHome]);
+  }, [viewMode, selectedStyleId, handleCanvasClick, showMEP, showSmartHome, isAutoRotating]);
 
   // 2. Update Highlight Mesh Position strictly restricted to the selected room's partition walls
   useEffect(() => {
@@ -721,32 +730,33 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, [showDimensions]);
 
-  // 5. Smooth Camera Preset Navigation with CameraControls (Clean 45-degree isometric perspective)
-  useEffect(() => {
+  // 5. Smooth Camera Preset Navigation with CameraControls (Smooth Pan & Zoom Animation)
+  const applyCameraPreset = (preset: "birds-eye" | "iso-2.5d" | "living" | "workstation" | "bedroom" | "balcony") => {
+    setCameraPreset(preset);
     if (!controlsRef.current) return;
     const ctrl = controlsRef.current;
 
-    switch (cameraPreset) {
+    switch (preset) {
       case "birds-eye":
-        ctrl.setLookAt(0, 9, 7, 0, 0, 0, true);
+        ctrl.setLookAt(0, 10, 8, 0, 0, 0, true);
         break;
       case "iso-2.5d":
-        ctrl.setLookAt(8.5, 8.5, 8.5, 0, 0, 0, true);
+        ctrl.setLookAt(8, 8, 8, 0, 0, 0, true);
         break;
       case "living":
-        ctrl.setLookAt(1.5, 4.5, 4.2, 1.5, 0.3, 1.8, true);
+        ctrl.setLookAt(1.5, 3.8, 4.2, 1.5, 0.4, 1.8, true);
         break;
       case "workstation":
-        ctrl.setLookAt(-1.5, 4.2, 2.8, -1.5, 0.3, 0.8, true);
+        ctrl.setLookAt(-1.5, 3.5, 2.6, -1.5, 0.4, 0.8, true);
         break;
       case "bedroom":
-        ctrl.setLookAt(-1.8, 4.2, 5.2, -1.8, 0.3, 3.0, true);
+        ctrl.setLookAt(-1.8, 3.5, 5.0, -1.8, 0.4, 3.0, true);
         break;
       case "balcony":
-        ctrl.setLookAt(1.5, 2.8, 2.2, 1.5, 0.3, 4.28, true);
+        ctrl.setLookAt(1.5, 2.4, 2.0, 1.5, 0.4, 4.28, true);
         break;
     }
-  }, [cameraPreset]);
+  };
 
   // Scroll Bottom Bar horizontally
   const scrollBottom = (direction: "left" | "right") => {
@@ -804,7 +814,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           ))}
         </div>
 
-        {/* Group 3: 4 Layer Switches with High-Contrast Active States (Default OFF for Clean Canvas) */}
+        {/* Group 3: 4 Layer Switches with High-Contrast Active States */}
         <div className="flex flex-wrap items-center gap-1.5">
           <button
             onClick={() => setShowDimensions(!showDimensions)}
@@ -851,7 +861,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             }`}
           >
             <Wind className="w-3.5 h-3.5" />
-            <span>微气候</span>
+            <span>微气候 {showMicroclimate ? "✓" : ""}</span>
           </button>
         </div>
       </div>
@@ -861,7 +871,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
         {/* 3D / 2.5D Viewport (8 Columns) */}
         <div className="lg:col-span-8 relative rounded-3xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm flex flex-col min-h-[560px]">
           {/* Top Camera Presets Overlay */}
-          <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-1.5 bg-white/95 backdrop-blur-md p-1.5 rounded-xl border border-slate-200 shadow-sm">
+          <div className="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-1.5 bg-white/95 backdrop-blur-md p-1.5 rounded-xl border border-slate-200 shadow-sm">
             <span className="text-[10px] text-slate-500 font-semibold px-2 py-1 flex items-center">
               <Eye className="w-3 h-3 mr-1 text-blue-600" />
               视角:
@@ -869,7 +879,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <button
               onClick={() => {
                 setViewMode("3d");
-                setCameraPreset("birds-eye");
+                applyCameraPreset("birds-eye");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 viewMode === "3d" && cameraPreset === "birds-eye"
@@ -882,7 +892,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <button
               onClick={() => {
                 setViewMode("3d");
-                setCameraPreset("iso-2.5d");
+                applyCameraPreset("iso-2.5d");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 viewMode === "3d" && cameraPreset === "iso-2.5d"
@@ -895,7 +905,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <button
               onClick={() => {
                 setViewMode("3d");
-                setCameraPreset("living");
+                applyCameraPreset("living");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "living"
@@ -908,7 +918,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <button
               onClick={() => {
                 setViewMode("3d");
-                setCameraPreset("workstation");
+                applyCameraPreset("workstation");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "workstation"
@@ -921,7 +931,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <button
               onClick={() => {
                 setViewMode("3d");
-                setCameraPreset("bedroom");
+                applyCameraPreset("bedroom");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "bedroom"
@@ -934,7 +944,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <button
               onClick={() => {
                 setViewMode("3d");
-                setCameraPreset("balcony");
+                applyCameraPreset("balcony");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                 cameraPreset === "balcony"
@@ -944,6 +954,22 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             >
               24F 阳台视野
             </button>
+
+            {/* Auto-Rotate 360° Toggle */}
+            {viewMode === "3d" && (
+              <button
+                onClick={() => setIsAutoRotating(!isAutoRotating)}
+                className={`ml-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 ${
+                  isAutoRotating
+                    ? "bg-amber-500 text-white shadow-2xs"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+                title="开启/暂停 3D 自动平滑环绕"
+              >
+                {isAutoRotating ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
+                <span>{isAutoRotating ? "暂停漫游" : "360° 漫游"}</span>
+              </button>
+            )}
           </div>
 
           {/* Compass & Solar Altitude Badge (Guaranteed 0° ~ 90°) */}
@@ -1007,7 +1033,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               </div>
             </div>
           ) : (
-            /* 2.5D ISOMETRIC ARCHITECTURAL BIM BLUEPRINT (1:1 Exact 6.9m × 9.725m Scale, 52%/48% East/West Split, 900mm Doors with Opening Arcs, 1:1 Furniture Line Art) */
+            /* 2.5D ISOMETRIC ARCHITECTURAL BIM BLUEPRINT (1:1 Exact 6.9m × 9.725m Scale, 52%/48% East/West Split, Interactive Layer Overlays) */
             <div className="w-full flex-1 min-h-[520px] p-6 bg-slate-100 relative overflow-hidden flex items-center justify-center">
               <div className="relative w-full max-w-[620px] aspect-[690/972.5] bg-[#ede8df] rounded-3xl border-4 border-slate-300 p-4 shadow-xl overflow-hidden flex flex-col justify-between">
                 
@@ -1225,6 +1251,101 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                     <circle cx="500" cy="910" r="14" fill="#bae6fd" stroke="#0284c7" strokeWidth="1.5" />
                     <text x="506" y="935" fill="#0369a1" fontSize="18" fontWeight="bold" textAnchor="middle">南向阳台 BALCONY (4.2㎡)</text>
                   </g>
+
+                  {/* ========================================================================= */}
+                  {/* 3. INTERACTIVE 2.5D SVG LAYER OVERLAYS */}
+                  {/* ========================================================================= */}
+
+                  {/* Layer A: Dimensions (6,900 mm × 9,725 mm) */}
+                  {showDimensions && (
+                    <g className="animate-fadeIn">
+                      {/* Top Overall Width Dimension */}
+                      <line x1="12" y1="2" x2="678" y2="2" stroke="#059669" strokeWidth="2.5" />
+                      <line x1="12" y1="-2" x2="12" y2="6" stroke="#059669" strokeWidth="2" />
+                      <line x1="678" y1="-2" x2="678" y2="6" stroke="#059669" strokeWidth="2" />
+                      <rect x="290" y="0" width="110" height="20" fill="#ecfdf5" stroke="#059669" rx="4" />
+                      <text x="345" y="14" fill="#065f46" fontSize="12" fontWeight="bold" textAnchor="middle">总宽 6,900 mm</text>
+
+                      {/* Right Overall Depth Dimension */}
+                      <line x1="684" y1="12" x2="684" y2="960" stroke="#2563eb" strokeWidth="2.5" />
+                      <line x1="680" y1="12" x2="688" y2="12" stroke="#2563eb" strokeWidth="2" />
+                      <line x1="680" y1="960" x2="688" y2="960" stroke="#2563eb" strokeWidth="2" />
+                      <rect x="630" y="470" width="55" height="22" fill="#eff6ff" stroke="#2563eb" rx="4" transform="rotate(-90 657 481)" />
+                      <text x="657" y="485" fill="#1e40af" fontSize="12" fontWeight="bold" textAnchor="middle" transform="rotate(-90 657 485)">总深 9,725 mm</text>
+
+                      {/* Public vs Private Split */}
+                      <text x="165" y="32" fill="#7c3aed" fontSize="12" fontWeight="bold" textAnchor="middle">私区净宽 3,300 mm (48%)</text>
+                      <text x="506" y="32" fill="#2563eb" fontSize="12" fontWeight="bold" textAnchor="middle">公区净宽 3,600 mm (52%)</text>
+                    </g>
+                  )}
+
+                  {/* Layer B: MEP (交标机电点位) */}
+                  {showMEP && (
+                    <g className="animate-fadeIn">
+                      {/* DB Box */}
+                      <rect x="580" y="25" width="80" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
+                      <text x="620" y="40" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ DB配电总箱</text>
+                      
+                      {/* Living TV & AC */}
+                      <rect x="575" y="525" width="80" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
+                      <text x="615" y="540" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ 15A 空调点</text>
+                      <rect x="575" y="660" width="80" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
+                      <text x="615" y="675" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ SMATV 电视点</text>
+
+                      {/* Study Desk Power */}
+                      <rect x="110" y="420" width="85" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
+                      <text x="152" y="435" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ 8组桌面插座</text>
+
+                      {/* Vanity IP44 */}
+                      <rect x="35" y="195" width="95" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
+                      <text x="82" y="210" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ 1.5m 镜柜插座</text>
+
+                      {/* Yard Water */}
+                      <rect x="25" y="95" width="85" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
+                      <text x="67" y="110" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ 洗衣机给排水</text>
+                    </g>
+                  )}
+
+                  {/* Layer C: Smart Home (Aqara 智能) */}
+                  {showSmartHome && (
+                    <g className="animate-fadeIn">
+                      {/* D200 Face Lock */}
+                      <rect x="560" y="120" width="95" height="22" fill="#f3e8ff" stroke="#9333ea" rx="6" />
+                      <text x="607" y="135" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">🤖 D200人脸锁</text>
+
+                      {/* Living FP2 Radar */}
+                      <rect x="420" y="550" width="90" height="22" fill="#f3e8ff" stroke="#9333ea" rx="6" />
+                      <text x="465" y="565" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">🤖 FP2 客厅雷达</text>
+
+                      {/* Study FP2 Radar */}
+                      <rect x="180" y="420" width="90" height="22" fill="#f3e8ff" stroke="#9333ea" rx="6" />
+                      <text x="225" y="435" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">🤖 FP2 坐姿雷达</text>
+
+                      {/* C3 Curtains */}
+                      <rect x="450" y="830" width="90" height="22" fill="#f3e8ff" stroke="#9333ea" rx="6" />
+                      <text x="495" y="845" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">🤖 C3 南向双轨帘</text>
+                      <rect x="110" y="930" width="90" height="22" fill="#f3e8ff" stroke="#9333ea" rx="6" />
+                      <text x="155" y="945" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">🤖 C3 主卧静音帘</text>
+                    </g>
+                  )}
+
+                  {/* Layer D: Microclimate Airflow & Sunbeams */}
+                  {showMicroclimate && (
+                    <g className="animate-fadeIn">
+                      {/* SSE 165° Sunlight Rays entering Balcony */}
+                      <path d="M 506 960 L 460 750" stroke="#f59e0b" strokeWidth="4" strokeDasharray="8 4" opacity="0.8" />
+                      <path d="M 420 960 L 380 780" stroke="#f59e0b" strokeWidth="4" strokeDasharray="8 4" opacity="0.8" />
+                      <path d="M 580 960 L 530 760" stroke="#f59e0b" strokeWidth="4" strokeDasharray="8 4" opacity="0.8" />
+                      <rect x="410" y="770" width="180" height="24" fill="#fef3c7" stroke="#d97706" rx="6" />
+                      <text x="500" y="786" fill="#92400e" fontSize="12" fontWeight="bold" textAnchor="middle">☀️ SSE 165° 晨曦漫射 (零西晒)</text>
+
+                      {/* Cross Ventilation Airflow Arrow */}
+                      <path d="M 506 820 C 506 500, 480 300, 168 160" fill="none" stroke="#10b981" strokeWidth="4" strokeDasharray="6 6" />
+                      <polygon points="160,160 175,152 172,168" fill="#10b981" />
+                      <rect x="360" y="440" width="130" height="24" fill="#ecfdf5" stroke="#10b981" rx="6" />
+                      <text x="425" y="456" fill="#065f46" fontSize="12" fontWeight="bold" textAnchor="middle">🌬️ 南北穿堂自然风</text>
+                    </g>
+                  )}
                 </svg>
 
                 {/* 2.5D Isometric Status Overlay */}
