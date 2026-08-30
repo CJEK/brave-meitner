@@ -76,7 +76,7 @@ const STYLE_THEMES: { [id: string]: StyleThemeConfig } = {
     lightAmbient: 0xffffff
   },
   "dark-luxury": {
-    floorHex: 0x1c1917, floorSvg: "#1c1917",
+    floorHex: 0x18181b, floorSvg: "#18181b",
     wallHex: 0x27272a, wallSvg: "#27272a",
     wallEdgeHex: 0x09090b, wallEdgeSvg: "#09090b",
     sofaHex: 0x451a03, sofaSvg: "#451a03",
@@ -85,7 +85,7 @@ const STYLE_THEMES: { [id: string]: StyleThemeConfig } = {
     lightAmbient: 0xfef3c7
   },
   "italian-luxury": {
-    floorHex: 0x1c1917, floorSvg: "#1c1917",
+    floorHex: 0x18181b, floorSvg: "#18181b",
     wallHex: 0x27272a, wallSvg: "#27272a",
     wallEdgeHex: 0x09090b, wallEdgeSvg: "#09090b",
     sofaHex: 0x451a03, sofaSvg: "#451a03",
@@ -111,6 +111,22 @@ const STYLE_THEMES: { [id: string]: StyleThemeConfig } = {
     accentHex: 0x06b6d4, accentSvg: "#06b6d4",
     lightAmbient: 0xe0f2fe
   }
+};
+
+// 2.5D SVG ViewBox Presets for Smooth Zoom & Focus Transitions
+const ZONE_VIEWBOXES: { [key: string]: string } = {
+  "birds-eye": "0 0 690 972.5",
+  "iso-2.5d": "0 0 690 972.5",
+  "all": "0 0 690 972.5",
+  "entrance": "300 0 380 180",
+  "kitchen": "300 140 380 200",
+  "dining": "300 290 380 220",
+  "living": "300 470 380 370",
+  "balcony": "300 790 380 180",
+  "yard": "0 0 350 190",
+  "bathroom": "0 160 350 260",
+  "study": "0 390 350 230",
+  "bedroom": "0 580 350 390"
 };
 
 // 1:1 Standard Coordinate System: Width X [-3.45, +3.45] (6.9m), Depth Z [-4.8625, +4.8625] (9.725m), Origin (0,0,0) at Geometric Center
@@ -192,7 +208,8 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const [viewMode, setViewMode] = useState<"3d" | "2.5d">("3d");
   const [cameraPreset, setCameraPreset] = useState<"birds-eye" | "iso-2.5d" | "living" | "workstation" | "bedroom" | "balcony">("birds-eye");
   const [isAutoRotating, setIsAutoRotating] = useState<boolean>(false);
-  const [isIsometricPerspective, setIsIsometricPerspective] = useState<boolean>(true); // 3D Isometric Axonometric tilt in 2.5D mode
+  const [isIsometricPerspective, setIsIsometricPerspective] = useState<boolean>(true);
+  const [svgViewBox, setSvgViewBox] = useState<string>("0 0 690 972.5");
   
   // Layer Toggles
   const [showDimensions, setShowDimensions] = useState<boolean>(false);
@@ -221,6 +238,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const furnitureGroupRef = useRef<THREE.Group | null>(null);
   const clickableZonesRef = useRef<THREE.Mesh[]>([]);
   const bottomScrollRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   // Handle Raycasting Pointer Click
   const handleCanvasClick = useCallback((event: MouseEvent) => {
@@ -242,6 +260,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
         const found = ZONES_DATA.find((z) => z.id === zoneId);
         if (found) {
           setActiveZone(found);
+          if (ZONE_VIEWBOXES[zoneId]) {
+            setSvgViewBox(ZONE_VIEWBOXES[zoneId]);
+          }
         }
       }
     }
@@ -694,9 +715,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, [showDimensions]);
 
-  // 5. Smooth Camera Preset Navigation with CameraControls
+  // 5. Smooth Camera Preset Navigation & SVG ViewBox Focus Transition
   const applyCameraPreset = (preset: "birds-eye" | "iso-2.5d" | "living" | "workstation" | "bedroom" | "balcony") => {
     setCameraPreset(preset);
+    if (ZONE_VIEWBOXES[preset]) {
+      setSvgViewBox(ZONE_VIEWBOXES[preset]);
+    }
+
     if (!controlsRef.current) return;
     const ctrl = controlsRef.current;
 
@@ -730,6 +755,16 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       });
     }
   };
+
+  // Time of day lighting filter for 2.5D SVG
+  const timeFilterStyle = 
+    timeOfDay === "morning"
+      ? "drop-shadow(0px 10px 28px rgba(251, 191, 36, 0.35)) saturate(1.15)"
+      : timeOfDay === "sunset"
+      ? "drop-shadow(0px 10px 28px rgba(249, 115, 22, 0.45)) hue-rotate(-8deg) saturate(1.25)"
+      : timeOfDay === "night"
+      ? "brightness(0.68) contrast(1.28)"
+      : "brightness(1.02) contrast(1.02)";
 
   return (
     <div className="space-y-6">
@@ -847,7 +882,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                 applyCameraPreset("birds-eye");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
-                viewMode === "3d" && cameraPreset === "birds-eye"
+                cameraPreset === "birds-eye"
                   ? "bg-slate-900 text-white font-semibold shadow-2xs"
                   : "text-slate-600 hover:text-slate-900"
               }`}
@@ -860,7 +895,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                 applyCameraPreset("iso-2.5d");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
-                viewMode === "3d" && cameraPreset === "iso-2.5d"
+                cameraPreset === "iso-2.5d"
                   ? "bg-blue-600 text-white font-semibold shadow-2xs"
                   : "text-slate-600 hover:text-slate-900"
               }`}
@@ -869,7 +904,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </button>
             <button
               onClick={() => {
-                setViewMode("3d");
                 applyCameraPreset("living");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
@@ -882,7 +916,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </button>
             <button
               onClick={() => {
-                setViewMode("3d");
                 applyCameraPreset("workstation");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
@@ -895,7 +928,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </button>
             <button
               onClick={() => {
-                setViewMode("3d");
                 applyCameraPreset("bedroom");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
@@ -908,7 +940,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </button>
             <button
               onClick={() => {
-                setViewMode("3d");
                 applyCameraPreset("balcony");
               }}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
@@ -939,7 +970,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             {/* 2.5D Isometric 3D Axonometric Tilt Toggle */}
             {viewMode === "2.5d" && (
               <button
-                onClick={() => setIsIsometricPerspective(!isIsometricPerspective)}
+                onClick={() => {
+                  setIsIsometricPerspective(!isIsometricPerspective);
+                  setSvgViewBox("0 0 690 972.5");
+                }}
                 className={`ml-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 ${
                   isIsometricPerspective
                     ? "bg-blue-600 text-white shadow-2xs"
@@ -1046,8 +1080,16 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                 className="relative w-full max-w-[580px] aspect-[690/972.5] rounded-3xl border-4 border-slate-700/80 p-4 shadow-2xl overflow-hidden flex flex-col justify-between"
               >
                 
-                {/* SVG Isometric Architectural Floor Plan */}
-                <svg viewBox="0 0 690 972.5" className="w-full h-full select-none">
+                {/* SVG Isometric Architectural Floor Plan with Dynamic ViewBox Transition & CSS Variables */}
+                <svg 
+                  ref={svgRef}
+                  viewBox={svgViewBox} 
+                  style={{
+                    filter: timeFilterStyle,
+                    transition: "viewBox 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease"
+                  }}
+                  className="w-full h-full select-none"
+                >
                   {/* Outer Perimeter Wall */}
                   <rect x="6" y="6" width="678" height="960.5" fill="none" stroke={currentTheme.wallEdgeSvg} strokeWidth="12" rx="14" />
 
@@ -1055,7 +1097,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   <line x1="330" y1="6" x2="330" y2="966.5" stroke={currentTheme.wallEdgeSvg} strokeWidth="10" strokeLinecap="round" />
 
                   {/* (1) 生活阳台 YARD */}
-                  <g onClick={() => setActiveZone(ZONES_DATA[5])} className="cursor-pointer group">
+                  <g onClick={() => {
+                    setActiveZone(ZONES_DATA[5]);
+                    setSvgViewBox(ZONE_VIEWBOXES["yard"]);
+                  }} className="cursor-pointer group">
                     <rect
                       x="12" y="12" width="312" height="154"
                       fill={activeZone.id === "yard" ? "#dbeafe" : currentTheme.wallSvg}
@@ -1073,7 +1118,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   <line x1="12" y1="170" x2="330" y2="170" stroke={currentTheme.wallEdgeSvg} strokeWidth="8" />
 
                   {/* (2) 独立卫浴室 BATH 1 */}
-                  <g onClick={() => setActiveZone(ZONES_DATA[7])} className="cursor-pointer group">
+                  <g onClick={() => {
+                    setActiveZone(ZONES_DATA[7]);
+                    setSvgViewBox(ZONE_VIEWBOXES["bathroom"]);
+                  }} className="cursor-pointer group">
                     <rect
                       x="12" y="175" width="312" height="220"
                       fill={activeZone.id === "bathroom" ? "#dbeafe" : currentTheme.wallSvg}
@@ -1095,7 +1143,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   <line x1="12" y1="405" x2="330" y2="405" stroke={currentTheme.wallEdgeSvg} strokeWidth="8" />
 
                   {/* (3) 极客多功能书房 STUDY */}
-                  <g onClick={() => setActiveZone(ZONES_DATA[6])} className="cursor-pointer group">
+                  <g onClick={() => {
+                    setActiveZone(ZONES_DATA[6]);
+                    setSvgViewBox(ZONE_VIEWBOXES["study"]);
+                  }} className="cursor-pointer group">
                     <rect
                       x="12" y="410" width="312" height="180"
                       fill={activeZone.id === "study" ? "#dbeafe" : currentTheme.wallSvg}
@@ -1114,7 +1165,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   <line x1="315" y1="595" x2="330" y2="595" stroke={currentTheme.wallEdgeSvg} strokeWidth="8" />
 
                   {/* (4) 主卧深睡空间 BEDROOM */}
-                  <g onClick={() => setActiveZone(ZONES_DATA[8])} className="cursor-pointer group">
+                  <g onClick={() => {
+                    setActiveZone(ZONES_DATA[8]);
+                    setSvgViewBox(ZONE_VIEWBOXES["bedroom"]);
+                  }} className="cursor-pointer group">
                     <rect
                       x="12" y="600" width="312" height="360"
                       fill={activeZone.id === "bedroom" ? "#dbeafe" : currentTheme.wallSvg}
@@ -1135,7 +1189,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   <line x1="330" y1="610" x2="265" y2="675" stroke={currentTheme.wallEdgeSvg} strokeWidth="3" />
 
                   {/* (5) 入户玄关 ENTRANCE */}
-                  <g onClick={() => setActiveZone(ZONES_DATA[0])} className="cursor-pointer group">
+                  <g onClick={() => {
+                    setActiveZone(ZONES_DATA[0]);
+                    setSvgViewBox(ZONE_VIEWBOXES["entrance"]);
+                  }} className="cursor-pointer group">
                     <rect
                       x="335" y="12" width="343" height="142"
                       fill={activeZone.id === "entrance" ? "#dbeafe" : currentTheme.wallSvg}
@@ -1149,7 +1206,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   </g>
 
                   {/* (6) 开放式厨房 KITCHEN */}
-                  <g onClick={() => setActiveZone(ZONES_DATA[1])} className="cursor-pointer group">
+                  <g onClick={() => {
+                    setActiveZone(ZONES_DATA[1]);
+                    setSvgViewBox(ZONE_VIEWBOXES["kitchen"]);
+                  }} className="cursor-pointer group">
                     <rect
                       x="335" y="162" width="343" height="145"
                       fill={activeZone.id === "kitchen" ? "#dbeafe" : currentTheme.wallSvg}
@@ -1165,7 +1225,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   </g>
 
                   {/* (7) 核心餐厅与中岛 DINING */}
-                  <g onClick={() => setActiveZone(ZONES_DATA[2])} className="cursor-pointer group">
+                  <g onClick={() => {
+                    setActiveZone(ZONES_DATA[2]);
+                    setSvgViewBox(ZONE_VIEWBOXES["dining"]);
+                  }} className="cursor-pointer group">
                     <rect
                       x="335" y="315" width="343" height="175"
                       fill={activeZone.id === "dining" ? "#dbeafe" : currentTheme.wallSvg}
@@ -1182,7 +1245,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   </g>
 
                   {/* (8) 景观客厅 LIVING */}
-                  <g onClick={() => setActiveZone(ZONES_DATA[3])} className="cursor-pointer group">
+                  <g onClick={() => {
+                    setActiveZone(ZONES_DATA[3]);
+                    setSvgViewBox(ZONE_VIEWBOXES["living"]);
+                  }} className="cursor-pointer group">
                     <rect
                       x="335" y="495" width="343" height="325"
                       fill={activeZone.id === "living" ? "#dbeafe" : currentTheme.wallSvg}
@@ -1199,7 +1265,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   <line x1="335" y1="825" x2="678" y2="825" stroke={currentTheme.accentSvg} strokeWidth="6" />
 
                   {/* (9) 南向休闲阳台 BALCONY */}
-                  <g onClick={() => setActiveZone(ZONES_DATA[4])} className="cursor-pointer group">
+                  <g onClick={() => {
+                    setActiveZone(ZONES_DATA[4]);
+                    setSvgViewBox(ZONE_VIEWBOXES["balcony"]);
+                  }} className="cursor-pointer group">
                     <rect
                       x="335" y="830" width="343" height="130"
                       fill={activeZone.id === "balcony" ? "#e0f2fe" : "#f0f9ff"}
@@ -1278,14 +1347,25 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               ref={bottomScrollRef}
               className="flex-1 overflow-x-auto scrollbar-hide no-scrollbar flex items-center gap-2 scroll-smooth px-1"
             >
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1 flex-shrink-0 whitespace-nowrap">
-                9大功能分区:
-              </span>
+              <button
+                onClick={() => {
+                  setSvgViewBox("0 0 690 972.5");
+                  if (controlsRef.current && viewMode === "3d") {
+                    controlsRef.current.setLookAt(0, 9.5, 7.5, 0, 0, 0, true);
+                  }
+                }}
+                className="flex-shrink-0 whitespace-nowrap min-w-max px-3.5 py-2 rounded-2xl text-xs font-black bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-all"
+              >
+                🔍 全屋俯瞰
+              </button>
               {ZONES_DATA.map((z) => (
                 <button
                   key={z.id}
                   onClick={() => {
                     setActiveZone(z);
+                    if (ZONE_VIEWBOXES[z.id]) {
+                      setSvgViewBox(ZONE_VIEWBOXES[z.id]);
+                    }
                     const coord = ZONE_3D_COORDS[z.id];
                     if (coord && controlsRef.current && viewMode === "3d") {
                       controlsRef.current.setLookAt(coord.x, 4.5, coord.z + 4, coord.x, 0.3, coord.z, true);
