@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as THREE from "three";
+import CameraControls from "camera-controls";
 import { 
   Layers, 
   Maximize2, 
@@ -14,14 +15,18 @@ import {
   CheckCircle2, 
   Sparkles, 
   Compass, 
-  Info,
-  ChevronRight,
-  ShieldCheck,
-  Building2,
-  Navigation,
-  MousePointerClick
+  Info, 
+  ShieldCheck, 
+  Building2, 
+  MousePointerClick,
+  Clock,
+  RotateCcw
 } from "lucide-react";
 import { ZONES_DATA, STYLES_DATA, PROPERTY_DATA, ZoneData } from "@/data/projectData";
+import { getJohorSunData, SOLAR_PRESETS, JB_LOCATION } from "@/utils/solarCalculator";
+
+// Install THREE for CameraControls
+CameraControls.install({ THREE });
 
 interface Spatial3DViewerProps {
   selectedStyleId: string;
@@ -85,36 +90,50 @@ const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: num
   }
 };
 
+// 3D Anchor Points for HTML Floating Labels
+const MARKER_ANCHORS = [
+  { id: "smatv", pos: [-3.5, 2.4, -0.4], label: "SMATV 电视点", type: "mep", icon: "⚡" },
+  { id: "ac-living", pos: [-5.5, 2.5, 2.2], label: "15A 空调动力", type: "mep", icon: "⚡" },
+  { id: "fp2-living", pos: [-3.5, 2.6, 1.2], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
+  { id: "desk-power", pos: [4.2, 1.9, 2.0], label: "8组桌面插座", type: "mep", icon: "⚡" },
+  { id: "fp2-study", pos: [4.2, 2.6, 1.5], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
+  { id: "curtain-c3", pos: [4.2, 2.6, -5.0], label: "C3 静音双轨帘", type: "smart", icon: "🤖" },
+  { id: "d200-lock", pos: [-5.0, 2.4, -7.0], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
+  { id: "vanity-power", pos: [0.5, 1.9, -6.5], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
+  { id: "roborock", pos: [4.2, 1.6, -7.5], label: "扫拖机自动上下水", type: "smart", icon: "🤖" }
+];
+
 export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleId }) => {
   const currentStyle = STYLES_DATA.find((s) => s.id === selectedStyleId) || STYLES_DATA[0];
-  const [activeZone, setActiveZone] = useState<ZoneData>(ZONES_DATA[3]); // Default to Living Room (Zone 4)
+  const [activeZone, setActiveZone] = useState<ZoneData>(ZONES_DATA[3]); // Default to Living Room
   const [viewMode, setViewMode] = useState<"3d" | "2.5d">("3d");
   const [cameraPreset, setCameraPreset] = useState<"birds-eye" | "living" | "workstation" | "bedroom" | "balcony">("birds-eye");
   
-  // Layer Toggles (All enabled by default for high visual richness)
+  // Layer Toggles
   const [showDimensions, setShowDimensions] = useState<boolean>(true);
   const [showMEP, setShowMEP] = useState<boolean>(true);
   const [showSmartHome, setShowSmartHome] = useState<boolean>(true);
   const [showMicroclimate, setShowMicroclimate] = useState<boolean>(true);
-  const [timeOfDay, setTimeOfDay] = useState<"morning" | "noon" | "night">("morning");
+  const [timeOfDay, setTimeOfDay] = useState<"morning" | "noon" | "sunset" | "night">("morning");
 
-  // Three.js Canvas Container & References
+  // Calculated Real-world Solar Data from SunCalc
+  const solarData = getJohorSunData(timeOfDay);
+
+  // Screen Projected 2D Overlay Positions for 3D Markers
+  const [projectedMarkers, setProjectedMarkers] = useState<{ id: string; x: number; y: number; label: string; type: string; icon: string; visible: boolean }[]>([]);
+
+  // Three.js References
   const mountRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+  const controlsRef = useRef<CameraControls | null>(null);
   const highlightMeshRef = useRef<THREE.Mesh | null>(null);
   const highlightBorderRef = useRef<THREE.LineSegments | null>(null);
   const sunLightRef = useRef<THREE.DirectionalLight | null>(null);
   const ambientLightRef = useRef<THREE.AmbientLight | null>(null);
-  const markerGroupRef = useRef<THREE.Group | null>(null);
   const dimensionGroupRef = useRef<THREE.Group | null>(null);
   const clickableZonesRef = useRef<THREE.Mesh[]>([]);
-
-  // Smooth Camera Lerp Targets
-  const targetCamPosRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 25, 24));
-  const targetLookAtRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
-  const currentLookAtRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
 
   // Handle Raycasting Pointer Click
   const handleCanvasClick = useCallback((event: MouseEvent) => {
@@ -141,27 +160,24 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, []);
 
-  // 1. Initialize Three.js Scene with Robust Memory Management & preserveDrawingBuffer
+  // 1. Initialize Three.js Scene with CameraControls & preserveDrawingBuffer
   useEffect(() => {
     if (!mountRef.current || viewMode !== "3d") return;
 
     const width = mountRef.current.clientWidth;
-    const height = mountRef.current.clientHeight || 540;
+    const height = mountRef.current.clientHeight || 560;
 
-    // Clean Architectural Studio Light Grey Background
+    // Clean Studio Background
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color(
-      timeOfDay === "night" ? 0x1e293b : 0xeef2f6
-    );
+    scene.background = new THREE.Color(solarData.skyBg);
 
     // Perspective Camera
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     cameraRef.current = camera;
-    camera.position.set(0, 25, 24);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(0, 24, 24);
 
-    // WebGL Renderer with preserveDrawingBuffer: true for PDF/Canvas snapshot exports
+    // WebGL Renderer with preserveDrawingBuffer for crystal clear PDF exports
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
@@ -177,25 +193,30 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     mountRef.current.innerHTML = "";
     mountRef.current.appendChild(renderer.domElement);
 
+    // Initialize CameraControls (High precision, buttery damping, zero boilerplate)
+    const controls = new CameraControls(camera, renderer.domElement);
+    controls.smoothTime = 0.4;
+    controls.draggingSmoothTime = 0.15;
+    controls.maxDistance = 50;
+    controls.minDistance = 4;
+    controls.maxPolarAngle = Math.PI / 2 - 0.05; // Prevent camera sinking under floor
+    controlsRef.current = controls;
+
+    // Set Initial LookAt
+    controls.setLookAt(0, 25, 24, 0, 0, 0, false);
+
     // Attach Raycasting Click Handler
     const domElem = renderer.domElement;
     domElem.addEventListener("click", handleCanvasClick);
 
-    // Ambient Lighting for Studio Clarity
-    const ambientLight = new THREE.AmbientLight(
-      timeOfDay === "night" ? 0x64748b : 0xffffff,
-      timeOfDay === "night" ? 0.9 : 1.6
-    );
+    // Ambient Lighting
+    const ambientLight = new THREE.AmbientLight(solarData.ambientColor, solarData.ambientIntensity);
     ambientLightRef.current = ambientLight;
     scene.add(ambientLight);
 
-    // SSE 165° Directional Sunlight entering from South (positive Z) angled from East (positive X)
-    const sunLight = new THREE.DirectionalLight(
-      timeOfDay === "morning" ? 0xfff7ed :
-      timeOfDay === "night" ? 0x93c5fd : 0xffffff,
-      timeOfDay === "night" ? 0.4 : 2.2
-    );
-    sunLight.position.set(8, 14, 18);
+    // Sun Directional Light (Calculated via SunCalc from Johor Bahru GPS coordinates)
+    const sunLight = new THREE.DirectionalLight(solarData.lightColor, solarData.lightIntensity);
+    sunLight.position.copy(solarData.position);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
@@ -209,17 +230,17 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     sunLightRef.current = sunLight;
     scene.add(sunLight);
 
-    // Opposite Soft Fill Light
+    // Soft Studio Fill Light
     const fillLight = new THREE.DirectionalLight(0xe2e8f0, 0.7);
     fillLight.position.set(-10, 12, -12);
     scene.add(fillLight);
 
-    // Architectural Ground Grid
+    // Architectural Studio Floor Grid
     const gridHelper = new THREE.GridHelper(34, 34, 0xcbd5e1, 0xe2e8f0);
     gridHelper.position.y = -0.02;
     scene.add(gridHelper);
 
-    // Base Floor Slab (648 sq ft = 6.9m × 9.725m in 16x18 aspect)
+    // Base Floor Slab (648 sq ft = 6.9m × 9.725m)
     const floorGeometry = new THREE.BoxGeometry(16, 0.2, 18);
     const floorMat = new THREE.MeshStandardMaterial({
       color: 0xf8fafc,
@@ -231,13 +252,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     floorMesh.receiveShadow = true;
     scene.add(floorMesh);
 
-    // Floor Perimeter Edge Line
+    // Floor Perimeter Wireframe Edge
     const floorEdges = new THREE.EdgesGeometry(floorGeometry);
     const floorLine = new THREE.LineSegments(floorEdges, new THREE.LineBasicMaterial({ color: 0x94a3b8 }));
     floorLine.position.y = -0.1;
     scene.add(floorLine);
 
-    // Clickable Invisible Raycasting Floor Meshes for each zone
+    // Clickable Raycasting Floor Meshes for each zone
     clickableZonesRef.current = [];
     Object.entries(ZONE_3D_COORDS).forEach(([zoneId, coord]) => {
       const planeGeom = new THREE.PlaneGeometry(coord.w, coord.d);
@@ -254,17 +275,12 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const createFurniture = (w: number, h: number, d: number, x: number, y: number, z: number, color = 0xe2e8f0, edgeColor = 0x94a3b8) => {
       const group = new THREE.Group();
       const geom = new THREE.BoxGeometry(w, h, d);
-      const mat = new THREE.MeshStandardMaterial({
-        color,
-        roughness: 0.4,
-        metalness: 0.05
-      });
+      const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.4, metalness: 0.05 });
       const mesh = new THREE.Mesh(geom, mat);
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       group.add(mesh);
 
-      // Add crisp architectural outline edge
       const edges = new THREE.EdgesGeometry(geom);
       const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: edgeColor, linewidth: 1.5 }));
       group.add(line);
@@ -298,7 +314,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       return group;
     };
 
-    // --- 1. Living Room & Balcony Furniture (Neutral Light Aesthetic) ---
+    // --- 1. Living Room & Balcony ---
     const sofa = createFurniture(4.5, 0.75, 1.6, -3.5, 0.45, 2.2, 0xd1d5db, 0x64748b);
     const cushion1 = createFurniture(1.2, 0.25, 0.6, -4.5, 0.85, 2.2, 0x93c5fd, 0x3b82f6);
     const cushion2 = createFurniture(1.2, 0.25, 0.6, -2.5, 0.85, 2.2, 0xfde68a, 0xd97706);
@@ -307,13 +323,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const balconyRailing = createWall(6.2, 1.1, 0.08, -3.5, 0.65, 7.8, 0.4, 0x93c5fd);
     scene.add(sofa, cushion1, cushion2, tvStand, tvScreen, balconyRailing);
 
-    // --- 2. Kitchen & Island (White Sintered Stone + Warm Oak) ---
+    // --- 2. Kitchen & Island ---
     const kitchenCounter = createFurniture(4.0, 1.0, 1.2, -4.8, 0.55, -4.5, 0xe2e8f0, 0x94a3b8);
     const island = createFurniture(3.4, 1.1, 1.4, -3.2, 0.6, -1.8, 0xffffff, 0x94a3b8);
     const islandWood = createFurniture(1.2, 0.08, 1.4, -1.0, 1.05, -1.8, 0xe8d5b5, 0xb45309);
     scene.add(kitchenCounter, island, islandWood);
 
-    // --- 3. 1+1 Geek Workstation (2.0m Lifting Desk + Glass Partition) ---
+    // --- 3. 1+1 Geek Workstation (2.0m Lifting Desk) ---
     const studyGlass = createWall(0.08, 2.6, 4.8, 1.2, 1.35, 2.2, 0.35, 0xbfdbfe);
     const liftDesk = createFurniture(3.4, 0.1, 1.4, 4.2, 1.1, 2.2, 0xe8d5b5, 0xb45309);
     const leg1 = createFurniture(0.18, 1.05, 1.2, 2.8, 0.55, 2.2, 0x64748b, 0x334155);
@@ -322,7 +338,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const screen2 = createFurniture(0.8, 1.3, 0.06, 4.9, 1.85, 2.0, 0x2563eb, 0x1e40af);
     scene.add(studyGlass, liftDesk, leg1, leg2, screen1, screen2);
 
-    // --- 4. Master Bedroom (1.8m Floating Bed + Wardrobe) ---
+    // --- 4. Master Bedroom ---
     const bedBase = createFurniture(3.4, 0.45, 3.6, 4.2, 0.3, -3.5, 0xd1d5db, 0x94a3b8);
     const mattress = createFurniture(3.0, 0.4, 3.2, 4.2, 0.65, -3.5, 0xffffff, 0xcbd5e1);
     const headboard = createFurniture(3.4, 1.3, 0.15, 4.2, 0.85, -5.35, 0xe2e8f0, 0x94a3b8);
@@ -354,7 +370,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     highlightMeshRef.current = highlightMesh;
     scene.add(highlightMesh);
 
-    // Highlight Border
+    // Highlight Border Wireframe
     const borderGeom = new THREE.BufferGeometry();
     const borderMat = new THREE.LineBasicMaterial({ color: 0x2563eb, linewidth: 2 });
     const highlightBorder = new THREE.LineSegments(borderGeom, borderMat);
@@ -362,31 +378,50 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     highlightBorderRef.current = highlightBorder;
     scene.add(highlightBorder);
 
-    // Dynamic Groups for Markers & Dimensions
-    const markerGroup = new THREE.Group();
-    markerGroupRef.current = markerGroup;
-    scene.add(markerGroup);
-
+    // Dimension Group
     const dimensionGroup = new THREE.Group();
     dimensionGroupRef.current = dimensionGroup;
     scene.add(dimensionGroup);
 
-    // Animation Loop with Smooth Camera Lerp
+    // Animation Loop
     let animationFrameId: number;
-    let clock = new THREE.Clock();
+    const clock = new THREE.Clock();
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
+      const delta = clock.getDelta();
       const elapsedTime = clock.getElapsedTime();
 
-      // Smooth Camera Lerp
-      camera.position.lerp(targetCamPosRef.current, 0.055);
-      currentLookAtRef.current.lerp(targetLookAtRef.current, 0.055);
-      camera.lookAt(currentLookAtRef.current);
+      // Update CameraControls
+      const hasControlsUpdated = controls.update(delta);
 
-      // Gentle breathing pulsation on active zone highlight
+      // Gentle breathing on active highlight mesh
       if (highlightMeshRef.current) {
         highlightMat.opacity = 0.22 + Math.sin(elapsedTime * 3.2) * 0.08;
+      }
+
+      // Update 2D Projected Screen Coordinates for 3D Markers
+      if (mountRef.current && camera) {
+        const rect = mountRef.current.getBoundingClientRect();
+        const projected = MARKER_ANCHORS.map((anchor) => {
+          const vec = new THREE.Vector3(anchor.pos[0], anchor.pos[1], anchor.pos[2]);
+          vec.project(camera);
+
+          const isBehind = vec.z > 1;
+          const x = ((vec.x + 1) * rect.width) / 2;
+          const y = ((-vec.y + 1) * rect.height) / 2;
+
+          return {
+            id: anchor.id,
+            x,
+            y,
+            label: anchor.label,
+            type: anchor.type,
+            icon: anchor.icon,
+            visible: !isBehind && x >= 0 && x <= rect.width && y >= 0 && y <= rect.height
+          };
+        });
+        setProjectedMarkers(projected);
       }
 
       renderer.render(scene, camera);
@@ -397,20 +432,21 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const handleResize = () => {
       if (!mountRef.current || !renderer || !camera) return;
       const newW = mountRef.current.clientWidth;
-      const newH = mountRef.current.clientHeight || 540;
+      const newH = mountRef.current.clientHeight || 560;
       camera.aspect = newW / newH;
       camera.updateProjectionMatrix();
       renderer.setSize(newW, newH);
     };
     window.addEventListener("resize", handleResize);
 
-    // Strict WebGL Cleanup on Unmount (Memory Leak Prevention & Context Loss Prevention)
+    // Strict Memory Cleanup on Unmount
     return () => {
       domElem.removeEventListener("click", handleCanvasClick);
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameId);
 
-      // Recursively dispose all scene geometries and materials
+      controls.dispose();
+
       scene.traverse((obj) => {
         if (obj instanceof THREE.Mesh) {
           if (obj.geometry) obj.geometry.dispose();
@@ -436,16 +472,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     };
   }, [viewMode, selectedStyleId, handleCanvasClick]);
 
-  // 2. Update Highlight Mesh when `activeZone` changes
+  // 2. Update Highlight Mesh Position on `activeZone` change
   useEffect(() => {
     if (!highlightMeshRef.current || !highlightBorderRef.current) return;
     const coords = ZONE_3D_COORDS[activeZone.id] || ZONE_3D_COORDS["zone-living"];
 
-    // Update Plane Size & Position
     highlightMeshRef.current.scale.set(coords.w, coords.d, 1);
     highlightMeshRef.current.position.set(coords.x, 0.05, coords.z);
 
-    // Update Border Wireframe Box
     const hw = coords.w / 2;
     const hd = coords.d / 2;
     const points = [
@@ -459,91 +493,30 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     highlightBorderRef.current.position.set(coords.x, 0.06, coords.z);
   }, [activeZone]);
 
-  // 3. Update Sunlight and Ambience when `timeOfDay` changes
+  // 3. Update Real-world Solar Simulation via SunCalc on `timeOfDay` change
   useEffect(() => {
     if (!sunLightRef.current || !ambientLightRef.current || !sceneRef.current) return;
 
-    if (timeOfDay === "morning") {
-      // Warm SSE 165° morning sunlight coming through South balcony
-      sunLightRef.current.position.set(8, 14, 18);
-      sunLightRef.current.color.setHex(0xfff7ed);
-      sunLightRef.current.intensity = 2.2;
-      ambientLightRef.current.color.setHex(0xffffff);
-      ambientLightRef.current.intensity = 1.6;
-      sceneRef.current.background = new THREE.Color(0xeef2f6);
-    } else if (timeOfDay === "noon") {
-      // High noon overhead sunlight
-      sunLightRef.current.position.set(2, 22, 6);
-      sunLightRef.current.color.setHex(0xffffff);
-      sunLightRef.current.intensity = 2.4;
-      ambientLightRef.current.color.setHex(0xffffff);
-      ambientLightRef.current.intensity = 1.7;
-      sceneRef.current.background = new THREE.Color(0xf1f5f9);
-    } else {
-      // Geek night mode with deep blue ambience
-      sunLightRef.current.position.set(-6, 12, -8);
-      sunLightRef.current.color.setHex(0x93c5fd);
-      sunLightRef.current.intensity = 0.5;
-      ambientLightRef.current.color.setHex(0x334155);
-      ambientLightRef.current.intensity = 0.9;
-      sceneRef.current.background = new THREE.Color(0x1e293b);
-    }
+    const data = getJohorSunData(timeOfDay);
+    sunLightRef.current.position.copy(data.position);
+    sunLightRef.current.color.setHex(data.lightColor);
+    sunLightRef.current.intensity = data.lightIntensity;
+
+    ambientLightRef.current.color.setHex(data.ambientColor);
+    ambientLightRef.current.intensity = data.ambientIntensity;
+
+    sceneRef.current.background = new THREE.Color(data.skyBg);
   }, [timeOfDay]);
 
-  // 4. Update 3D Markers & Dimensions
+  // 4. Update 3D Dimension Lines
   useEffect(() => {
-    if (!markerGroupRef.current || !dimensionGroupRef.current) return;
+    if (!dimensionGroupRef.current) return;
 
-    // Clear existing markers
-    while (markerGroupRef.current.children.length > 0) {
-      const obj = markerGroupRef.current.children[0];
-      markerGroupRef.current.remove(obj);
-    }
     while (dimensionGroupRef.current.children.length > 0) {
       const obj = dimensionGroupRef.current.children[0];
       dimensionGroupRef.current.remove(obj);
     }
 
-    // Helper: Create 3D Floating Pin Marker
-    const create3DPin = (x: number, y: number, z: number, colorHex: number, label: string) => {
-      const pinGroup = new THREE.Group();
-      const sphereGeom = new THREE.SphereGeometry(0.2, 16, 16);
-      const sphereMat = new THREE.MeshBasicMaterial({ color: colorHex });
-      const sphere = new THREE.Mesh(sphereGeom, sphereMat);
-      sphere.position.set(0, 0, 0);
-      pinGroup.add(sphere);
-
-      const stemGeom = new THREE.BufferGeometry().setFromPoints([
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(0, -y, 0)
-      ]);
-      const stemMat = new THREE.LineBasicMaterial({ color: colorHex, opacity: 0.7, transparent: true });
-      const stem = new THREE.Line(stemGeom, stemMat);
-      pinGroup.add(stem);
-
-      pinGroup.position.set(x, y, z);
-      return pinGroup;
-    };
-
-    // Render MEP Markers (Amber 0xf59e0b)
-    if (showMEP) {
-      markerGroupRef.current.add(create3DPin(-3.5, 2.0, -0.4, 0xf59e0b, "SMATV"));
-      markerGroupRef.current.add(create3DPin(-5.5, 2.4, 2.2, 0xf59e0b, "15A A/C"));
-      markerGroupRef.current.add(create3DPin(-4.8, 1.8, -4.5, 0xf59e0b, "20A Oven"));
-      markerGroupRef.current.add(create3DPin(4.2, 1.8, 2.0, 0xf59e0b, "Desk Sockets"));
-      markerGroupRef.current.add(create3DPin(0.5, 1.8, -6.5, 0xf59e0b, "Vanity Power"));
-    }
-
-    // Render Smart Home Markers (Purple 0xa855f7)
-    if (showSmartHome) {
-      markerGroupRef.current.add(create3DPin(-5.0, 2.2, -7.0, 0xa855f7, "D200 Lock"));
-      markerGroupRef.current.add(create3DPin(-3.5, 2.4, 1.0, 0xa855f7, "FP2 Living"));
-      markerGroupRef.current.add(create3DPin(4.2, 2.4, 1.5, 0xa855f7, "FP2 Study"));
-      markerGroupRef.current.add(create3DPin(4.2, 2.4, -5.0, 0xa855f7, "C3 Curtain"));
-      markerGroupRef.current.add(create3DPin(4.2, 1.5, -7.5, 0xa855f7, "Roborock"));
-    }
-
-    // Render Dimensions Measurement Lines (Blue 0x2563eb)
     if (showDimensions) {
       const drawDimLine = (p1: [number, number, number], p2: [number, number, number], color = 0x2563eb) => {
         const geom = new THREE.BufferGeometry().setFromPoints([
@@ -554,34 +527,35 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
         return new THREE.Line(geom, mat);
       };
 
+      // Living Room Clear Width Line (3,800 mm)
       dimensionGroupRef.current.add(drawDimLine([-6.6, 0.15, 4.5], [-0.4, 0.15, 4.5], 0x2563eb));
+      // Living Room Depth Line (3,600 mm)
       dimensionGroupRef.current.add(drawDimLine([-0.4, 0.15, -0.4], [-0.4, 0.15, 4.5], 0x2563eb));
+      // Full Width 6,900 mm Reference Line
       dimensionGroupRef.current.add(drawDimLine([-6.6, 0.15, 7.8], [6.6, 0.15, 7.8], 0x059669));
     }
-  }, [showMEP, showSmartHome, showDimensions]);
+  }, [showDimensions]);
 
-  // 5. Smooth Camera Preset Lerp Targets
+  // 5. Smooth Camera Preset Navigation with CameraControls
   useEffect(() => {
+    if (!controlsRef.current) return;
+    const ctrl = controlsRef.current;
+
     switch (cameraPreset) {
       case "birds-eye":
-        targetCamPosRef.current.set(0, 25, 24);
-        targetLookAtRef.current.set(0, 0, 0);
+        ctrl.setLookAt(0, 25, 24, 0, 0, 0, true);
         break;
       case "living":
-        targetCamPosRef.current.set(-3.5, 7.5, 10);
-        targetLookAtRef.current.set(-3.5, 1.5, 1.0);
+        ctrl.setLookAt(-3.5, 7.5, 10, -3.5, 1.5, 1.0, true);
         break;
       case "workstation":
-        targetCamPosRef.current.set(4.2, 6.5, 9);
-        targetLookAtRef.current.set(4.2, 1.5, 2.2);
+        ctrl.setLookAt(4.2, 6.5, 9, 4.2, 1.5, 2.2, true);
         break;
       case "bedroom":
-        targetCamPosRef.current.set(4.2, 6.5, 2);
-        targetLookAtRef.current.set(4.2, 1.2, -3.5);
+        ctrl.setLookAt(4.2, 6.5, 2, 4.2, 1.2, -3.5, true);
         break;
       case "balcony":
-        targetCamPosRef.current.set(-3.5, 3.8, 3.2);
-        targetLookAtRef.current.set(-3.5, 1.5, 8.0);
+        ctrl.setLookAt(-3.5, 3.8, 3.2, -3.5, 1.5, 8.0, true);
         break;
     }
   }, [cameraPreset]);
@@ -590,7 +564,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     <div className="space-y-6">
       {/* Top Controls Bar */}
       <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
-        {/* Left: View Mode & Sun Light Presets */}
+        {/* Left: View Mode & SunCalc Presets */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1">
             <button
@@ -615,42 +589,26 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </button>
           </div>
 
-          {/* Time of Day Sun Angles */}
+          {/* SunCalc Mathematical Presets for Johor Bahru */}
           <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 text-xs">
-            <button
-              onClick={() => setTimeOfDay("morning")}
-              className={`px-2.5 py-1 rounded-md transition-all font-medium flex items-center space-x-1 ${
-                timeOfDay === "morning"
-                  ? "bg-amber-100 text-amber-900 font-bold shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              <span>🌅 晨光 (SSE 165°)</span>
-            </button>
-            <button
-              onClick={() => setTimeOfDay("noon")}
-              className={`px-2.5 py-1 rounded-md transition-all font-medium ${
-                timeOfDay === "noon"
-                  ? "bg-sky-100 text-sky-900 font-bold shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              ☀️ 正午高光
-            </button>
-            <button
-              onClick={() => setTimeOfDay("night")}
-              className={`px-2.5 py-1 rounded-md transition-all font-medium ${
-                timeOfDay === "night"
-                  ? "bg-indigo-100 text-indigo-900 font-bold shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              🌙 极客夜景
-            </button>
+            {SOLAR_PRESETS.map((preset) => (
+              <button
+                key={preset.id}
+                onClick={() => setTimeOfDay(preset.id)}
+                className={`px-2.5 py-1 rounded-md transition-all font-medium flex items-center space-x-1 ${
+                  timeOfDay === preset.id
+                    ? "bg-amber-100 text-amber-900 font-bold shadow-2xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+                title={preset.description}
+              >
+                <span>{preset.label}</span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Right: Layer Toggles (All active by default) */}
+        {/* Right: Layer Toggles */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           <button
             onClick={() => setShowDimensions(!showDimensions)}
@@ -706,11 +664,11 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* 3D Viewport (8 Columns) */}
         <div className="lg:col-span-8 relative rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-sm flex flex-col min-h-[560px]">
-          {/* Top Camera Presets Overlay with Smooth Lerp */}
+          {/* Top Camera Presets Overlay */}
           <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-1.5 bg-white/90 backdrop-blur-md p-1.5 rounded-xl border border-slate-200 shadow-sm">
             <span className="text-[10px] text-slate-500 font-semibold px-2 py-1 flex items-center">
               <Eye className="w-3 h-3 mr-1 text-blue-600" />
-              平滑视角:
+              视角:
             </span>
             <button
               onClick={() => setCameraPreset("birds-eye")}
@@ -764,26 +722,60 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </button>
           </div>
 
-          {/* Compass & Solar Inflow Angle Badge */}
+          {/* Compass & SunCalc Astronomical Inflow Angle Badge */}
           <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 p-2.5 rounded-2xl flex items-center space-x-2.5 shadow-sm">
             <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
               <Sun className="w-4 h-4" />
             </div>
             <div className="text-right">
-              <div className="text-[10px] text-slate-500 font-semibold">日照入射角 (Solar Azimuth)</div>
-              <div className="text-xs font-black text-amber-600 font-mono">SSE 165° (直射南向阳台)</div>
+              <div className="text-[10px] text-slate-500 font-semibold flex items-center justify-end space-x-1">
+                <span>新山日照轨迹 (SunCalc)</span>
+              </div>
+              <div className="text-xs font-black text-amber-600 font-mono">
+                方位 {solarData.azimuthDegrees}° · 高度角 {solarData.altitudeDegrees}°
+              </div>
             </div>
-          </div>
-
-          {/* Direct 3D Raycasting Hint Badge */}
-          <div className="absolute bottom-16 left-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl flex items-center space-x-1.5 shadow-sm text-[11px] text-slate-700">
-            <MousePointerClick className="w-3.5 h-3.5 text-blue-600 animate-bounce" />
-            <span>可直接在 3D 画布中<strong>点击任意房间</strong>实时拾取联动</span>
           </div>
 
           {/* 3D WebGL Canvas Container */}
           {viewMode === "3d" ? (
-            <div ref={mountRef} className="w-full flex-1 h-full min-h-[520px] cursor-pointer bg-[#eef2f6]" />
+            <div className="relative w-full flex-1 h-full min-h-[520px]">
+              <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing bg-[#eef2f6]" />
+
+              {/* 3D Projected Screen UI Labels (Clean React-driven HTML overlay) */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {projectedMarkers.map((marker) => {
+                  if (!marker.visible) return null;
+                  const isMEP = marker.type === "mep";
+                  if (isMEP && !showMEP) return null;
+                  if (!isMEP && !showSmartHome) return null;
+
+                  return (
+                    <div
+                      key={marker.id}
+                      style={{
+                        position: "absolute",
+                        left: `${marker.x}px`,
+                        top: `${marker.y}px`,
+                        transform: "translate(-50%, -100%)",
+                        transition: "left 0.05s linear, top 0.05s linear"
+                      }}
+                      className="pointer-events-auto cursor-pointer group"
+                    >
+                      <div className={`flex items-center space-x-1 px-2 py-0.5 rounded-full shadow-md text-[10px] font-bold border transition-all ${
+                        isMEP
+                          ? "bg-white text-amber-800 border-amber-300 group-hover:scale-105"
+                          : "bg-white text-purple-800 border-purple-300 group-hover:scale-105"
+                      }`}>
+                        <span>{marker.icon}</span>
+                        <span>{marker.label}</span>
+                      </div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-slate-800 mx-auto mt-0.5" />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           ) : (
             /* 2.5D BIM Vector Floor Plan (Architectural Blueprints) */
             <div className="w-full flex-1 min-h-[520px] p-6 bg-slate-50 relative overflow-hidden flex items-center justify-center">
@@ -862,7 +854,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             {ZONES_DATA.map((z) => (
               <button
                 key={z.id}
-                onClick={() => setActiveZone(z)}
+                onClick={() => {
+                  setActiveZone(z);
+                  const coord = ZONE_3D_COORDS[z.id];
+                  if (coord && controlsRef.current) {
+                    controlsRef.current.setLookAt(coord.x, 12, coord.z + 10, coord.x, 1.0, coord.z, true);
+                  }
+                }}
                 className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                   activeZone.id === z.id
                     ? "bg-slate-900 text-white shadow-sm ring-2 ring-blue-500/30"
@@ -877,7 +875,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
         {/* Side Inspector: Deep-Dive Zone Info (4 Columns) */}
         <div className="lg:col-span-4 space-y-4">
-          {/* Active Zone Detail Card (Pure White Modern Card) */}
+          {/* Active Zone Detail Card */}
           <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
@@ -901,7 +899,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               </div>
             </div>
 
-            {/* Spatial Dimensions Specs (3800 × 3600 mm) */}
+            {/* Spatial Dimensions Specs */}
             <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-100 text-xs">
               <div>
                 <div className="text-[10px] text-slate-500 font-medium">净开间进深尺寸</div>
@@ -955,10 +953,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           <div className="bg-blue-50/60 p-4 rounded-2xl border border-blue-100 text-xs space-y-2">
             <div className="flex items-center space-x-2 text-blue-900 font-bold">
               <Sun className="w-4 h-4 text-amber-500" />
-              <span>南向 24 楼高层微气候评估</span>
+              <span>新山经纬度日照实况 ({JB_LOCATION.latitude}°N, {JB_LOCATION.longitude}°E)</span>
             </div>
             <p className="text-[11px] text-slate-700 leading-relaxed">
-              {PROPERTY_DATA.microclimate.sunlight}
+              当前时段: <strong>{solarData.preset.label}</strong>。太阳方位角 <strong>{solarData.azimuthDegrees}°</strong>，高度角 <strong>{solarData.altitudeDegrees}°</strong>。{solarData.preset.description}。
             </p>
             <p className="text-[11px] text-slate-500 leading-relaxed border-t border-blue-200/60 pt-2">
               {PROPERTY_DATA.microclimate.acousticsAndView}
