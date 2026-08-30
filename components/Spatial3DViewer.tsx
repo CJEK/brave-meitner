@@ -91,17 +91,17 @@ const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: num
   }
 };
 
-// 3D Anchor Points for Screen-Projected Badges (Spatially Staggered to prevent overlap)
+// 3D Anchor Points for Screen-Projected Badges (Spatially Separated & Height Staggered)
 const MARKER_ANCHORS = [
-  { id: "smatv", pos: [-3.5, 2.1, -0.5], label: "SMATV 电视点", type: "mep", icon: "⚡" },
-  { id: "ac-living", pos: [-5.8, 2.7, 2.2], label: "15A 空调动力", type: "mep", icon: "⚡" },
-  { id: "fp2-living", pos: [-2.0, 3.0, 1.2], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
-  { id: "desk-power", pos: [3.4, 2.0, 2.0], label: "8组桌面插座", type: "mep", icon: "⚡" },
-  { id: "fp2-study", pos: [5.2, 2.9, 1.5], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
-  { id: "curtain-c3", pos: [4.2, 2.7, -5.2], label: "C3 静音双轨帘", type: "smart", icon: "🤖" },
-  { id: "d200-lock", pos: [-5.2, 2.2, -7.0], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
-  { id: "vanity-power", pos: [0.5, 2.0, -6.5], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
-  { id: "roborock", pos: [4.2, 1.6, -7.5], label: "扫拖机自动上下水", type: "smart", icon: "🤖" }
+  { id: "smatv", pos: [-3.5, 2.0, -0.6], label: "SMATV 电视点", type: "mep", icon: "⚡" },
+  { id: "ac-living", pos: [-6.2, 2.9, 2.2], label: "15A 空调动力", type: "mep", icon: "⚡" },
+  { id: "fp2-living", pos: [-1.6, 3.3, 0.8], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
+  { id: "desk-power", pos: [3.2, 1.9, 2.2], label: "8组桌面插座", type: "mep", icon: "⚡" },
+  { id: "fp2-study", pos: [5.4, 3.2, 1.2], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
+  { id: "curtain-c3", pos: [4.2, 2.9, -5.4], label: "C3 静音双轨帘", type: "smart", icon: "🤖" },
+  { id: "d200-lock", pos: [-5.8, 2.1, -7.0], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
+  { id: "vanity-power", pos: [0.5, 2.2, -6.5], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
+  { id: "roborock", pos: [5.6, 1.6, -7.8], label: "扫拖机自动上下水", type: "smart", icon: "🤖" }
 ];
 
 export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleId }) => {
@@ -162,14 +162,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, []);
 
-  // 1. Initialize Three.js Scene with Contrast-Calibrated Studio Environment
+  // 1. Initialize Three.js Scene with Contrast-Calibrated Studio Environment & Soft Contact Shadows
   useEffect(() => {
     if (!mountRef.current || viewMode !== "3d") return;
 
     const width = mountRef.current.clientWidth;
     const height = mountRef.current.clientHeight || 560;
 
-    // Architectural Studio Background (Clear Light Slate #f1f5f9, not pure white!)
+    // Architectural Studio Background (Light Slate #f1f5f9)
     const scene = new THREE.Scene();
     sceneRef.current = scene;
     scene.background = new THREE.Color(0xf1f5f9);
@@ -211,7 +211,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const domElem = renderer.domElement;
     domElem.addEventListener("click", handleCanvasClick);
 
-    // Calibrated Ambient Lighting (0.95 for clear contrast without blowing out whites)
+    // Calibrated Ambient Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
     ambientLightRef.current = ambientLight;
     scene.add(ambientLight);
@@ -237,7 +237,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     fillLight.position.set(-10, 12, -12);
     scene.add(fillLight);
 
-    // Ground Grid Helper (Clean, High Visibility Lines)
+    // Ground Grid Helper
     const gridHelper = new THREE.GridHelper(34, 34, 0x94a3b8, 0xcbd5e1);
     gridHelper.position.y = -0.02;
     scene.add(gridHelper);
@@ -272,6 +272,34 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       scene.add(zoneFloor);
       clickableZonesRef.current.push(zoneFloor);
     });
+
+    // Helper: Soft Contact Shadow Generator for Furniture Grounding
+    const createContactShadow = (w: number, d: number, x: number, z: number, opacity = 0.28) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 64;
+      canvas.height = 64;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        const gradient = ctx.createRadialGradient(32, 32, 4, 32, 32, 30);
+        gradient.addColorStop(0, "rgba(51, 65, 85, 0.85)");
+        gradient.addColorStop(0.5, "rgba(71, 85, 105, 0.35)");
+        gradient.addColorStop(1, "rgba(100, 116, 139, 0)");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 64, 64);
+      }
+      const texture = new THREE.CanvasTexture(canvas);
+      const planeGeom = new THREE.PlaneGeometry(w * 1.15, d * 1.15);
+      planeGeom.rotateX(-Math.PI / 2);
+      const planeMat = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        opacity,
+        depthWrite: false
+      });
+      const shadowMesh = new THREE.Mesh(planeGeom, planeMat);
+      shadowMesh.position.set(x, 0.008, z);
+      return shadowMesh;
+    };
 
     // Helper: Create High-Contrast Architectural Furniture with Dark Edge Lines
     const createFurniture = (w: number, h: number, d: number, x: number, y: number, z: number, color = 0xcbd5e1, edgeColor = 0x475569) => {
@@ -316,36 +344,42 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       return group;
     };
 
-    // --- 1. Living Room & Balcony ---
+    // --- 1. Living Room & Balcony with Contact Shadows ---
     const sofa = createFurniture(4.5, 0.75, 1.6, -3.5, 0.45, 2.2, 0xb0b8c4, 0x334155);
+    const sofaShadow = createContactShadow(4.8, 1.8, -3.5, 2.2, 0.35);
     const cushion1 = createFurniture(1.2, 0.25, 0.6, -4.5, 0.85, 2.2, 0x60a5fa, 0x1e40af);
     const cushion2 = createFurniture(1.2, 0.25, 0.6, -2.5, 0.85, 2.2, 0xfbbf24, 0xb45309);
     const tvStand = createFurniture(5.2, 0.35, 0.6, -3.5, 0.3, -0.4, 0xd1d5db, 0x475569);
+    const tvStandShadow = createContactShadow(5.4, 0.8, -3.5, -0.4, 0.3);
     const tvScreen = createFurniture(4.6, 2.3, 0.08, -3.5, 1.7, -0.6, 0x1e293b, 0x0f172a);
     const balconyRailing = createWall(6.2, 1.1, 0.08, -3.5, 0.65, 7.8, 0.45, 0x60a5fa);
-    scene.add(sofa, cushion1, cushion2, tvStand, tvScreen, balconyRailing);
+    scene.add(sofaShadow, sofa, cushion1, cushion2, tvStandShadow, tvStand, tvScreen, balconyRailing);
 
-    // --- 2. Kitchen & Island ---
+    // --- 2. Kitchen & Island with Contact Shadows ---
     const kitchenCounter = createFurniture(4.0, 1.0, 1.2, -4.8, 0.55, -4.5, 0xd1d5db, 0x475569);
+    const kitchenShadow = createContactShadow(4.2, 1.4, -4.8, -4.5, 0.3);
     const island = createFurniture(3.4, 1.1, 1.4, -3.2, 0.6, -1.8, 0xffffff, 0x475569);
+    const islandShadow = createContactShadow(3.6, 1.6, -3.2, -1.8, 0.35);
     const islandWood = createFurniture(1.2, 0.08, 1.4, -1.0, 1.05, -1.8, 0xd4a373, 0x78350f);
-    scene.add(kitchenCounter, island, islandWood);
+    scene.add(kitchenShadow, kitchenCounter, islandShadow, island, islandWood);
 
-    // --- 3. 1+1 Geek Workstation (2.0m Lifting Desk) ---
+    // --- 3. 1+1 Geek Workstation (2.0m Lifting Desk) with Contact Shadows ---
     const studyGlass = createWall(0.08, 2.6, 4.8, 1.2, 1.35, 2.2, 0.4, 0x93c5fd);
+    const deskShadow = createContactShadow(3.6, 1.6, 4.2, 2.2, 0.32);
     const liftDesk = createFurniture(3.4, 0.1, 1.4, 4.2, 1.1, 2.2, 0xd4a373, 0x78350f);
     const leg1 = createFurniture(0.18, 1.05, 1.2, 2.8, 0.55, 2.2, 0x475569, 0x1e293b);
     const leg2 = createFurniture(0.18, 1.05, 1.2, 5.6, 0.55, 2.2, 0x475569, 0x1e293b);
     const screen1 = createFurniture(1.4, 0.8, 0.06, 3.7, 1.75, 2.0, 0x2563eb, 0x1e40af);
     const screen2 = createFurniture(0.8, 1.3, 0.06, 4.9, 1.85, 2.0, 0x2563eb, 0x1e40af);
-    scene.add(studyGlass, liftDesk, leg1, leg2, screen1, screen2);
+    scene.add(studyGlass, deskShadow, liftDesk, leg1, leg2, screen1, screen2);
 
-    // --- 4. Master Bedroom ---
+    // --- 4. Master Bedroom with Contact Shadows ---
+    const bedShadow = createContactShadow(3.6, 3.8, 4.2, -3.5, 0.35);
     const bedBase = createFurniture(3.4, 0.45, 3.6, 4.2, 0.3, -3.5, 0xb0b8c4, 0x475569);
     const mattress = createFurniture(3.0, 0.4, 3.2, 4.2, 0.65, -3.5, 0xffffff, 0x94a3b8);
     const headboard = createFurniture(3.4, 1.3, 0.15, 4.2, 0.85, -5.35, 0xd1d5db, 0x475569);
     const wardrobe = createFurniture(0.7, 2.6, 4.2, 7.3, 1.35, -3.5, 0xffffff, 0x94a3b8);
-    scene.add(bedBase, mattress, headboard, wardrobe);
+    scene.add(bedShadow, bedBase, mattress, headboard, wardrobe);
 
     // --- 5. Bathroom 1.5m Vanity Monolithic Platform ---
     const vanityLedge = createFurniture(2.8, 0.35, 1.2, 0.5, 0.9, -6.2, 0xffffff, 0x2563eb);
@@ -413,9 +447,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           const rawX = ((vec.x + 1) * rect.width) / 2;
           const rawY = ((-vec.y + 1) * rect.height) / 2;
 
-          // Clamped within 3D viewport canvas bounds
-          const x = Math.max(50, Math.min(rect.width - 50, rawX));
-          const y = Math.max(30, Math.min(rect.height - 30, rawY));
+          // Clamped within 3D viewport canvas bounds to prevent cutting off text
+          const x = Math.max(60, Math.min(rect.width - 60, rawX));
+          const y = Math.max(35, Math.min(rect.height - 35, rawY));
 
           return {
             id: anchor.id,
@@ -568,7 +602,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const scrollBottom = (direction: "left" | "right") => {
     if (bottomScrollRef.current) {
       bottomScrollRef.current.scrollBy({
-        left: direction === "left" ? -200 : 200,
+        left: direction === "left" ? -240 : 240,
         behavior: "smooth"
       });
     }
@@ -760,7 +794,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <div className="relative w-full flex-1 h-full min-h-[520px] overflow-hidden bg-slate-100">
               <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
-              {/* 3D Projected Screen UI Labels (Strictly Contained within Canvas Bounds) */}
+              {/* 3D Projected Screen UI Labels (Clamped & Layered) */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 {projectedMarkers.map((marker) => {
                   if (!marker.visible) return null;
@@ -780,10 +814,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                       }}
                       className="pointer-events-auto cursor-pointer group hover:z-50"
                     >
-                      <div className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all duration-200 ease-out whitespace-nowrap group-hover:scale-105 group-hover:shadow-xl group-hover:z-50 ${
+                      <div className={`flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-bold border transition-all duration-200 ease-out whitespace-nowrap group-hover:scale-110 group-hover:shadow-2xl group-hover:z-50 ${
                         isMEP
-                          ? "bg-white text-amber-900 border-amber-300 shadow-md group-hover:border-amber-500 group-hover:ring-2 group-hover:ring-amber-400/30"
-                          : "bg-white text-purple-900 border-purple-300 shadow-md group-hover:border-purple-500 group-hover:ring-2 group-hover:ring-purple-400/30"
+                          ? "bg-white/95 text-amber-900 border-amber-300 shadow-md group-hover:border-amber-500 group-hover:ring-2 group-hover:ring-amber-400/30"
+                          : "bg-white/95 text-purple-900 border-purple-300 shadow-md group-hover:border-purple-500 group-hover:ring-2 group-hover:ring-purple-400/30"
                       }`}>
                         <span className="text-xs">{marker.icon}</span>
                         <span>{marker.label}</span>
@@ -864,12 +898,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           )}
 
-          {/* Bottom 9 Zones Selector: Smooth Horizontal Scrolling with Side Mask & Arrows */}
+          {/* Bottom 9 Zones Selector: Full flex-shrink-0 Protection with Right Fade Mask */}
           <div className="relative p-2.5 bg-white border-t border-slate-200 flex items-center">
             {/* Scroll Left Button */}
             <button
               onClick={() => scrollBottom("left")}
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all flex-shrink-0 mr-1"
+              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all flex-shrink-0 mr-1 z-10 shadow-2xs bg-white border border-slate-200"
+              title="向左滚动查看"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -877,7 +912,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             {/* Scrollable Buttons Container */}
             <div
               ref={bottomScrollRef}
-              className="flex-1 overflow-x-auto no-scrollbar flex items-center space-x-2 scroll-smooth pr-10"
+              className="flex-1 overflow-x-auto no-scrollbar flex items-center space-x-2 scroll-smooth px-1"
             >
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1 flex-shrink-0">
                 9大功能分区:
@@ -892,7 +927,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                       controlsRef.current.setLookAt(coord.x, 12, coord.z + 10, coord.x, 1.0, coord.z, true);
                     }
                   }}
-                  className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
+                  className={`flex-shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                     activeZone.id === z.id
                       ? "bg-slate-900 text-white shadow-sm ring-2 ring-blue-500/30"
                       : "bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-100"
@@ -904,9 +939,11 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
 
             {/* Scroll Right Button & Fade Mask */}
+            <div className="absolute right-9 top-0 bottom-0 w-12 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none" />
             <button
               onClick={() => scrollBottom("right")}
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all flex-shrink-0 ml-1"
+              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all flex-shrink-0 ml-1 z-10 shadow-2xs bg-white border border-slate-200"
+              title="向右滚动查看"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -915,7 +952,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
         {/* Side Inspector: Deep-Dive Zone Info (4 Columns) */}
         <div className="lg:col-span-4 space-y-4">
-          {/* Active Zone Detail Card (Pure White Modern Card with Clear Borders) */}
+          {/* Active Zone Detail Card */}
           <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
@@ -939,7 +976,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               </div>
             </div>
 
-            {/* Spatial Dimensions Specs (3800 × 3600 mm) */}
+            {/* Spatial Dimensions Specs */}
             <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/70 text-xs">
               <div>
                 <div className="text-[10px] text-slate-500 font-medium">净开间进深尺寸</div>
