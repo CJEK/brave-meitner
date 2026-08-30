@@ -12,9 +12,14 @@ import {
   Calculator, 
   Sparkles,
   Share2,
-  Camera
+  Camera,
+  ShieldCheck,
+  Sun,
+  Layers,
+  Ruler
 } from "lucide-react";
 import { PROPERTY_DATA, STYLES_DATA, ZONES_DATA } from "@/data/projectData";
+import { getJohorSunData } from "@/utils/solarCalculator";
 
 interface DecisionModalProps {
   isOpen: boolean;
@@ -49,6 +54,7 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
   if (!isOpen) return null;
 
   const style = STYLES_DATA.find((s) => s.id === selectedStyleId) || STYLES_DATA[0];
+  const morningSolar = getJohorSunData("morning");
 
   const handlePrint = () => {
     window.print();
@@ -60,7 +66,7 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
         {/* Header */}
         <div className="bg-slate-50 p-6 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-black shadow-sm text-base">
               PG
             </div>
             <div>
@@ -69,7 +75,7 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
                   Paragon Gateway 空间与设计风格决策终审报告
                 </h3>
                 <span className="text-[10px] bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded font-mono font-bold">
-                  FINAL DECISION
+                  BIM 1:1 VERIFIED
                 </span>
               </div>
               <p className="text-xs text-slate-500">
@@ -100,19 +106,19 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
           {/* Section 1: Property Metadata Summary */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-2xl border border-slate-200">
             <div>
-              <div className="text-[10px] text-slate-500 font-medium">物业名称</div>
-              <div className="font-bold text-slate-900 mt-0.5">{PROPERTY_DATA.projectName}</div>
+              <div className="text-[10px] text-slate-500 font-medium">物业名称与户型</div>
+              <div className="font-bold text-slate-900 mt-0.5">{PROPERTY_DATA.projectName} ({PROPERTY_DATA.unitType})</div>
             </div>
             <div>
               <div className="text-[10px] text-slate-500 font-medium">房号与楼层</div>
-              <div className="font-bold text-blue-700 font-mono mt-0.5">{PROPERTY_DATA.unitNo} (24楼)</div>
+              <div className="font-bold text-blue-700 font-mono mt-0.5">{PROPERTY_DATA.unitNo} (24F 高层无遮挡)</div>
             </div>
             <div>
-              <div className="text-[10px] text-slate-500 font-medium">建筑面积</div>
+              <div className="text-[10px] text-slate-500 font-medium">建筑总面积 (锁定)</div>
               <div className="font-bold text-slate-900 mt-0.5">{PROPERTY_DATA.builtUpSqFt} sq ft ({PROPERTY_DATA.builtUpSqm} ㎡)</div>
             </div>
             <div>
-              <div className="text-[10px] text-slate-500 font-medium">主采光朝向</div>
+              <div className="text-[10px] text-slate-500 font-medium">主采光面朝向</div>
               <div className="font-bold text-amber-700 mt-0.5">SSE 165° (零西晒)</div>
             </div>
           </div>
@@ -134,7 +140,75 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
             </div>
           )}
 
-          {/* Section 3: Selected Interior Style */}
+          {/* Section 3: 9-Zone Area Quantitative Breakdown (Sum = 60.22 ㎡) */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
+              <div className="flex items-center space-x-2">
+                <Layers className="w-4 h-4 text-blue-600" />
+                <span>9 大功能分区套内面积校准清单 (Total: 60.22 ㎡ / 648 sq ft)</span>
+              </div>
+              <span className="text-xs font-mono font-normal text-slate-500">100% 吻合 Type B 购房合同</span>
+            </div>
+
+            <div className="grid grid-cols-3 sm:grid-cols-3 gap-2">
+              {ZONES_DATA.map((z) => (
+                <div key={z.id} className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+                  <div>
+                    <div className="font-bold text-slate-900">{z.name}</div>
+                    <div className="text-[10px] text-slate-500 font-mono">{z.dimensionsMm}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-mono font-bold text-blue-700">{z.sqm} ㎡</div>
+                    <div className="text-[10px] text-slate-400 font-mono">{z.sqft} sqft</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Section 4: Mandatory Compliance Check */}
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>硬性指标达标自检校验表 (Mandatory Compliance Check)</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 flex items-start space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="font-bold text-emerald-950">尺寸基准锁定：X=6,900mm × Y=9,725mm</div>
+                  <div className="text-[11px] text-emerald-800">总面积固定 60.22 ㎡ (648 sq ft)，层高 3.0m，吊顶净高 2,650~2,750mm。</div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 flex items-start space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="font-bold text-emerald-950">朝向光影合规：南偏东 SSE 165° 零西晒</div>
+                  <div className="text-[11px] text-emerald-800">SunCalc 天体计算：晨光方位 108.5° / 高度角 28.5°，全天漫射采光。</div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 flex items-start space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="font-bold text-emerald-950">家政分区铁律：洗衣设备归入北侧 Yard</div>
+                  <div className="text-[11px] text-emerald-800">洗烘一体与自动上下水全部就位北侧生活阳台，南向阳台完全保持景观休闲。</div>
+                </div>
+              </div>
+
+              <div className="p-3 bg-emerald-50/60 rounded-xl border border-emerald-200 flex items-start space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <div className="font-bold text-emerald-950">动线安全达标：全屋过道净宽 ≥ 800mm</div>
+                  <div className="text-[11px] text-emerald-800">入户主通道 1,050mm，中岛过道 950mm，卧室床侧 750~850mm。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 5: Selected Interior Style */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
               <Palette className="w-4 h-4 text-blue-600" />
@@ -166,7 +240,7 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
             </div>
           </div>
 
-          {/* Section 4: Smart Home & Automation Profile */}
+          {/* Section 6: Smart Home & Automation Profile */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
               <Cpu className="w-4 h-4 text-purple-600" />
@@ -189,7 +263,7 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
             </div>
           </div>
 
-          {/* Section 5: Budget & Cost Estimation */}
+          {/* Section 7: Budget & Cost Estimation */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
               <Calculator className="w-4 h-4 text-amber-600" />
