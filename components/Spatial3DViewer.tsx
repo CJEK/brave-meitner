@@ -95,16 +95,16 @@ const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: num
 
 // 3D Anchor Points (Only rendered when user explicitly turns on the layer switch)
 const MARKER_ANCHORS = [
-  { id: "d200-lock", pos: [2.8, 1.4, -4.5], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
-  { id: "smatv", pos: [3.3, 1.2, 1.7], label: "SMATV 电视点", type: "mep", icon: "⚡" },
-  { id: "ac-living", pos: [3.3, 2.4, 2.8], label: "15A 空调动力", type: "mep", icon: "⚡" },
-  { id: "fp2-living", pos: [1.55, 2.6, 1.7], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
-  { id: "desk-power", pos: [-1.9, 0.9, -2.35], label: "8组桌面插座", type: "mep", icon: "⚡" },
-  { id: "fp2-study", pos: [-1.9, 2.6, -2.35], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
-  { id: "vanity-power", pos: [-3.3, 1.3, -0.25], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
-  { id: "roborock", pos: [-2.8, 0.5, -4.0], label: "扫拖机自动上下水", type: "smart", icon: "🤖" },
-  { id: "curtain-c3", pos: [1.55, 2.4, 4.6], label: "C3 南向双轨帘", type: "smart", icon: "🤖" },
-  { id: "curtain-bed", pos: [-3.3, 2.4, 4.4], label: "C3 主卧静音帘", type: "smart", icon: "🤖" }
+  { id: "d200-lock", pos: [2.8, 0.8, -4.5], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
+  { id: "smatv", pos: [3.3, 0.8, 1.7], label: "SMATV 电视点", type: "mep", icon: "⚡" },
+  { id: "ac-living", pos: [3.3, 1.2, 2.8], label: "15A 空调动力", type: "mep", icon: "⚡" },
+  { id: "fp2-living", pos: [1.55, 1.4, 1.7], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
+  { id: "desk-power", pos: [-1.9, 0.65, -2.35], label: "8组桌面插座", type: "mep", icon: "⚡" },
+  { id: "fp2-study", pos: [-1.9, 1.4, -2.35], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
+  { id: "vanity-power", pos: [-3.3, 0.8, -0.25], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
+  { id: "roborock", pos: [-2.8, 0.4, -4.0], label: "扫拖机自动上下水", type: "smart", icon: "🤖" },
+  { id: "curtain-c3", pos: [1.55, 0.8, 4.6], label: "C3 南向双轨帘", type: "smart", icon: "🤖" },
+  { id: "curtain-bed", pos: [-3.3, 0.8, 4.4], label: "C3 主卧静音帘", type: "smart", icon: "🤖" }
 ];
 
 export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleId }) => {
@@ -165,7 +165,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, []);
 
-  // 1. Initialize Three.js Scene: 6.9m × 9.725m Rectangular Slab, Physical Partition Walls (X = -0.35m, Z = 1.0m, Z = -1.5m), 1:1 Scaled Furniture
+  // 1. Initialize Three.js Scene: 6.9m × 9.725m Rectangular Slab, 0.3m Half-Walls (BIM Section Cut), 1:1 Scaled Furniture
   useEffect(() => {
     if (!mountRef.current || viewMode !== "3d") return;
 
@@ -177,10 +177,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     sceneRef.current = scene;
     scene.background = new THREE.Color(0xf8fafc);
 
-    // Perspective Camera
+    // Perspective Camera (45 FOV, 0.1 Near plane)
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     cameraRef.current = camera;
-    camera.position.set(0, 16, 16);
+    camera.position.set(0, 8.5, 9.5);
 
     // WebGL Renderer with preserveDrawingBuffer: true
     const renderer = new THREE.WebGLRenderer({
@@ -202,13 +202,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const controls = new CameraControls(camera, renderer.domElement);
     controls.smoothTime = 0.35;
     controls.draggingSmoothTime = 0.12;
-    controls.maxDistance = 32;
-    controls.minDistance = 4;
+    controls.maxDistance = 24;
+    controls.minDistance = 3.5;
     controls.maxPolarAngle = Math.PI / 2 - 0.08;
     controlsRef.current = controls;
 
-    // Set Initial LookAt
-    controls.setLookAt(0, 16, 15, 0, 0, 0, false);
+    // Clean 45-degree Bird's-eye Perspective
+    controls.setLookAt(0, 8.5, 9.5, 0, 0, 0, false);
 
     // Attach Raycasting Click Handler
     const domElem = renderer.domElement;
@@ -227,10 +227,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     sunLight.shadow.bias = -0.0004;
     sunLight.shadow.camera.near = 0.5;
     sunLight.shadow.camera.far = 45;
-    sunLight.shadow.camera.left = -10;
-    sunLight.shadow.camera.right = 10;
-    sunLight.shadow.camera.top = 10;
-    sunLight.shadow.camera.bottom = -10;
+    sunLight.shadow.camera.left = -8;
+    sunLight.shadow.camera.right = 8;
+    sunLight.shadow.camera.top = 8;
+    sunLight.shadow.camera.bottom = -8;
     sunLightRef.current = sunLight;
     scene.add(sunLight);
 
@@ -420,13 +420,15 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       return group;
     };
 
-    // Helper: Create Architectural Partition Wall with Crisp Outlines (0.15m Thickness)
-    const createWall = (w: number, h: number, d: number, x: number, y: number, z: number, opacity = 1, color = 0xffffff) => {
+    // Helper: Create Standard 0.3m (300mm) Architectural Half-Wall (BIM Section Cut)
+    const createHalfWall = (w: number, d: number, x: number, z: number, opacity = 0.95, color = 0xe2e8f0) => {
+      const wallHeight = 0.3; // 300mm dwarf wall mode
       const group = new THREE.Group();
-      const geom = new THREE.BoxGeometry(w, h, d);
+      const geom = new THREE.BoxGeometry(w, wallHeight, d);
       const mat = new THREE.MeshStandardMaterial({
         color,
-        roughness: 0.5,
+        roughness: 0.35,
+        metalness: 0.05,
         transparent: opacity < 1,
         opacity
       });
@@ -435,93 +437,91 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       wall.receiveShadow = true;
       group.add(wall);
 
-      if (opacity >= 0.8) {
-        const edges = new THREE.EdgesGeometry(geom);
-        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x94a3b8 }));
-        group.add(line);
-      }
+      const edges = new THREE.EdgesGeometry(geom);
+      const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x94a3b8, linewidth: 1.5 }));
+      group.add(line);
 
-      group.position.set(x, y, z);
+      // Sits right on top of floor plane (y = 0.15)
+      group.position.set(x, wallHeight / 2, z);
       return group;
     };
 
     // =========================================================================
-    // 🧱 3 CORE PHYSICAL PARTITION WALLS (Exact User Dimensions)
+    // 🧱 3 CORE 3D HALF-WALLS (Height = 0.3m / 300mm)
     // =========================================================================
-    // 1. 纵向主墙 (Spine Wall at X = -0.35m, Length 9.725m, separating Left 3.1m & Right 3.8m)
-    const spineWallNorth = createWall(0.15, 2.4, 4.36, -0.35, 1.2, -2.68); // From North to Bedroom door (z: -4.86 ~ -0.5)
-    const spineWallSouth = createWall(0.15, 2.4, 3.86, -0.35, 1.2, 2.93);  // From Bedroom door to South (z: 1.0 ~ 4.86)
+    // 1. 纵向主墙 (Spine Wall at X = -0.35m, 0.15m thickness, 0.3m height)
+    const spineWallNorth = createHalfWall(0.15, 4.36, -0.35, -2.68); // North to Bedroom door (z: -4.86 ~ -0.5)
+    const spineWallSouth = createHalfWall(0.15, 3.86, -0.35, 2.93);  // Bedroom door to South (z: 1.0 ~ 4.86)
     scene.add(spineWallNorth, spineWallSouth);
 
-    // 2. 横向主卧隔墙 (Bedroom Wall at Z = 1.0m, from X = -3.45 to X = -0.35, 3.1m width)
-    const bedWallLeft = createWall(2.0, 2.4, 0.15, -2.45, 1.2, 1.0);
-    const bedWallRight = createWall(0.2, 2.4, 0.15, -0.45, 1.2, 1.0); // 900mm Bedroom doorway opening at x: -1.05 ~ -0.15
+    // 2. 横向主卧隔墙 (Bedroom Wall at Z = 1.0m, from X = -3.45 to X = -0.35, 0.3m height)
+    const bedWallLeft = createHalfWall(2.0, 0.15, -2.45, 1.0);
+    const bedWallRight = createHalfWall(0.2, 0.15, -0.45, 1.0); // 900mm Bedroom doorway opening
     scene.add(bedWallLeft, bedWallRight);
 
     // 3. 横向卫浴/书房隔墙 (Bathroom / Study Wall at Z = -1.5m, from X = -3.45 to X = -0.35)
-    const bathStudyWall = createWall(3.1, 2.4, 0.15, -1.9, 1.2, -1.5);
+    const bathStudyWall = createHalfWall(3.1, 0.15, -1.9, -1.5);
     scene.add(bathStudyWall);
 
     // 4. 横向生活阳台隔墙 (Yard Wall at Z = -3.2m, from X = -3.45 to X = -0.35)
-    const yardStudyWall = createWall(3.1, 2.4, 0.15, -1.9, 1.2, -3.2);
+    const yardStudyWall = createHalfWall(3.1, 0.15, -1.9, -3.2);
     scene.add(yardStudyWall);
 
-    // 5. 南向景观阳台推拉门与玻璃栏杆 (Z = 3.4m & Z = 4.86m)
-    const balconySlidingGlass = createWall(3.8, 2.4, 0.05, 1.55, 1.2, 3.4, 0.45, 0x93c5fd);
-    const balconyGlassRailing = createWall(3.8, 1.1, 0.06, 1.55, 0.55, 4.86, 0.5, 0x60a5fa);
-    scene.add(balconySlidingGlass, balconyGlassRailing);
+    // 5. 南向景观阳台玻璃栏杆 (Balcony Glass Railing at Z = 4.86m, 0.25m height)
+    const balconyGlassRailing = createHalfWall(3.8, 0.06, 1.55, 4.86, 0.6, 0x60a5fa);
+    scene.add(balconyGlassRailing);
 
     // =========================================================================
     // 🛋️ REAL-WORLD SCALED FURNITURE (1:1 Metric Scale, Leaves Open Walk Corridors)
     // =========================================================================
 
     // --- 1. [客厅极简影音区] (X: +1.55, Z: +1.7, 3.8m × 3.4m Room) ---
-    // Sofa: 2.6m W × 1.0m D (leaves 1.2m clear aisle to east wall!)
-    const sofa = createFurniture(2.6, 0.75, 1.0, 0.6, 0.45, 1.7, 0xb0b8c4, 0x1e293b);
+    // Sofa: 2.6m W × 1.0m D × 0.55m H
+    const sofa = createFurniture(2.6, 0.55, 1.0, 0.6, 0.28, 1.7, 0xb0b8c4, 0x1e293b);
     const sofaShadow = createContactShadow(2.8, 1.2, 0.6, 1.7, 0.38);
-    // TV Stand: 2.8m W × 0.45m D
-    const tvStand = createFurniture(2.8, 0.35, 0.45, 3.1, 0.25, 1.7, 0xd1d5db, 0x334155);
+    // TV Stand: 2.8m W × 0.45m D × 0.25m H
+    const tvStand = createFurniture(2.8, 0.25, 0.45, 3.1, 0.125, 1.7, 0xd1d5db, 0x334155);
     const tvStandShadow = createContactShadow(3.0, 0.6, 3.1, 1.7, 0.32);
-    const tvScreen = createFurniture(0.06, 1.4, 2.6, 3.38, 1.35, 1.7, 0x0f172a, 0x0284c7);
+    const tvScreen = createFurniture(0.06, 0.85, 2.6, 3.38, 0.75, 1.7, 0x0f172a, 0x0284c7);
     scene.add(sofaShadow, sofa, tvStandShadow, tvStand, tvScreen);
 
     // --- 2. [开放式厨房 & 多功能中岛吧台] (X: +1.55, Z: -2.55 / -0.9) ---
-    const kitchenCounter = createFurniture(3.4, 0.95, 0.65, 1.55, 0.55, -2.55, 0xd1d5db, 0x334155);
+    const kitchenCounter = createFurniture(3.4, 0.55, 0.65, 1.55, 0.28, -2.55, 0xd1d5db, 0x334155);
     const kitchenShadow = createContactShadow(3.6, 0.85, 1.55, -2.55, 0.3);
-    // Island: 2.0m W × 0.9m D (leaves 0.95m passage on each side!)
-    const island = createFurniture(2.0, 1.05, 0.9, 1.55, 0.6, -0.9, 0xffffff, 0x1e293b);
+    // Island: 2.0m W × 0.9m D × 0.65m H
+    const island = createFurniture(2.0, 0.65, 0.9, 1.55, 0.33, -0.9, 0xffffff, 0x1e293b);
     const islandShadow = createContactShadow(2.2, 1.1, 1.55, -0.9, 0.38);
-    const islandWood = createFurniture(0.8, 0.08, 0.8, 2.3, 0.95, -0.9, 0xd4a373, 0x78350f);
+    const islandWood = createFurniture(0.8, 0.08, 0.8, 2.3, 0.65, -0.9, 0xd4a373, 0x78350f);
     scene.add(kitchenShadow, kitchenCounter, islandShadow, island, islandWood);
 
     // --- 3. [极客工作站 1+1 房] (X: -1.9, Z: -2.35, 3.1m × 1.7m Room) ---
-    // Lifting Desk: 1.8m W × 0.8m D (leaves 1.3m activity room)
-    const liftDesk = createFurniture(1.8, 0.08, 0.8, -1.9, 0.95, -2.35, 0xd4a373, 0x78350f);
+    // Lifting Desk: 1.8m W × 0.8m D
+    const liftDesk = createFurniture(1.8, 0.06, 0.8, -1.9, 0.55, -2.35, 0xd4a373, 0x78350f);
     const deskShadow = createContactShadow(2.0, 1.0, -1.9, -2.35, 0.35);
-    const deskLeg1 = createFurniture(0.12, 0.9, 0.7, -2.6, 0.48, -2.35, 0x334155, 0x0f172a);
-    const deskLeg2 = createFurniture(0.12, 0.9, 0.7, -1.2, 0.48, -2.35, 0x334155, 0x0f172a);
-    const dualScreen = createFurniture(1.4, 0.6, 0.05, -1.9, 1.45, -2.6, 0x2563eb, 0x1e40af);
+    const deskLeg1 = createFurniture(0.1, 0.52, 0.65, -2.6, 0.26, -2.35, 0x334155, 0x0f172a);
+    const deskLeg2 = createFurniture(0.1, 0.52, 0.65, -1.2, 0.26, -2.35, 0x334155, 0x0f172a);
+    const dualScreen = createFurniture(1.4, 0.45, 0.05, -1.9, 0.85, -2.6, 0x2563eb, 0x1e40af);
     scene.add(deskShadow, liftDesk, deskLeg1, deskLeg2, dualScreen);
 
     // --- 4. [独立封闭卫浴室] (X: -1.9, Z: -0.25, 3.1m × 2.5m Room) ---
     // 1.5m Hotel Vanity Platform
-    const vanityLedge = createFurniture(1.5, 0.35, 0.65, -2.6, 0.8, -0.25, 0xffffff, 0x2563eb);
-    const mirrorCabinet = createFurniture(1.5, 0.9, 0.12, -2.6, 1.5, -0.65, 0xeff6ff, 0x1d4ed8);
-    const toilet = createFurniture(0.5, 0.5, 0.7, -1.1, 0.35, 0.2, 0xffffff, 0x64748b);
+    const vanityLedge = createFurniture(1.5, 0.25, 0.65, -2.6, 0.45, -0.25, 0xffffff, 0x2563eb);
+    const mirrorCabinet = createFurniture(1.5, 0.55, 0.1, -2.6, 0.85, -0.65, 0xeff6ff, 0x1d4ed8);
+    const toilet = createFurniture(0.45, 0.35, 0.65, -1.1, 0.18, 0.2, 0xffffff, 0x64748b);
     scene.add(vanityLedge, mirrorCabinet, toilet);
 
     // --- 5. [主卧深睡空间] (X: -1.9, Z: +2.9, 3.1m × 3.8m Room) ---
-    // King Bed: 1.8m W × 2.0m D (leaves 1.1m walkway to wardrobe!)
+    // King Bed: 1.8m W × 2.0m D
     const bedShadow = createContactShadow(2.0, 2.2, -1.9, 2.9, 0.38);
-    const bedBase = createFurniture(1.8, 0.4, 2.0, -1.9, 0.28, 2.9, 0xb0b8c4, 0x1e293b);
-    const mattress = createFurniture(1.6, 0.35, 1.9, -1.9, 0.58, 2.9, 0xffffff, 0x64748b);
-    const headboard = createFurniture(2.0, 1.0, 0.12, -1.9, 0.85, 1.85, 0xd1d5db, 0x334155);
-    // Wardrobe: 0.6m W × 2.4m H × 2.6m D along West Wall
-    const wardrobe = createFurniture(0.6, 2.4, 2.6, -3.1, 1.25, 3.0, 0xffffff, 0x94a3b8);
+    const bedBase = createFurniture(1.8, 0.3, 2.0, -1.9, 0.15, 2.9, 0xb0b8c4, 0x1e293b);
+    const mattress = createFurniture(1.6, 0.2, 1.9, -1.9, 0.35, 2.9, 0xffffff, 0x64748b);
+    const headboard = createFurniture(2.0, 0.65, 0.1, -1.9, 0.45, 1.85, 0xd1d5db, 0x334155);
+    // Wardrobe: 0.6m W × 1.2m H × 2.6m D along West Wall
+    const wardrobe = createFurniture(0.6, 1.2, 2.6, -3.1, 0.6, 3.0, 0xffffff, 0x94a3b8);
     scene.add(bedShadow, bedBase, mattress, headboard, wardrobe);
 
     // --- 6. [生活阳台 / 家政区] (X: -1.9, Z: -4.0, 3.1m × 1.6m Room) ---
-    const washer = createFurniture(0.9, 1.1, 0.8, -2.7, 0.6, -4.0, 0xe2e8f0, 0x475569);
+    const washer = createFurniture(0.9, 0.65, 0.8, -2.7, 0.33, -4.0, 0xe2e8f0, 0x475569);
     scene.add(washer);
 
     // --- 7. Interactive Zone Highlight Floor Mesh & Outline ---
@@ -716,19 +716,19 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
     switch (cameraPreset) {
       case "birds-eye":
-        ctrl.setLookAt(0, 16, 15, 0, 0, 0, true);
+        ctrl.setLookAt(0, 8.5, 9.5, 0, 0, 0, true);
         break;
       case "living":
-        ctrl.setLookAt(1.55, 6.0, 6.5, 1.55, 1.2, 1.7, true);
+        ctrl.setLookAt(1.55, 4.5, 5.2, 1.55, 0.5, 1.7, true);
         break;
       case "workstation":
-        ctrl.setLookAt(-1.9, 5.5, 3.5, -1.9, 1.2, -2.35, true);
+        ctrl.setLookAt(-1.9, 4.2, 2.2, -1.9, 0.5, -2.35, true);
         break;
       case "bedroom":
-        ctrl.setLookAt(-1.9, 5.5, 7.5, -1.9, 1.2, 2.9, true);
+        ctrl.setLookAt(-1.9, 4.2, 6.2, -1.9, 0.5, 2.9, true);
         break;
       case "balcony":
-        ctrl.setLookAt(1.55, 3.5, 2.0, 1.55, 1.2, 4.1, true);
+        ctrl.setLookAt(1.55, 2.8, 2.2, 1.55, 0.5, 4.1, true);
         break;
     }
   }, [cameraPreset]);
@@ -1062,7 +1062,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                     setActiveZone(z);
                     const coord = ZONE_3D_COORDS[z.id];
                     if (coord && controlsRef.current) {
-                      controlsRef.current.setLookAt(coord.x, 8, coord.z + 5, coord.x, 1.0, coord.z, true);
+                      controlsRef.current.setLookAt(coord.x, 4.5, coord.z + 4, coord.x, 0.5, coord.z, true);
                     }
                   }}
                   className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
