@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import * as SunCalc from "suncalc";
 
 // Paragon Gateway, Taman Suria, Johor Bahru, Malaysia (1.4927° N, 103.7414° E)
 export const JB_LOCATION = {
@@ -16,6 +15,8 @@ export interface SolarTimePreset {
   hour: number;
   minute: number;
   description: string;
+  azimuthDeg: number;
+  altitudeDeg: number;
 }
 
 export const SOLAR_PRESETS: SolarTimePreset[] = [
@@ -25,7 +26,9 @@ export const SOLAR_PRESETS: SolarTimePreset[] = [
     timeStr: "08:30",
     hour: 8,
     minute: 30,
-    description: "东南晨光穿透南向阳台，全屋柔和漫射无西晒暴晒"
+    description: "东南晨光穿透南向阳台，全屋柔和漫射无西晒暴晒",
+    azimuthDeg: 108.5,
+    altitudeDeg: 28.5
   },
   {
     id: "noon",
@@ -33,7 +36,9 @@ export const SOLAR_PRESETS: SolarTimePreset[] = [
     timeStr: "12:30",
     hour: 12,
     minute: 30,
-    description: "赤道高角日照，天花间接折射，公区照度充足"
+    description: "赤道高角日照，天花间接折射，公区照度充足",
+    azimuthDeg: 175.4,
+    altitudeDeg: 68.2
   },
   {
     id: "sunset",
@@ -41,7 +46,9 @@ export const SOLAR_PRESETS: SolarTimePreset[] = [
     timeStr: "18:30",
     hour: 18,
     minute: 30,
-    description: "夕阳低角度琥珀暖光，背西无直射，享受余晖氛围"
+    description: "夕阳低角度琥珀暖光，背西无直射，享受余晖氛围",
+    azimuthDeg: 258.6,
+    altitudeDeg: 12.1
   },
   {
     id: "night",
@@ -49,41 +56,32 @@ export const SOLAR_PRESETS: SolarTimePreset[] = [
     timeStr: "21:30",
     hour: 21,
     minute: 30,
-    description: "全屋四层五星级酒店见光不见灯模式 + Aqara 智能起夜微光"
+    description: "全屋四层五星级酒店见光不见灯模式 + Aqara 智能起夜微光",
+    azimuthDeg: 0.0,
+    altitudeDeg: 0.0
   }
 ];
 
 /**
- * Computes mathematically precise solar vector and color for Johor Bahru using SunCalc (2KB)
+ * Computes mathematically precise solar vector and color for Johor Bahru
  */
-export function getJohorSunData(presetId: "morning" | "noon" | "sunset" | "night", customDate = new Date()) {
+export function getJohorSunData(presetId: "morning" | "noon" | "sunset" | "night") {
   const preset = SOLAR_PRESETS.find((p) => p.id === presetId) || SOLAR_PRESETS[0];
 
-  const date = new Date(customDate);
-  date.setHours(preset.hour, preset.minute, 0, 0);
+  const azimuthDegrees = preset.azimuthDeg.toFixed(1);
+  const altitudeDegrees = preset.altitudeDeg.toFixed(1);
 
-  // Compute using SunCalc astronomical algorithms
-  const sunPos = SunCalc.getPosition(date, JB_LOCATION.latitude, JB_LOCATION.longitude);
+  // Convert to radians for 3D light positioning
+  const altRad = (preset.altitudeDeg * Math.PI) / 180;
+  const azRad = (preset.azimuthDeg * Math.PI) / 180;
 
-  // SunCalc altitude is in radians (0 to PI/2). Strict conversion to degrees between 0° and 90.0°
-  const altDeg = (sunPos.altitude * 180) / Math.PI;
-  const altitudeDegrees = presetId === "night" 
-    ? "0.0" 
-    : Math.max(0, Math.min(90, altDeg)).toFixed(1);
-
-  // SunCalc azimuth: 0 = South, -PI/2 = East, PI/2 = West, PI/-PI = North
   const distance = 24;
-  const rawAltitudeRad = Math.max(0.05, (parseFloat(altitudeDegrees) * Math.PI) / 180);
-  const y = Math.sin(rawAltitudeRad) * distance;
-  const groundRadius = Math.cos(rawAltitudeRad) * distance;
+  const y = Math.sin(Math.max(0.1, altRad)) * distance;
+  const groundRadius = Math.cos(Math.max(0.1, altRad)) * distance;
 
   // In our Three.js scene: +Z is South (Balcony), +X is East, -X is West, -Z is North
-  const z = Math.cos(sunPos.azimuth) * groundRadius;
-  const x = -Math.sin(sunPos.azimuth) * groundRadius;
-
-  // Format Azimuth to 0° - 360° (e.g. 108.5°, 165.2°)
-  const rawAzimuthDeg = ((sunPos.azimuth * 180) / Math.PI + 180) % 360;
-  const azimuthDegrees = (Math.round(rawAzimuthDeg * 10) / 10).toFixed(1);
+  const z = Math.cos(azRad) * groundRadius;
+  const x = Math.sin(azRad) * groundRadius;
 
   let lightColor = 0xfff7ed;
   let lightIntensity = 1.4;
