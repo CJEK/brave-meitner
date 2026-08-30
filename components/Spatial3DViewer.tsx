@@ -95,18 +95,18 @@ const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: num
   }
 };
 
-// 3D Anchor Points (Decoupled with elevation & spatial spacing)
+// 3D Anchor Points (Physically Decoupled with Vertical Elevation & Room Confinement)
 const MARKER_ANCHORS = [
-  { id: "d200-lock", pos: [2.5, 0.8, -4.5], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
-  { id: "smatv", pos: [3.35, 0.8, 1.7], label: "SMATV 电视点", type: "mep", icon: "⚡" },
-  { id: "ac-living", pos: [3.35, 1.3, 2.8], label: "15A 空调动力", type: "mep", icon: "⚡" },
-  { id: "fp2-living", pos: [1.65, 1.5, 1.7], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
-  { id: "desk-power", pos: [-1.8, 0.65, -2.35], label: "8组桌面插座", type: "mep", icon: "⚡" },
-  { id: "fp2-study", pos: [-1.8, 1.4, -2.35], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
-  { id: "vanity-power", pos: [-3.1, 0.8, -0.25], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
-  { id: "roborock", pos: [-2.6, 0.4, -4.0], label: "扫拖机自动上下水", type: "smart", icon: "🤖" },
-  { id: "curtain-c3", pos: [1.65, 0.8, 4.6], label: "C3 南向双轨帘", type: "smart", icon: "🤖" },
-  { id: "curtain-bed", pos: [-3.1, 0.8, 4.4], label: "C3 主卧静音帘", type: "smart", icon: "🤖" }
+  { id: "d200-lock", pos: [2.2, 1.2, -4.0], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
+  { id: "smatv", pos: [3.25, 0.65, 1.8], label: "SMATV 电视点位", type: "mep", icon: "⚡" },
+  { id: "ac-living", pos: [3.3, 2.2, 2.8], label: "15A 空调动力", type: "mep", icon: "⚡" },
+  { id: "fp2-living", pos: [1.5, 2.6, 1.0], label: "FP2 客厅微动雷达", type: "smart", icon: "🤖" },
+  { id: "desk-power", pos: [-1.5, 0.9, -1.5], label: "8组桌面组合插座", type: "mep", icon: "⚡" },
+  { id: "fp2-study", pos: [-1.5, 1.5, -1.5], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
+  { id: "vanity-power", pos: [-1.8, 1.35, 0.0], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
+  { id: "roborock", pos: [-2.2, 0.3, -3.8], label: "扫拖机自动上下水", type: "smart", icon: "🤖" },
+  { id: "curtain-c3", pos: [1.5, 2.6, 4.4], label: "C3 静音双轨电动帘", type: "smart", icon: "🤖" },
+  { id: "curtain-bed", pos: [-1.8, 2.6, 4.4], label: "C3 主卧静音帘", type: "smart", icon: "🤖" }
 ];
 
 export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleId }) => {
@@ -478,19 +478,19 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     // =========================================================================
 
     // --- 1. [客厅极简影音区] (X in [-0.15, 3.45], Z in [0.0, 3.4], 3.6m × 3.4m) ---
-    // Sofa (backed on West side near spine wall, running along Z): W=0.85 (X), H=0.45, D=2.4 (Z)
-    const sofa = createFurniture(0.85, 0.45, 2.4, 0.55, 0.225, 1.7, 0xe2e8f0, 0x64748b);
-    const sofaShadow = createContactShadow(1.0, 2.6, 0.55, 1.7, 0.35);
+    // Sofa (West side, facing East TV wall): W=0.85 (X), H=0.45, D=2.4 (Z)
+    const sofa = createFurniture(0.85, 0.45, 2.4, 0.55, 0.225, 1.8, 0xe2e8f0, 0x64748b);
+    const sofaShadow = createContactShadow(1.0, 2.6, 0.55, 1.8, 0.35);
 
     // TV Console (backed on East wall at X=3.25, running along Z): W=0.35 (X), H=0.25, D=2.4 (Z)
-    const tvStand = createFurniture(0.35, 0.25, 2.4, 3.25, 0.125, 1.7, 0xcbd5e1, 0x475569);
-    const tvStandShadow = createContactShadow(0.5, 2.6, 3.25, 1.7, 0.3);
+    const tvStand = createFurniture(0.35, 0.25, 2.4, 3.125, 0.125, 1.8, 0xcbd5e1, 0x475569);
+    const tvStandShadow = createContactShadow(0.5, 2.6, 3.125, 1.8, 0.3);
 
-    // 85" Ultra-Thin TV Screen (flush on East wall at X=3.40): W=0.04 (X), H=0.65, D=1.9 (Z), Color: matte slate #334155
-    const tvScreen = createFurniture(0.04, 0.65, 1.9, 3.40, 0.55, 1.7, 0x334155, 0x64748b);
+    // 85" Ultra-Thin TV Screen (flush on East wall at X=3.25): W=0.04 (X), H=0.65, D=1.9 (Z), Color: matte slate #334155
+    const tvScreen = createFurniture(0.04, 0.65, 1.9, 3.25, 0.55, 1.8, 0x334155, 0x64748b);
 
     // Coffee Table (centered in wide 1.85m aisle between Sofa and TV): W=0.55, H=0.22, D=0.90
-    const coffeeTable = createFurniture(0.55, 0.22, 0.9, 1.85, 0.11, 1.7, 0xf1f5f9, 0x94a3b8);
+    const coffeeTable = createFurniture(0.55, 0.22, 0.9, 1.85, 0.11, 1.8, 0xf1f5f9, 0x94a3b8);
     scene.add(sofaShadow, sofa, tvStandShadow, tvStand, tvScreen, coffeeTable);
 
     // --- 2. [开放式厨房 & 多功能中岛吧台] (X in [-0.15, 3.45], Z in [-3.2, 0.0]) ---
