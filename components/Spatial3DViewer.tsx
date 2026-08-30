@@ -91,17 +91,17 @@ const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: num
   }
 };
 
-// 3D Anchor Points for Screen-Projected Badges
+// 3D Anchor Points for Screen-Projected Badges (Spatially Staggered to prevent overlap)
 const MARKER_ANCHORS = [
-  { id: "smatv", pos: [-3.5, 2.2, -0.4], label: "SMATV 电视点", type: "mep", icon: "⚡" },
-  { id: "ac-living", pos: [-5.5, 2.4, 2.2], label: "15A 空调动力", type: "mep", icon: "⚡" },
-  { id: "fp2-living", pos: [-3.5, 2.5, 1.2], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
-  { id: "desk-power", pos: [4.2, 1.8, 2.0], label: "8组桌面插座", type: "mep", icon: "⚡" },
-  { id: "fp2-study", pos: [4.2, 2.5, 1.5], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
-  { id: "curtain-c3", pos: [4.2, 2.5, -5.0], label: "C3 静音双轨帘", type: "smart", icon: "🤖" },
-  { id: "d200-lock", pos: [-5.0, 2.2, -7.0], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
-  { id: "vanity-power", pos: [0.5, 1.8, -6.5], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
-  { id: "roborock", pos: [4.2, 1.5, -7.5], label: "扫拖机自动上下水", type: "smart", icon: "🤖" }
+  { id: "smatv", pos: [-3.5, 2.1, -0.5], label: "SMATV 电视点", type: "mep", icon: "⚡" },
+  { id: "ac-living", pos: [-5.8, 2.7, 2.2], label: "15A 空调动力", type: "mep", icon: "⚡" },
+  { id: "fp2-living", pos: [-2.0, 3.0, 1.2], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
+  { id: "desk-power", pos: [3.4, 2.0, 2.0], label: "8组桌面插座", type: "mep", icon: "⚡" },
+  { id: "fp2-study", pos: [5.2, 2.9, 1.5], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
+  { id: "curtain-c3", pos: [4.2, 2.7, -5.2], label: "C3 静音双轨帘", type: "smart", icon: "🤖" },
+  { id: "d200-lock", pos: [-5.2, 2.2, -7.0], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
+  { id: "vanity-power", pos: [0.5, 2.0, -6.5], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
+  { id: "roborock", pos: [4.2, 1.6, -7.5], label: "扫拖机自动上下水", type: "smart", icon: "🤖" }
 ];
 
 export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleId }) => {
@@ -776,19 +776,19 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                         left: `${marker.x}px`,
                         top: `${marker.y}px`,
                         transform: "translate(-50%, -100%)",
-                        transition: "left 0.05s linear, top 0.05s linear"
+                        transition: "left 0.05s linear, top 0.05s linear, z-index 0.2s ease"
                       }}
-                      className="pointer-events-auto cursor-pointer group"
+                      className="pointer-events-auto cursor-pointer group hover:z-50"
                     >
-                      <div className={`flex items-center space-x-1 px-2 py-0.5 rounded-full shadow-md text-[10px] font-bold border transition-all whitespace-nowrap ${
+                      <div className={`flex items-center space-x-1 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all duration-200 ease-out whitespace-nowrap group-hover:scale-105 group-hover:shadow-xl group-hover:z-50 ${
                         isMEP
-                          ? "bg-white text-amber-800 border-amber-300 group-hover:scale-105"
-                          : "bg-white text-purple-800 border-purple-300 group-hover:scale-105"
+                          ? "bg-white text-amber-900 border-amber-300 shadow-md group-hover:border-amber-500 group-hover:ring-2 group-hover:ring-amber-400/30"
+                          : "bg-white text-purple-900 border-purple-300 shadow-md group-hover:border-purple-500 group-hover:ring-2 group-hover:ring-purple-400/30"
                       }`}>
-                        <span>{marker.icon}</span>
+                        <span className="text-xs">{marker.icon}</span>
                         <span>{marker.label}</span>
                       </div>
-                      <div className="w-1.5 h-1.5 rounded-full bg-slate-800 mx-auto mt-0.5" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-slate-700 mx-auto mt-0.5 shadow-2xs group-hover:bg-blue-600 group-hover:scale-125 transition-all" />
                     </div>
                   );
                 })}

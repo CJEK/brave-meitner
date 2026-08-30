@@ -67,7 +67,8 @@ export function getJohorSunData(presetId: "morning" | "noon" | "sunset" | "night
 
   // SunCalc azimuth: 0 = South, -PI/2 = East, PI/2 = West, PI/-PI = North
   const distance = 24;
-  const altitude = Math.max(0.08, sunPos.altitude);
+  const rawAltitudeRad = sunPos.altitude;
+  const altitude = Math.max(0.08, rawAltitudeRad);
   const y = Math.sin(altitude) * distance;
   const groundRadius = Math.cos(altitude) * distance;
 
@@ -75,38 +76,44 @@ export function getJohorSunData(presetId: "morning" | "noon" | "sunset" | "night
   const z = Math.cos(sunPos.azimuth) * groundRadius;
   const x = -Math.sin(sunPos.azimuth) * groundRadius;
 
-  const azimuthDegrees = Math.round(((sunPos.azimuth * 180) / Math.PI + 180) % 360);
-  const altitudeDegrees = Math.round((sunPos.altitude * 180) / Math.PI);
+  // Format Azimuth & Altitude to exactly 1 decimal place (e.g. 165.2°, 28.5°)
+  const rawAzimuthDeg = ((sunPos.azimuth * 180) / Math.PI + 180) % 360;
+  const azimuthDegrees = (Math.round(rawAzimuthDeg * 10) / 10).toFixed(1);
+
+  const rawAltitudeDeg = (rawAltitudeRad * 180) / Math.PI;
+  const altitudeDegrees = presetId === "night" 
+    ? "0.0" 
+    : (Math.max(0.1, Math.round(rawAltitudeDeg * 10) / 10)).toFixed(1);
 
   let lightColor = 0xfff7ed;
-  let lightIntensity = 2.2;
+  let lightIntensity = 1.4;
   let ambientColor = 0xffffff;
-  let ambientIntensity = 1.6;
-  let skyBg = "#eef2f6";
+  let ambientIntensity = 0.95;
+  let skyBg = "#f1f5f9";
 
   if (presetId === "morning") {
-    lightColor = 0xffedd5;
-    lightIntensity = 2.3;
-    ambientColor = 0xf8fafc;
-    ambientIntensity = 1.5;
-    skyBg = "#eef2f6";
+    lightColor = 0xfff7ed;
+    lightIntensity = 1.45;
+    ambientColor = 0xffffff;
+    ambientIntensity = 0.95;
+    skyBg = "#f1f5f9";
   } else if (presetId === "noon") {
     lightColor = 0xffffff;
-    lightIntensity = 2.5;
+    lightIntensity = 1.6;
     ambientColor = 0xffffff;
-    ambientIntensity = 1.7;
+    ambientIntensity = 1.0;
     skyBg = "#f1f5f9";
   } else if (presetId === "sunset") {
     lightColor = 0xfdba74;
-    lightIntensity = 1.8;
+    lightIntensity = 1.3;
     ambientColor = 0xfef3c7;
-    ambientIntensity = 1.3;
+    ambientIntensity = 0.9;
     skyBg = "#fef3c7";
   } else if (presetId === "night") {
     lightColor = 0x93c5fd;
     lightIntensity = 0.4;
     ambientColor = 0x334155;
-    ambientIntensity = 0.85;
+    ambientIntensity = 0.8;
     skyBg = "#1e293b";
   }
 
