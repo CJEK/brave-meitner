@@ -19,7 +19,8 @@ import {
   ShieldCheck, 
   Building2, 
   MousePointerClick,
-  Clock,
+  ChevronLeft,
+  ChevronRight,
   RotateCcw
 } from "lucide-react";
 import { ZONES_DATA, STYLES_DATA, PROPERTY_DATA, ZoneData } from "@/data/projectData";
@@ -90,17 +91,17 @@ const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: num
   }
 };
 
-// 3D Anchor Points for HTML Floating Labels
+// 3D Anchor Points for Screen-Projected Badges
 const MARKER_ANCHORS = [
-  { id: "smatv", pos: [-3.5, 2.4, -0.4], label: "SMATV 电视点", type: "mep", icon: "⚡" },
-  { id: "ac-living", pos: [-5.5, 2.5, 2.2], label: "15A 空调动力", type: "mep", icon: "⚡" },
-  { id: "fp2-living", pos: [-3.5, 2.6, 1.2], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
-  { id: "desk-power", pos: [4.2, 1.9, 2.0], label: "8组桌面插座", type: "mep", icon: "⚡" },
-  { id: "fp2-study", pos: [4.2, 2.6, 1.5], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
-  { id: "curtain-c3", pos: [4.2, 2.6, -5.0], label: "C3 静音双轨帘", type: "smart", icon: "🤖" },
-  { id: "d200-lock", pos: [-5.0, 2.4, -7.0], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
-  { id: "vanity-power", pos: [0.5, 1.9, -6.5], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
-  { id: "roborock", pos: [4.2, 1.6, -7.5], label: "扫拖机自动上下水", type: "smart", icon: "🤖" }
+  { id: "smatv", pos: [-3.5, 2.2, -0.4], label: "SMATV 电视点", type: "mep", icon: "⚡" },
+  { id: "ac-living", pos: [-5.5, 2.4, 2.2], label: "15A 空调动力", type: "mep", icon: "⚡" },
+  { id: "fp2-living", pos: [-3.5, 2.5, 1.2], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
+  { id: "desk-power", pos: [4.2, 1.8, 2.0], label: "8组桌面插座", type: "mep", icon: "⚡" },
+  { id: "fp2-study", pos: [4.2, 2.5, 1.5], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
+  { id: "curtain-c3", pos: [4.2, 2.5, -5.0], label: "C3 静音双轨帘", type: "smart", icon: "🤖" },
+  { id: "d200-lock", pos: [-5.0, 2.2, -7.0], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
+  { id: "vanity-power", pos: [0.5, 1.8, -6.5], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
+  { id: "roborock", pos: [4.2, 1.5, -7.5], label: "扫拖机自动上下水", type: "smart", icon: "🤖" }
 ];
 
 export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleId }) => {
@@ -134,6 +135,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const ambientLightRef = useRef<THREE.AmbientLight | null>(null);
   const dimensionGroupRef = useRef<THREE.Group | null>(null);
   const clickableZonesRef = useRef<THREE.Mesh[]>([]);
+  const bottomScrollRef = useRef<HTMLDivElement>(null);
 
   // Handle Raycasting Pointer Click
   const handleCanvasClick = useCallback((event: MouseEvent) => {
@@ -160,24 +162,24 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, []);
 
-  // 1. Initialize Three.js Scene with CameraControls & preserveDrawingBuffer
+  // 1. Initialize Three.js Scene with Contrast-Calibrated Studio Environment
   useEffect(() => {
     if (!mountRef.current || viewMode !== "3d") return;
 
     const width = mountRef.current.clientWidth;
     const height = mountRef.current.clientHeight || 560;
 
-    // Clean Studio Background
+    // Architectural Studio Background (Clear Light Slate #f1f5f9, not pure white!)
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color(solarData.skyBg);
+    scene.background = new THREE.Color(0xf1f5f9);
 
     // Perspective Camera
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
     cameraRef.current = camera;
     camera.position.set(0, 24, 24);
 
-    // WebGL Renderer with preserveDrawingBuffer for crystal clear PDF exports
+    // WebGL Renderer with preserveDrawingBuffer: true
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
@@ -193,13 +195,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     mountRef.current.innerHTML = "";
     mountRef.current.appendChild(renderer.domElement);
 
-    // Initialize CameraControls (High precision, buttery damping, zero boilerplate)
+    // Initialize CameraControls
     const controls = new CameraControls(camera, renderer.domElement);
-    controls.smoothTime = 0.4;
-    controls.draggingSmoothTime = 0.15;
-    controls.maxDistance = 50;
-    controls.minDistance = 4;
-    controls.maxPolarAngle = Math.PI / 2 - 0.05; // Prevent camera sinking under floor
+    controls.smoothTime = 0.35;
+    controls.draggingSmoothTime = 0.12;
+    controls.maxDistance = 45;
+    controls.minDistance = 5;
+    controls.maxPolarAngle = Math.PI / 2 - 0.08;
     controlsRef.current = controls;
 
     // Set Initial LookAt
@@ -209,14 +211,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const domElem = renderer.domElement;
     domElem.addEventListener("click", handleCanvasClick);
 
-    // Ambient Lighting
-    const ambientLight = new THREE.AmbientLight(solarData.ambientColor, solarData.ambientIntensity);
+    // Calibrated Ambient Lighting (0.95 for clear contrast without blowing out whites)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
     ambientLightRef.current = ambientLight;
     scene.add(ambientLight);
 
     // Sun Directional Light (Calculated via SunCalc from Johor Bahru GPS coordinates)
-    const sunLight = new THREE.DirectionalLight(solarData.lightColor, solarData.lightIntensity);
-    sunLight.position.copy(solarData.position);
+    const sunLight = new THREE.DirectionalLight(0xfff7ed, 1.4);
+    sunLight.position.set(8, 14, 18);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
@@ -231,20 +233,20 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     scene.add(sunLight);
 
     // Soft Studio Fill Light
-    const fillLight = new THREE.DirectionalLight(0xe2e8f0, 0.7);
+    const fillLight = new THREE.DirectionalLight(0xe2e8f0, 0.6);
     fillLight.position.set(-10, 12, -12);
     scene.add(fillLight);
 
-    // Architectural Studio Floor Grid
-    const gridHelper = new THREE.GridHelper(34, 34, 0xcbd5e1, 0xe2e8f0);
+    // Ground Grid Helper (Clean, High Visibility Lines)
+    const gridHelper = new THREE.GridHelper(34, 34, 0x94a3b8, 0xcbd5e1);
     gridHelper.position.y = -0.02;
     scene.add(gridHelper);
 
-    // Base Floor Slab (648 sq ft = 6.9m × 9.725m)
+    // Base Floor Slab (Warm Architectural Stone / Oak base 0xede8df)
     const floorGeometry = new THREE.BoxGeometry(16, 0.2, 18);
     const floorMat = new THREE.MeshStandardMaterial({
-      color: 0xf8fafc,
-      roughness: 0.35,
+      color: 0xede8df,
+      roughness: 0.4,
       metalness: 0.05
     });
     const floorMesh = new THREE.Mesh(floorGeometry, floorMat);
@@ -252,9 +254,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     floorMesh.receiveShadow = true;
     scene.add(floorMesh);
 
-    // Floor Perimeter Wireframe Edge
+    // Floor Perimeter Edge Line
     const floorEdges = new THREE.EdgesGeometry(floorGeometry);
-    const floorLine = new THREE.LineSegments(floorEdges, new THREE.LineBasicMaterial({ color: 0x94a3b8 }));
+    const floorLine = new THREE.LineSegments(floorEdges, new THREE.LineBasicMaterial({ color: 0x64748b, linewidth: 2 }));
     floorLine.position.y = -0.1;
     scene.add(floorLine);
 
@@ -271,8 +273,8 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       clickableZonesRef.current.push(zoneFloor);
     });
 
-    // Helper: Create Architect-Grade Clean Furniture with Wireframe Border
-    const createFurniture = (w: number, h: number, d: number, x: number, y: number, z: number, color = 0xe2e8f0, edgeColor = 0x94a3b8) => {
+    // Helper: Create High-Contrast Architectural Furniture with Dark Edge Lines
+    const createFurniture = (w: number, h: number, d: number, x: number, y: number, z: number, color = 0xcbd5e1, edgeColor = 0x475569) => {
       const group = new THREE.Group();
       const geom = new THREE.BoxGeometry(w, h, d);
       const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.4, metalness: 0.05 });
@@ -289,7 +291,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       return group;
     };
 
-    // Helper: Create Architectural White Wall
+    // Helper: Create Architectural White Wall with Crisp Borders
     const createWall = (w: number, h: number, d: number, x: number, y: number, z: number, opacity = 1, color = 0xffffff) => {
       const group = new THREE.Group();
       const geom = new THREE.BoxGeometry(w, h, d);
@@ -306,7 +308,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
       if (opacity >= 0.8) {
         const edges = new THREE.EdgesGeometry(geom);
-        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xcbd5e1 }));
+        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x94a3b8 }));
         group.add(line);
       }
 
@@ -315,39 +317,39 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     };
 
     // --- 1. Living Room & Balcony ---
-    const sofa = createFurniture(4.5, 0.75, 1.6, -3.5, 0.45, 2.2, 0xd1d5db, 0x64748b);
-    const cushion1 = createFurniture(1.2, 0.25, 0.6, -4.5, 0.85, 2.2, 0x93c5fd, 0x3b82f6);
-    const cushion2 = createFurniture(1.2, 0.25, 0.6, -2.5, 0.85, 2.2, 0xfde68a, 0xd97706);
-    const tvStand = createFurniture(5.2, 0.35, 0.6, -3.5, 0.3, -0.4, 0xe2e8f0, 0x94a3b8);
-    const tvScreen = createFurniture(4.6, 2.3, 0.08, -3.5, 1.7, -0.6, 0x334155, 0x0f172a);
-    const balconyRailing = createWall(6.2, 1.1, 0.08, -3.5, 0.65, 7.8, 0.4, 0x93c5fd);
+    const sofa = createFurniture(4.5, 0.75, 1.6, -3.5, 0.45, 2.2, 0xb0b8c4, 0x334155);
+    const cushion1 = createFurniture(1.2, 0.25, 0.6, -4.5, 0.85, 2.2, 0x60a5fa, 0x1e40af);
+    const cushion2 = createFurniture(1.2, 0.25, 0.6, -2.5, 0.85, 2.2, 0xfbbf24, 0xb45309);
+    const tvStand = createFurniture(5.2, 0.35, 0.6, -3.5, 0.3, -0.4, 0xd1d5db, 0x475569);
+    const tvScreen = createFurniture(4.6, 2.3, 0.08, -3.5, 1.7, -0.6, 0x1e293b, 0x0f172a);
+    const balconyRailing = createWall(6.2, 1.1, 0.08, -3.5, 0.65, 7.8, 0.45, 0x60a5fa);
     scene.add(sofa, cushion1, cushion2, tvStand, tvScreen, balconyRailing);
 
     // --- 2. Kitchen & Island ---
-    const kitchenCounter = createFurniture(4.0, 1.0, 1.2, -4.8, 0.55, -4.5, 0xe2e8f0, 0x94a3b8);
-    const island = createFurniture(3.4, 1.1, 1.4, -3.2, 0.6, -1.8, 0xffffff, 0x94a3b8);
-    const islandWood = createFurniture(1.2, 0.08, 1.4, -1.0, 1.05, -1.8, 0xe8d5b5, 0xb45309);
+    const kitchenCounter = createFurniture(4.0, 1.0, 1.2, -4.8, 0.55, -4.5, 0xd1d5db, 0x475569);
+    const island = createFurniture(3.4, 1.1, 1.4, -3.2, 0.6, -1.8, 0xffffff, 0x475569);
+    const islandWood = createFurniture(1.2, 0.08, 1.4, -1.0, 1.05, -1.8, 0xd4a373, 0x78350f);
     scene.add(kitchenCounter, island, islandWood);
 
     // --- 3. 1+1 Geek Workstation (2.0m Lifting Desk) ---
-    const studyGlass = createWall(0.08, 2.6, 4.8, 1.2, 1.35, 2.2, 0.35, 0xbfdbfe);
-    const liftDesk = createFurniture(3.4, 0.1, 1.4, 4.2, 1.1, 2.2, 0xe8d5b5, 0xb45309);
-    const leg1 = createFurniture(0.18, 1.05, 1.2, 2.8, 0.55, 2.2, 0x64748b, 0x334155);
-    const leg2 = createFurniture(0.18, 1.05, 1.2, 5.6, 0.55, 2.2, 0x64748b, 0x334155);
+    const studyGlass = createWall(0.08, 2.6, 4.8, 1.2, 1.35, 2.2, 0.4, 0x93c5fd);
+    const liftDesk = createFurniture(3.4, 0.1, 1.4, 4.2, 1.1, 2.2, 0xd4a373, 0x78350f);
+    const leg1 = createFurniture(0.18, 1.05, 1.2, 2.8, 0.55, 2.2, 0x475569, 0x1e293b);
+    const leg2 = createFurniture(0.18, 1.05, 1.2, 5.6, 0.55, 2.2, 0x475569, 0x1e293b);
     const screen1 = createFurniture(1.4, 0.8, 0.06, 3.7, 1.75, 2.0, 0x2563eb, 0x1e40af);
     const screen2 = createFurniture(0.8, 1.3, 0.06, 4.9, 1.85, 2.0, 0x2563eb, 0x1e40af);
     scene.add(studyGlass, liftDesk, leg1, leg2, screen1, screen2);
 
     // --- 4. Master Bedroom ---
-    const bedBase = createFurniture(3.4, 0.45, 3.6, 4.2, 0.3, -3.5, 0xd1d5db, 0x94a3b8);
-    const mattress = createFurniture(3.0, 0.4, 3.2, 4.2, 0.65, -3.5, 0xffffff, 0xcbd5e1);
-    const headboard = createFurniture(3.4, 1.3, 0.15, 4.2, 0.85, -5.35, 0xe2e8f0, 0x94a3b8);
-    const wardrobe = createFurniture(0.7, 2.6, 4.2, 7.3, 1.35, -3.5, 0xffffff, 0xcbd5e1);
+    const bedBase = createFurniture(3.4, 0.45, 3.6, 4.2, 0.3, -3.5, 0xb0b8c4, 0x475569);
+    const mattress = createFurniture(3.0, 0.4, 3.2, 4.2, 0.65, -3.5, 0xffffff, 0x94a3b8);
+    const headboard = createFurniture(3.4, 1.3, 0.15, 4.2, 0.85, -5.35, 0xd1d5db, 0x475569);
+    const wardrobe = createFurniture(0.7, 2.6, 4.2, 7.3, 1.35, -3.5, 0xffffff, 0x94a3b8);
     scene.add(bedBase, mattress, headboard, wardrobe);
 
     // --- 5. Bathroom 1.5m Vanity Monolithic Platform ---
-    const vanityLedge = createFurniture(2.8, 0.35, 1.2, 0.5, 0.9, -6.2, 0xffffff, 0x3b82f6);
-    const mirrorCabinet = createFurniture(2.8, 1.1, 0.15, 0.5, 1.7, -6.7, 0xeff6ff, 0x2563eb);
+    const vanityLedge = createFurniture(2.8, 0.35, 1.2, 0.5, 0.9, -6.2, 0xffffff, 0x2563eb);
+    const mirrorCabinet = createFurniture(2.8, 1.1, 0.15, 0.5, 1.7, -6.7, 0xeff6ff, 0x1d4ed8);
     scene.add(vanityLedge, mirrorCabinet);
 
     // --- 6. Exterior Walls ---
@@ -362,7 +364,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const highlightMat = new THREE.MeshBasicMaterial({
       color: 0x3b82f6,
       transparent: true,
-      opacity: 0.28,
+      opacity: 0.32,
       side: THREE.DoubleSide
     });
     const highlightMesh = new THREE.Mesh(highlightGeom, highlightMat);
@@ -372,7 +374,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
     // Highlight Border Wireframe
     const borderGeom = new THREE.BufferGeometry();
-    const borderMat = new THREE.LineBasicMaterial({ color: 0x2563eb, linewidth: 2 });
+    const borderMat = new THREE.LineBasicMaterial({ color: 0x1d4ed8, linewidth: 2.5 });
     const highlightBorder = new THREE.LineSegments(borderGeom, borderMat);
     highlightBorder.position.y = 0.06;
     highlightBorderRef.current = highlightBorder;
@@ -393,14 +395,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       const elapsedTime = clock.getElapsedTime();
 
       // Update CameraControls
-      const hasControlsUpdated = controls.update(delta);
+      controls.update(delta);
 
       // Gentle breathing on active highlight mesh
       if (highlightMeshRef.current) {
-        highlightMat.opacity = 0.22 + Math.sin(elapsedTime * 3.2) * 0.08;
+        highlightMat.opacity = 0.25 + Math.sin(elapsedTime * 3.2) * 0.09;
       }
 
-      // Update 2D Projected Screen Coordinates for 3D Markers
+      // Update Screen Coordinates for 3D Markers (Strictly Clamped to Canvas Boundaries)
       if (mountRef.current && camera) {
         const rect = mountRef.current.getBoundingClientRect();
         const projected = MARKER_ANCHORS.map((anchor) => {
@@ -408,8 +410,12 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           vec.project(camera);
 
           const isBehind = vec.z > 1;
-          const x = ((vec.x + 1) * rect.width) / 2;
-          const y = ((-vec.y + 1) * rect.height) / 2;
+          const rawX = ((vec.x + 1) * rect.width) / 2;
+          const rawY = ((-vec.y + 1) * rect.height) / 2;
+
+          // Clamped within 3D viewport canvas bounds
+          const x = Math.max(50, Math.min(rect.width - 50, rawX));
+          const y = Math.max(30, Math.min(rect.height - 30, rawY));
 
           return {
             id: anchor.id,
@@ -418,7 +424,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             label: anchor.label,
             type: anchor.type,
             icon: anchor.icon,
-            visible: !isBehind && x >= 0 && x <= rect.width && y >= 0 && y <= rect.height
+            visible: !isBehind && rawX >= 10 && rawX <= rect.width - 10 && rawY >= 10 && rawY <= rect.height - 10
           };
         });
         setProjectedMarkers(projected);
@@ -504,8 +510,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
     ambientLightRef.current.color.setHex(data.ambientColor);
     ambientLightRef.current.intensity = data.ambientIntensity;
-
-    sceneRef.current.background = new THREE.Color(data.skyBg);
   }, [timeOfDay]);
 
   // 4. Update 3D Dimension Lines
@@ -523,7 +527,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           new THREE.Vector3(...p1),
           new THREE.Vector3(...p2)
         ]);
-        const mat = new THREE.LineBasicMaterial({ color, linewidth: 2 });
+        const mat = new THREE.LineBasicMaterial({ color, linewidth: 2.5 });
         return new THREE.Line(geom, mat);
       };
 
@@ -560,62 +564,70 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, [cameraPreset]);
 
+  // Scroll Bottom Bar horizontally
+  const scrollBottom = (direction: "left" | "right") => {
+    if (bottomScrollRef.current) {
+      bottomScrollRef.current.scrollBy({
+        left: direction === "left" ? -200 : 200,
+        behavior: "smooth"
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
-      {/* Top Controls Bar */}
+      {/* Top Controls Bar: 3 Distinct Function Groups */}
       <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
-        {/* Left: View Mode & SunCalc Presets */}
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1">
-            <button
-              onClick={() => setViewMode("3d")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === "3d"
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              3D 真实推演 (Three.js)
-            </button>
-            <button
-              onClick={() => setViewMode("2.5d")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === "2.5d"
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              2.5D BIM 交互底图
-            </button>
-          </div>
-
-          {/* SunCalc Mathematical Presets for Johor Bahru */}
-          <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 text-xs">
-            {SOLAR_PRESETS.map((preset) => (
-              <button
-                key={preset.id}
-                onClick={() => setTimeOfDay(preset.id)}
-                className={`px-2.5 py-1 rounded-md transition-all font-medium flex items-center space-x-1 ${
-                  timeOfDay === preset.id
-                    ? "bg-amber-100 text-amber-900 font-bold shadow-2xs"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-                title={preset.description}
-              >
-                <span>{preset.label}</span>
-              </button>
-            ))}
-          </div>
+        {/* Group 1: 3D vs 2.5D View Mode */}
+        <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+          <button
+            onClick={() => setViewMode("3d")}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              viewMode === "3d"
+                ? "bg-slate-900 text-white shadow-xs"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            3D 真实推演 (Three.js)
+          </button>
+          <button
+            onClick={() => setViewMode("2.5d")}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              viewMode === "2.5d"
+                ? "bg-slate-900 text-white shadow-xs"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            2.5D BIM 交互底图
+          </button>
         </div>
 
-        {/* Right: Layer Toggles */}
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        {/* Group 2: SunCalc Real-time Solar Presets */}
+        <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
+          {SOLAR_PRESETS.map((preset) => (
+            <button
+              key={preset.id}
+              onClick={() => setTimeOfDay(preset.id)}
+              className={`px-2.5 py-1.5 rounded-lg transition-all font-semibold flex items-center space-x-1 ${
+                timeOfDay === preset.id
+                  ? "bg-amber-100 text-amber-950 font-bold shadow-2xs"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+              title={preset.description}
+            >
+              <span>{preset.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Group 3: 4 Layer Switches with High-Contrast Active States */}
+        <div className="flex flex-wrap items-center gap-1.5">
           <button
             onClick={() => setShowDimensions(!showDimensions)}
-            className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
               showDimensions
-                ? "bg-blue-50 border-blue-300 text-blue-700 font-semibold"
-                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                ? "bg-blue-600 text-white border-blue-600 shadow-xs"
+                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
             }`}
           >
             <Ruler className="w-3.5 h-3.5" />
@@ -624,38 +636,38 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
           <button
             onClick={() => setShowMEP(!showMEP)}
-            className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
               showMEP
-                ? "bg-amber-50 border-amber-300 text-amber-700 font-semibold"
-                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                ? "bg-amber-500 text-white border-amber-500 shadow-xs"
+                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
             }`}
           >
             <Zap className="w-3.5 h-3.5" />
-            <span>交标机电底账 {showMEP ? "✓" : ""}</span>
+            <span>交标机电 {showMEP ? "✓" : ""}</span>
           </button>
 
           <button
             onClick={() => setShowSmartHome(!showSmartHome)}
-            className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
               showSmartHome
-                ? "bg-purple-50 border-purple-300 text-purple-700 font-semibold"
-                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                ? "bg-purple-600 text-white border-purple-600 shadow-xs"
+                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
             }`}
           >
             <Cpu className="w-3.5 h-3.5" />
-            <span>Aqara 智能点位 {showSmartHome ? "✓" : ""}</span>
+            <span>Aqara 智能 {showSmartHome ? "✓" : ""}</span>
           </button>
 
           <button
             onClick={() => setShowMicroclimate(!showMicroclimate)}
-            className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
               showMicroclimate
-                ? "bg-emerald-50 border-emerald-300 text-emerald-700 font-semibold"
-                : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
+                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
             }`}
           >
             <Wind className="w-3.5 h-3.5" />
-            <span>微气候流场</span>
+            <span>微气候</span>
           </button>
         </div>
       </div>
@@ -663,9 +675,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       {/* Main 3D Viewport & Side Inspection Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* 3D Viewport (8 Columns) */}
-        <div className="lg:col-span-8 relative rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-sm flex flex-col min-h-[560px]">
+        <div className="lg:col-span-8 relative rounded-3xl overflow-hidden bg-slate-100 border border-slate-200 shadow-sm flex flex-col min-h-[560px]">
           {/* Top Camera Presets Overlay */}
-          <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-1.5 bg-white/90 backdrop-blur-md p-1.5 rounded-xl border border-slate-200 shadow-sm">
+          <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-1.5 bg-white/95 backdrop-blur-md p-1.5 rounded-xl border border-slate-200 shadow-sm">
             <span className="text-[10px] text-slate-500 font-semibold px-2 py-1 flex items-center">
               <Eye className="w-3 h-3 mr-1 text-blue-600" />
               视角:
@@ -723,7 +735,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           </div>
 
           {/* Compass & SunCalc Astronomical Inflow Angle Badge */}
-          <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 p-2.5 rounded-2xl flex items-center space-x-2.5 shadow-sm">
+          <div className="absolute top-4 right-4 z-20 bg-white/95 backdrop-blur-md border border-slate-200 p-2.5 rounded-2xl flex items-center space-x-2.5 shadow-sm">
             <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
               <Sun className="w-4 h-4" />
             </div>
@@ -737,12 +749,18 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           </div>
 
+          {/* Direct 3D Raycasting Hint Badge */}
+          <div className="absolute bottom-16 left-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl flex items-center space-x-1.5 shadow-sm text-[11px] text-slate-700 pointer-events-none">
+            <MousePointerClick className="w-3.5 h-3.5 text-blue-600 animate-bounce" />
+            <span>点击 3D 任意房间即刻拾取</span>
+          </div>
+
           {/* 3D WebGL Canvas Container */}
           {viewMode === "3d" ? (
-            <div className="relative w-full flex-1 h-full min-h-[520px]">
-              <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing bg-[#eef2f6]" />
+            <div className="relative w-full flex-1 h-full min-h-[520px] overflow-hidden bg-slate-100">
+              <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
-              {/* 3D Projected Screen UI Labels (Clean React-driven HTML overlay) */}
+              {/* 3D Projected Screen UI Labels (Strictly Contained within Canvas Bounds) */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 {projectedMarkers.map((marker) => {
                   if (!marker.visible) return null;
@@ -762,7 +780,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                       }}
                       className="pointer-events-auto cursor-pointer group"
                     >
-                      <div className={`flex items-center space-x-1 px-2 py-0.5 rounded-full shadow-md text-[10px] font-bold border transition-all ${
+                      <div className={`flex items-center space-x-1 px-2 py-0.5 rounded-full shadow-md text-[10px] font-bold border transition-all whitespace-nowrap ${
                         isMEP
                           ? "bg-white text-amber-800 border-amber-300 group-hover:scale-105"
                           : "bg-white text-purple-800 border-purple-300 group-hover:scale-105"
@@ -778,7 +796,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           ) : (
             /* 2.5D BIM Vector Floor Plan (Architectural Blueprints) */
-            <div className="w-full flex-1 min-h-[520px] p-6 bg-slate-50 relative overflow-hidden flex items-center justify-center">
+            <div className="w-full flex-1 min-h-[520px] p-6 bg-slate-100 relative overflow-hidden flex items-center justify-center">
               <div className="relative w-full max-w-[620px] aspect-[4/3] bg-white rounded-2xl border-2 border-slate-300 p-3 shadow-md">
                 {ZONES_DATA.map((zone) => {
                   const isSelected = activeZone.id === zone.id;
@@ -846,37 +864,59 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           )}
 
-          {/* Bottom Interactive Zone Selector */}
-          <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center overflow-x-auto space-x-2 no-scrollbar">
-            <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider pl-2 flex-shrink-0">
-              9大功能分区:
-            </span>
-            {ZONES_DATA.map((z) => (
-              <button
-                key={z.id}
-                onClick={() => {
-                  setActiveZone(z);
-                  const coord = ZONE_3D_COORDS[z.id];
-                  if (coord && controlsRef.current) {
-                    controlsRef.current.setLookAt(coord.x, 12, coord.z + 10, coord.x, 1.0, coord.z, true);
-                  }
-                }}
-                className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                  activeZone.id === z.id
-                    ? "bg-slate-900 text-white shadow-sm ring-2 ring-blue-500/30"
-                    : "bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-                }`}
-              >
-                {z.name} ({z.sqm}㎡)
-              </button>
-            ))}
+          {/* Bottom 9 Zones Selector: Smooth Horizontal Scrolling with Side Mask & Arrows */}
+          <div className="relative p-2.5 bg-white border-t border-slate-200 flex items-center">
+            {/* Scroll Left Button */}
+            <button
+              onClick={() => scrollBottom("left")}
+              className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all flex-shrink-0 mr-1"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+
+            {/* Scrollable Buttons Container */}
+            <div
+              ref={bottomScrollRef}
+              className="flex-1 overflow-x-auto no-scrollbar flex items-center space-x-2 scroll-smooth pr-10"
+            >
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1 flex-shrink-0">
+                9大功能分区:
+              </span>
+              {ZONES_DATA.map((z) => (
+                <button
+                  key={z.id}
+                  onClick={() => {
+                    setActiveZone(z);
+                    const coord = ZONE_3D_COORDS[z.id];
+                    if (coord && controlsRef.current) {
+                      controlsRef.current.setLookAt(coord.x, 12, coord.z + 10, coord.x, 1.0, coord.z, true);
+                    }
+                  }}
+                  className={`flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap ${
+                    activeZone.id === z.id
+                      ? "bg-slate-900 text-white shadow-sm ring-2 ring-blue-500/30"
+                      : "bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-100"
+                  }`}
+                >
+                  {z.name} ({z.sqm}㎡)
+                </button>
+              ))}
+            </div>
+
+            {/* Scroll Right Button & Fade Mask */}
+            <button
+              onClick={() => scrollBottom("right")}
+              className="p-1 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-all flex-shrink-0 ml-1"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
         {/* Side Inspector: Deep-Dive Zone Info (4 Columns) */}
         <div className="lg:col-span-4 space-y-4">
-          {/* Active Zone Detail Card */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+          {/* Active Zone Detail Card (Pure White Modern Card with Clear Borders) */}
+          <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
                 <span className="text-[10px] text-blue-600 uppercase tracking-widest font-mono font-bold">
@@ -899,8 +939,8 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               </div>
             </div>
 
-            {/* Spatial Dimensions Specs */}
-            <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-100 text-xs">
+            {/* Spatial Dimensions Specs (3800 × 3600 mm) */}
+            <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/70 text-xs">
               <div>
                 <div className="text-[10px] text-slate-500 font-medium">净开间进深尺寸</div>
                 <div className="font-mono font-bold text-slate-900 text-sm mt-0.5">{activeZone.dimensionsMm}</div>
@@ -922,7 +962,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                 <Zap className="w-3.5 h-3.5 text-amber-500" />
                 <span>交付机电底账预埋 (MEP Baseline)</span>
               </div>
-              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100 space-y-1.5">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-1.5">
                 {activeZone.mepPoints.map((mep, idx) => (
                   <div key={idx} className="flex items-start space-x-2 text-xs text-slate-700">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 flex-shrink-0" />
@@ -938,7 +978,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                 <Cpu className="w-3.5 h-3.5 text-purple-500" />
                 <span>Aqara / 米家智能设备规划</span>
               </div>
-              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-100 space-y-1.5">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/70 space-y-1.5">
                 {activeZone.smartDevices.map((dev, idx) => (
                   <div key={idx} className="flex items-start space-x-2 text-xs text-slate-700">
                     <span className="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 flex-shrink-0" />
@@ -950,7 +990,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           </div>
 
           {/* Microclimate & Environment Card */}
-          <div className="bg-blue-50/60 p-4 rounded-2xl border border-blue-100 text-xs space-y-2">
+          <div className="bg-blue-50/70 p-4 rounded-2xl border border-blue-200 text-xs space-y-2">
             <div className="flex items-center space-x-2 text-blue-900 font-bold">
               <Sun className="w-4 h-4 text-amber-500" />
               <span>新山经纬度日照实况 ({JB_LOCATION.latitude}°N, {JB_LOCATION.longitude}°E)</span>
@@ -958,7 +998,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <p className="text-[11px] text-slate-700 leading-relaxed">
               当前时段: <strong>{solarData.preset.label}</strong>。太阳方位角 <strong>{solarData.azimuthDegrees}°</strong>，高度角 <strong>{solarData.altitudeDegrees}°</strong>。{solarData.preset.description}。
             </p>
-            <p className="text-[11px] text-slate-500 leading-relaxed border-t border-blue-200/60 pt-2">
+            <p className="text-[11px] text-slate-500 leading-relaxed border-t border-blue-200/80 pt-2">
               {PROPERTY_DATA.microclimate.acousticsAndView}
             </p>
           </div>
