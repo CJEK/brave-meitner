@@ -435,9 +435,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     // =========================================================================
     // 🧱 0.25m (250mm) BIM HALF-WALLS WITH 900mm DOORWAY OPENINGS
     // =========================================================================
-    // 1. 纵向主墙 (Spine Wall at X = -0.15m, with 900mm Bath Doorway at Z = -0.8m)
-    const spineWallNorth = createHalfWall(0.15, 3.86, -0.15, -2.93); // from z: -4.8625 to -1.0
-    const spineWallSouth = createHalfWall(0.15, 4.56, -0.15, 2.58);   // from z: 0.3 to 4.8625
+    // 1. 纵向主墙 (Spine Wall at X = -0.15m, with 900mm Bath Doorway at Z = -0.2m)
+    const spineWallNorth = createHalfWall(0.15, 4.21, -0.15, -2.75); // from z: -4.8625 to -0.65
+    const spineWallSouth = createHalfWall(0.15, 4.61, -0.15, 2.55);   // from z: +0.25 to +4.8625
     scene.add(spineWallNorth, spineWallSouth);
 
     // 2. 卫浴室隔墙 (Bath 1: 1.8m W × 2.3m D, center at X: -1.8m, Z: -0.8m)
@@ -445,9 +445,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const bathSouthWall = createHalfWall(1.8, 0.15, -1.8, 0.35);
     scene.add(bathNorthWall, bathSouthWall);
 
-    // 3. 主卧北侧隔墙 (Bedroom Wall at Z = 1.8m, with 900mm Bedroom Doorway at X = -0.9m)
-    const bedWallLeft = createHalfWall(2.1, 0.15, -2.4, 1.8);  // from x: -3.45 to -1.35
-    const bedWallRight = createHalfWall(0.3, 0.15, -0.3, 1.8); // from x: -0.45 to -0.15
+    // 3. 主卧北侧隔墙 (Bedroom Wall at Z = 1.2m, with 900mm Bedroom Doorway at X = -0.9m)
+    const bedWallLeft = createHalfWall(2.1, 0.15, -2.4, 1.2);  // from x: -3.45 to -1.35
+    const bedWallRight = createHalfWall(0.3, 0.15, -0.3, 1.2); // from x: -0.45 to -0.15
     scene.add(bedWallLeft, bedWallRight);
 
     // 4. 生活阳台隔墙 (Yard Wall at Z = -3.2m, from X = -3.45 to -0.15)
@@ -467,12 +467,12 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const sofa = createFurniture(0.85, 0.45, 2.4, 0.55, 0.225, 1.8, 0xe2e8f0, 0x64748b);
     const sofaShadow = createContactShadow(1.0, 2.6, 0.55, 1.8, 0.35);
 
-    // TV Console (backed on East wall at X=3.125, running along Z): W=0.35 (X), H=0.22, D=2.4 (Z)
-    const tvStand = createFurniture(0.35, 0.22, 2.4, 3.125, 0.11, 1.8, 0xcbd5e1, 0x475569);
+    // TV Console (backed on East wall at X=3.125, running along Z): W=0.35 (X), H=0.20, D=2.4 (Z)
+    const tvStand = createFurniture(0.35, 0.20, 2.4, 3.125, 0.10, 1.8, 0xe2e8f0, 0x94a3b8);
     const tvStandShadow = createContactShadow(0.5, 2.6, 3.125, 1.8, 0.3);
 
-    // 85" Floating TV Screen (flush on East wall at X=3.25, height 1.2m level, neutral matte slate gray):
-    const tvScreen = createFurniture(0.04, 0.55, 1.8, 3.25, 0.45, 1.8, 0x64748b, 0x94a3b8);
+    // 85" Floating TV Screen (flush on East wall at X=3.25, height 1.0m max, light matte slate gray #94a3b8):
+    const tvScreen = createFurniture(0.04, 0.40, 1.8, 3.25, 0.35, 1.8, 0x94a3b8, 0xcbd5e1);
 
     // Coffee Table (centered in wide 1.85m aisle between Sofa and TV): W=0.55, H=0.22, D=0.90
     const coffeeTable = createFurniture(0.55, 0.22, 0.9, 1.85, 0.11, 1.8, 0xf1f5f9, 0x94a3b8);
@@ -1221,7 +1221,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           )}
 
-          {/* Bottom 9 Zones Selector: Spacious, Non-Squished Flex-Shrink-0 Buttons with Smooth Arrows & Gradient Mask */}
+          {/* Bottom 9 Zones Selector: Spacious, Non-Squished Flex-Shrink-0 Buttons with Smooth Arrows */}
           <div className="relative p-2.5 bg-white border-t border-slate-200 flex items-center">
             {/* Scroll Left Button */}
             <button
@@ -1235,7 +1235,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             {/* Scrollable Buttons Container */}
             <div
               ref={bottomScrollRef}
-              className="flex-1 overflow-x-auto no-scrollbar flex items-center space-x-2 scroll-smooth px-1"
+              className="flex-1 overflow-x-auto scrollbar-hide no-scrollbar flex items-center gap-2 scroll-smooth px-1"
             >
               <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1 flex-shrink-0 whitespace-nowrap">
                 9大功能分区:
@@ -1250,7 +1250,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                       controlsRef.current.setLookAt(coord.x, 4.5, coord.z + 4, coord.x, 0.3, coord.z, true);
                     }
                   }}
-                  className={`flex-shrink-0 px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`flex-shrink-0 whitespace-nowrap min-w-max px-4 py-2.5 rounded-2xl text-xs font-bold transition-all ${
                     activeZone.id === z.id
                       ? "bg-slate-900 text-white shadow-sm ring-2 ring-blue-500/30"
                       : "bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 hover:bg-slate-100"
