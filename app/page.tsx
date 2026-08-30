@@ -34,12 +34,17 @@ export default function Home() {
 
   const currentStyle = STYLES_DATA.find((s) => s.id === selectedStyleId) || STYLES_DATA[0];
 
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-blue-600 selection:text-white">
       {/* Top Navbar */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
         selectedStyleId={selectedStyleId}
         setSelectedStyleId={setSelectedStyleId}
         onOpenReport={() => setIsReportOpen(true)}
@@ -64,22 +69,22 @@ export default function Home() {
 
             {/* Right Microclimate & Value KPI Chips */}
             <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
-              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-xl text-slate-700">
+              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-xl text-slate-700 transition-all hover:bg-slate-100 hover:shadow-2xs">
                 <Compass className="w-3.5 h-3.5 text-amber-600" />
                 <span>SSE 165° (零西晒·全天漫射)</span>
               </div>
 
-              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-xl text-slate-700">
+              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-xl text-slate-700 transition-all hover:bg-slate-100 hover:shadow-2xs">
                 <Building2 className="w-3.5 h-3.5 text-blue-600" />
                 <span>648 sq ft (60.22 ㎡)</span>
               </div>
 
-              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-xl text-slate-700">
+              <div className="flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-3 py-1 rounded-xl text-slate-700 transition-all hover:bg-slate-100 hover:shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 <span>永久地契 Freehold</span>
               </div>
 
-              <div className="flex items-center space-x-1.5 bg-blue-50 border border-blue-200 px-3 py-1 rounded-xl text-blue-800 font-bold">
+              <div className="flex items-center space-x-1.5 bg-blue-50 border border-blue-200 px-3 py-1 rounded-xl text-blue-800 font-bold transition-all hover:bg-blue-100">
                 <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                 <span>当前风格: {currentStyle.name}</span>
               </div>
@@ -148,7 +153,7 @@ export default function Home() {
             </span>
             <button
               onClick={() => setIsReportOpen(true)}
-              className="text-blue-600 hover:text-blue-800 font-bold underline underline-offset-4"
+              className="text-blue-600 hover:text-blue-800 font-bold underline underline-offset-4 transition-all hover:translate-x-0.5"
             >
               查看决策终审报告 →
             </button>

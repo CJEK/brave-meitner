@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Palette, 
   Sliders, 
@@ -19,7 +19,8 @@ import {
   CheckCircle2,
   Layers,
   Box,
-  Image as ImageIcon
+  AlertCircle,
+  HelpCircle
 } from "lucide-react";
 import { STYLES_DATA, StyleData } from "@/data/projectData";
 
@@ -32,10 +33,21 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
   selectedStyleId,
   setSelectedStyleId
 }) => {
-  const [compareStyleA, setCompareStyleA] = useState<string>("tech-minimal");
-  const [compareStyleB, setCompareStyleB] = useState<string>("dark-luxury");
+  const [compareStyleA, setCompareStyleA] = useState<string>(selectedStyleId);
+  const [compareStyleB, setCompareStyleB] = useState<string>(
+    selectedStyleId === "dark-luxury" ? "tech-minimal" : "dark-luxury"
+  );
   const [compareRoomIndex, setCompareRoomIndex] = useState<number>(0);
   const [sliderPos, setSliderPos] = useState<number>(50); // 0-100%
+
+  // Sync compareStyleA when global selectedStyleId changes
+  useEffect(() => {
+    setCompareStyleA(selectedStyleId);
+    if (selectedStyleId === compareStyleB) {
+      const alternative = STYLES_DATA.find((s) => s.id !== selectedStyleId)?.id || "dark-luxury";
+      setCompareStyleB(alternative);
+    }
+  }, [selectedStyleId]);
 
   // User Custom Decision Weights (0 - 10)
   const [weightGeek, setWeightGeek] = useState<number>(9);
@@ -46,6 +58,8 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
 
   const styleA = STYLES_DATA.find((s) => s.id === compareStyleA) || STYLES_DATA[0];
   const styleB = STYLES_DATA.find((s) => s.id === compareStyleB) || STYLES_DATA[1];
+
+  const isSameStyle = compareStyleA === compareStyleB;
 
   // Calculate Weighted Scores
   const calculateScore = (style: StyleData) => {
@@ -78,7 +92,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
     const tvBorder = isDark ? "#78350f" : isJapandi ? "#b45309" : isCyber ? "#00f0ff" : "#2563eb";
 
     return (
-      <svg viewBox="0 0 800 500" className="w-full h-full object-cover">
+      <svg viewBox="0 0 800 500" className="w-full h-full object-cover select-none">
         {/* Background Wall Cladding */}
         <rect x="0" y="0" width="800" height="360" fill={wallBg} />
         
@@ -117,10 +131,10 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
         <rect x="180" y="70" width="440" height="210" rx="8" fill="#0f172a" stroke={tvBorder} strokeWidth="3" />
         {/* TV Screen Display Mockup */}
         <rect x="188" y="78" width="424" height="194" rx="4" fill={isDark ? "#1e1b4b" : isJapandi ? "#451a03" : isCyber ? "#082f49" : "#0f172a"} />
-        <text x="400" y="180" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="bold" opacity="0.9">
+        <text x="400" y="175" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="bold" opacity="0.95">
           {style.roomRenderings[roomIdx].title}
         </text>
-        <text x="400" y="210" textAnchor="middle" fill={accentLight} fontSize="12" fontWeight="bold" fontFamily="monospace">
+        <text x="400" y="205" textAnchor="middle" fill={accentLight} fontSize="12" fontWeight="bold" fontFamily="monospace">
           {style.roomRenderings[roomIdx].visualStyle}
         </text>
 
@@ -128,18 +142,15 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
         <rect x="140" y="300" width="520" height="35" rx="6" fill={isDark ? "#292524" : isJapandi ? "#d4a373" : isCyber ? "#0284c7" : "#ffffff"} stroke="#64748b" strokeWidth="1.5" />
         <rect x="280" y="288" width="240" height="10" rx="3" fill="#0f172a" />
 
-        {/* Main Furniture: Ergonomic Linen/Leather Sofa (Left / Front Perspective) */}
+        {/* Main Furniture: Ergonomic Linen/Leather Sofa */}
         <g transform="translate(100, 320)">
-          {/* Base */}
           <rect x="0" y="20" width="320" height="60" rx="8" fill={sofaColor} stroke="#475569" strokeWidth="2" />
-          {/* Backrest */}
           <rect x="10" y="0" width="300" height="30" rx="6" fill={sofaColor} stroke="#475569" strokeWidth="1.5" />
-          {/* Cushions */}
           <rect x="25" y="15" width="80" height="25" rx="4" fill={accentLight} opacity="0.9" />
           <rect x="120" y="15" width="80" height="25" rx="4" fill="#ffffff" opacity="0.8" />
         </g>
 
-        {/* Monolithic Sintered Stone Island Dining Bar (Right Perspective) */}
+        {/* Monolithic Sintered Stone Island Dining Bar */}
         <g transform="translate(520, 270)">
           <rect x="0" y="0" width="220" height="110" rx="8" fill={isDark ? "#09090b" : isJapandi ? "#e8d5b5" : isCyber ? "#cbd5e1" : "#ffffff"} stroke="#64748b" strokeWidth="2" />
           <line x1="0" y1="18" x2="220" y2="18" stroke={accentLight} strokeWidth="3" />
@@ -180,14 +191,15 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
 
           <div className="flex items-center space-x-2 text-xs bg-white px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-            <span className="text-slate-500">当前激活风格:</span>
+            <span className="text-slate-500">当前主推风格:</span>
             <span className="font-bold text-slate-900">
               {STYLES_DATA.find((s) => s.id === selectedStyleId)?.name}
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* 4 Style Cards Grid (Fully Dense, Zero Blank Containers, 3 Bullet Points) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {STYLES_DATA.map((style) => {
             const isSelected = selectedStyleId === style.id;
             const score = calculateScore(style);
@@ -198,17 +210,24 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 onClick={() => setSelectedStyleId(style.id)}
                 className={`relative rounded-3xl p-5 border transition-all duration-200 cursor-pointer flex flex-col justify-between overflow-hidden ${
                   isSelected
-                    ? "bg-blue-50/40 border-blue-600 shadow-md ring-2 ring-blue-500/20 scale-[1.02]"
-                    : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-sm"
+                    ? "bg-blue-50/50 border-blue-600 shadow-xl ring-2 ring-blue-500 scale-[1.02] -translate-y-1"
+                    : "bg-white border-slate-200 hover:border-slate-300 hover:shadow-md hover:-translate-y-0.5"
                 }`}
               >
                 {/* Top Badge & Score */}
                 <div className="flex items-center justify-between mb-2.5">
-                  <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md ${
-                    isSelected ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-700 border border-slate-200"
-                  }`}>
-                    {style.badge}
-                  </span>
+                  <div className="flex items-center space-x-1.5">
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md ${
+                      isSelected ? "bg-blue-600 text-white shadow-2xs" : "bg-slate-100 text-slate-700 border border-slate-200"
+                    }`}>
+                      {style.badge}
+                    </span>
+                    {isSelected && (
+                      <span className="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded shadow-2xs">
+                        ★ 推荐首选
+                      </span>
+                    )}
+                  </div>
 
                   <div className="flex items-center space-x-1 text-xs font-mono font-bold text-blue-600">
                     <Award className="w-3.5 h-3.5" />
@@ -222,25 +241,35 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                   <div className="text-[11px] font-semibold text-blue-600 font-mono">
                     {style.enName}
                   </div>
-                  <p className="text-xs text-slate-700 font-medium leading-snug">
+                  <p className="text-xs text-slate-800 font-bold leading-snug">
                     {style.tagline}
                   </p>
                 </div>
 
-                {/* Rich Material & Atmosphere Visual Banner (No empty boxes) */}
+                {/* 3 Structured Key Highlights (Replacing Truncated Text) */}
+                <div className="space-y-1.5 mb-3 bg-white/80 p-3 rounded-2xl border border-slate-200/70 text-xs">
+                  {style.pros.slice(0, 3).map((pro, pIdx) => (
+                    <div key={pIdx} className="flex items-start space-x-1.5 text-slate-700 text-[11px] leading-tight">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <span>{pro}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Core Material Swatches Pills */}
                 <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200/80 space-y-2 mb-4">
                   <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider flex items-center justify-between">
-                    <span>核心主材与质感</span>
-                    <span className="font-mono text-blue-600">4大选材</span>
+                    <span>核心色系与材质色卡</span>
+                    <span className="font-mono text-blue-600">4大主材</span>
                   </div>
 
-                  {/* Palette Swatches with Name Tooltips */}
+                  {/* Palette Swatches */}
                   <div className="grid grid-cols-4 gap-1.5">
                     {style.palette.map((p, idx) => (
                       <div key={idx} className="flex flex-col items-center space-y-1">
                         <div
                           style={{ backgroundColor: p.hex }}
-                          className="w-full h-7 rounded-lg border border-slate-300 shadow-2xs"
+                          className="w-full h-7 rounded-lg border border-slate-300 shadow-2xs transition-transform hover:scale-105"
                           title={`${p.name} (${p.role})`}
                         />
                         <span className="text-[9px] text-slate-600 truncate w-full text-center font-medium">
@@ -250,7 +279,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                     ))}
                   </div>
 
-                  {/* Key Tech & Ergonomic Highlight Chips */}
+                  {/* Key Material Spec Badges */}
                   <div className="flex flex-wrap gap-1 pt-1 border-t border-slate-200/60">
                     {style.keyMaterials.slice(0, 2).map((m, idx) => (
                       <span key={idx} className="text-[9px] bg-white text-slate-700 px-1.5 py-0.5 rounded border border-slate-200 font-mono truncate">
@@ -260,25 +289,25 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                   </div>
                 </div>
 
-                {/* Select Button */}
+                {/* Select Button with Hover Feedback */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedStyleId(style.id);
                   }}
-                  className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 ${
+                  className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center space-x-1.5 hover:shadow-md hover:-translate-y-0.5 ${
                     isSelected
-                      ? "bg-blue-600 text-white shadow-sm"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      ? "bg-blue-600 text-white shadow-sm ring-2 ring-blue-400/30"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900"
                   }`}
                 >
                   {isSelected ? (
                     <>
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
-                      <span>已选定此风格为主推演</span>
+                      <span>已选定为主推演风格</span>
                     </>
                   ) : (
-                    <span>切换至此风格</span>
+                    <span>选择此风格推演</span>
                   )}
                 </button>
               </div>
@@ -319,9 +348,9 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
         </div>
 
         {/* Style A & B Selectors */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center space-x-2 bg-slate-50 p-3 rounded-2xl border border-slate-200">
-            <span className="text-xs font-bold text-blue-700">左侧风格 (A):</span>
+            <span className="text-xs font-bold text-blue-700 whitespace-nowrap">左侧风格 (A):</span>
             <select
               value={compareStyleA}
               onChange={(e) => setCompareStyleA(e.target.value)}
@@ -336,7 +365,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
           </div>
 
           <div className="flex items-center space-x-2 bg-slate-50 p-3 rounded-2xl border border-slate-200">
-            <span className="text-xs font-bold text-amber-700">右侧风格 (B):</span>
+            <span className="text-xs font-bold text-amber-700 whitespace-nowrap">右侧风格 (B):</span>
             <select
               value={compareStyleB}
               onChange={(e) => setCompareStyleB(e.target.value)}
@@ -351,8 +380,16 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
           </div>
         </div>
 
+        {/* Same Style Friendly Warning */}
+        {isSameStyle && (
+          <div className="flex items-center space-x-2 text-xs bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-2xl">
+            <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+            <span>💡 当前两侧已选择相同风格进行同模查看，建议右侧切换为其他风格以对比不同材质与光影差异。</span>
+          </div>
+        )}
+
         {/* Interactive Comparison Canvas Container (Rich SVG Vector Elevation) */}
-        <div className="relative w-full aspect-[16/9] min-h-[380px] rounded-3xl overflow-hidden border-2 border-slate-200 select-none shadow-md bg-slate-100">
+        <div className="relative w-full aspect-video min-h-[380px] rounded-3xl overflow-hidden border-2 border-slate-200 select-none shadow-md bg-slate-100">
           {/* Style B Layer (Right / Background) */}
           <div className="absolute inset-0 w-full h-full">
             {renderRoomIllustration(styleB, compareRoomIndex, true)}
@@ -401,7 +438,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
             style={{ left: `${sliderPos}%` }}
             className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_15px_rgba(0,0,0,0.6)] cursor-ew-resize flex items-center justify-center pointer-events-none"
           >
-            <div className="w-10 h-10 rounded-full bg-white border-2 border-slate-900 shadow-2xl flex items-center justify-center text-slate-900 text-sm font-black transform -translate-x-1/2 pointer-events-auto">
+            <div className="w-10 h-10 rounded-full bg-white border-2 border-slate-900 shadow-2xl flex items-center justify-center text-slate-900 text-sm font-black transform -translate-x-1/2 pointer-events-auto hover:scale-110 transition-transform">
               ↔
             </div>
           </div>
@@ -415,6 +452,53 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
             onChange={(e) => setSliderPos(Number(e.target.value))}
             className="absolute inset-0 opacity-0 cursor-ew-resize w-full h-full z-30"
           />
+        </div>
+
+        {/* Structured Bottom Descriptions for Style A and Style B */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          {/* Style A Card Wrap */}
+          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                左侧: {styleA.name} ({styleA.enName})
+              </span>
+              <span className="text-[10px] text-slate-500 font-mono">
+                {styleA.lightingStrategy.cct}
+              </span>
+            </div>
+            <p className="text-xs text-slate-700 font-medium leading-relaxed">
+              {styleA.roomRenderings[compareRoomIndex].description}
+            </p>
+            <div className="flex flex-wrap gap-1 pt-1">
+              {styleA.roomRenderings[compareRoomIndex].focalPoints.map((fp, i) => (
+                <span key={i} className="text-[9px] bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
+                  {fp}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Style B Card Wrap */}
+          <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                右侧: {styleB.name} ({styleB.enName})
+              </span>
+              <span className="text-[10px] text-slate-500 font-mono">
+                {styleB.lightingStrategy.cct}
+              </span>
+            </div>
+            <p className="text-xs text-slate-700 font-medium leading-relaxed">
+              {styleB.roomRenderings[compareRoomIndex].description}
+            </p>
+            <div className="flex flex-wrap gap-1 pt-1">
+              {styleB.roomRenderings[compareRoomIndex].focalPoints.map((fp, i) => (
+                <span key={i} className="text-[9px] bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
+                  {fp}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -549,7 +633,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                 <div
                   key={style.id}
                   onClick={() => setSelectedStyleId(style.id)}
-                  className={`flex items-center justify-between p-2.5 rounded-xl text-xs cursor-pointer transition-all ${
+                  className={`flex items-center justify-between p-2.5 rounded-xl text-xs cursor-pointer transition-all duration-150 hover:-translate-y-0.5 ${
                     selectedStyleId === style.id
                       ? "bg-blue-600 text-white font-bold shadow-sm"
                       : "hover:bg-white text-slate-700 border border-transparent hover:border-slate-200"
