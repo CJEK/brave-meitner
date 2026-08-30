@@ -8,17 +8,20 @@ import {
   Maximize2, 
   Palette, 
   Filter, 
-  Check,
+  Check, 
+  Copy, 
   ChevronRight,
-  Sun,
-  Moon,
-  Zap,
-  Ruler,
-  Droplets,
+  Sun, 
+  Moon, 
+  Zap, 
+  Camera, 
+  Search, 
+  RotateCw, 
+  Building2, 
+  SlidersHorizontal,
+  Lightbulb,
   Cpu,
-  Wind,
-  Compass,
-  Building2
+  CheckCircle2
 } from "lucide-react";
 import { STYLES_DATA, StyleData, PROPERTY_DATA } from "@/data/projectData";
 
@@ -27,153 +30,259 @@ interface VisualGalleryProps {
   setSelectedStyleId: (id: string) => void;
 }
 
-// 5 Curated 2D Blueprint Schemes based on Type B 60.22 ㎡ (6.90m × 9.725m)
-interface BlueprintScheme {
+interface MultiViewRoom {
   id: string;
+  roomName: string;
+  enName: string;
+  category: "living" | "bedroom" | "bathroom" | "workstation" | "balcony";
+  styleTheme: string;
+  themeStyleId: string;
+  accentColor: string;
   title: string;
   subtitle: string;
-  category: string;
-  tag: string;
-  themeStyleId: string;
-  primaryColor: string;
-  accentColor: string;
-  bgFill: string;
   description: string;
-  specs: string[];
+  materials: { name: string; spec: string }[];
+  lighting: string;
   focalPoints: string[];
-  mepHighlights: string[];
-  palette: { name: string; hex: string }[];
+  views: {
+    key: "A" | "B" | "C";
+    label: string;
+    sublabel: string;
+    imageUrl: string;
+    prompt: string;
+    highlight: string;
+  }[];
 }
 
-const BLUEPRINT_SCHEMES: BlueprintScheme[] = [
+const MULTI_VIEW_ROOMS: MultiViewRoom[] = [
   {
-    id: "scheme-topology",
-    title: "基准建筑物理拓扑 2D 标尺图",
-    subtitle: "1+1 房实体墙与动线标尺基准",
-    category: "物理拓扑",
-    tag: "建筑硬红线",
+    id: "room-living",
+    roomName: "客厅极简影音与悬浮中岛",
+    enName: "Living & Sintered Stone Island",
+    category: "living",
+    styleTheme: "现代极简科技风",
     themeStyleId: "modern-minimalist",
-    primaryColor: "#2563eb",
+    accentColor: "#2563eb",
+    title: "1.8m 悬浮岩板中岛与 85 吋巨幕通透公区",
+    subtitle: "太空灰微水泥通铺 · 晨光漫射 · 极简无界动线",
+    description: "入户玄关与客厅全通透无界相连，1.8m 太空灰岩板中岛延伸为轻食吧台，85寸超薄电视悬浮贴墙，南向景观阳台将晨光均匀漫射于微水泥地面，通透纯粹。",
+    materials: [
+      { name: "中岛台面", spec: "进口太空灰耐污岩板 (厚度 12mm)" },
+      { name: "公区地面", spec: "纳米耐污微水泥 (无缝整体通铺)" },
+      { name: "电视背景", spec: "哑光超白肤感护墙板 (内嵌隐形灯带)" },
+      { name: "极简沙发", spec: "科技布浅灰直排沙发 (离地悬空 180mm)" }
+    ],
+    lighting: "3500K 间接洗天花漫射灯槽 + 中岛上方 3000K 防眩聚焦射灯",
+    focalPoints: ["1.8m 悬浮中岛", "85寸壁画电视", "无缝微水泥通铺", "见光不见灯吊顶"],
+    views: [
+      {
+        key: "A",
+        label: "视角 A: 全景主视角",
+        sublabel: "入户俯瞰中岛与客厅巨幕",
+        imageUrl: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80",
+        highlight: "大开间纵深视野，中岛连接客厅沙发，晨光透过南向全景落地窗洒入室内",
+        prompt: "Interior architectural photo of a modern minimalist 60 sqm apartment living room, 1.8m floating grey sintered stone kitchen island connected to living zone, 85-inch ultra-thin TV mounted flush on white matte feature wall, seamless micro-cement floor, large floor-to-ceiling balcony window with warm morning sunlight streaming in, soft ambient strip lighting, Hasselblad medium format, ultra-detailed 8k --ar 16:9 --style raw"
+      },
+      {
+        key: "B",
+        label: "视角 B: 材质光影特写",
+        sublabel: "岩板接缝与悬浮底座微光",
+        imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+        highlight: "1.8m 岩板细腻细砂肌理，悬浮底座内嵌 3000K 暖光漫射，触感温润抗指纹",
+        prompt: "Macro interior shot of a minimalist 1.8m matte grey sintered stone kitchen island, under-cabinet warm 3000K LED lighting strip casting soft glow on micro-cement floor, subtle marble grain texture details, luxury architectural design, depth of field, architectural digest style, 8k resolution --ar 16:9 --style raw"
+      },
+      {
+        key: "C",
+        label: "视角 C: 阳台回看视角",
+        sublabel: "由南向阳台回望室内纵深",
+        imageUrl: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80",
+        highlight: "站在阳台推拉门处望向厨房与玄关，开阔通畅的 1.2m 走道动线一览无遗",
+        prompt: "Reverse angle interior photo looking from the sunlit balcony into a sleek modern minimalist open-plan apartment, floating kitchen island, living room media unit, warm oak accents, ultra-clean wide walkway, diffused architectural lighting, highly detailed photorealistic render --ar 16:9 --style raw"
+      }
+    ]
+  },
+  {
+    id: "room-bedroom",
+    roomName: "主卧深睡空间",
+    enName: "Master Bedroom Suite",
+    category: "bedroom",
+    styleTheme: "纯粹极简深睡",
+    themeStyleId: "modern-minimalist",
     accentColor: "#3b82f6",
-    bgFill: "#f8fafc",
-    description: "严格依据 Paragon Gateway Type B (6.9m × 9.725m) 真实建面 60.22 ㎡ 绘制。以 X = -0.35m 纵向主墙隔离右侧 3.8m 公共动区与左侧 3.1m 私密静区，清晰标定 900mm 卧室与卫浴门洞及通畅主动线。",
-    specs: [
-      "总宽 6,900 mm × 总深 9,725 mm (648 sq ft)",
-      "右侧公区 3.8m (55%) · 左侧私区 3.1m (45%)",
-      "纵向主隔墙 X = -0.35m (贯穿南北)",
-      "门洞净宽 900mm · 主过道净宽 ≥ 800mm"
+    title: "1.8m 悬浮科技布大床与纯白隐形衣柜",
+    subtitle: "2700K 暖光洗墙 · 悬浮起夜地脚灯 · 电动全遮光帘",
+    description: "专属私密深睡区，1.8m 悬浮大床床底内嵌温和感应地脚灯，西侧为整面 600mm 深度纯白哑光无把手衣柜，南向大窗配置电动双轨静音窗帘，打造极度松弛的沉浸深睡体验。",
+    materials: [
+      { name: "悬浮大床", spec: "1800×2000mm 科技布静音悬浮床架" },
+      { name: "定制衣柜", spec: "整墙超哑抗指纹 PET 肤感板 (反弹器开门)" },
+      { name: "床头背景", spec: "浅灰哑光艺术涂料 + 琥珀洗墙灯带" },
+      { name: "智能窗帘", spec: "Aqara C3 双轨超静音电动开合帘" }
     ],
-    focalPoints: ["纵向中轴主墙", "900mm 卧室门洞", "900mm 卫浴门洞", "南向全宽阳台移门"],
-    mepHighlights: ["DB配电总箱", "SMATV电视点", "生活阳台上下水", "主卧与阳台双轨帘"],
-    palette: [
-      { name: "建筑骨架", hex: "#1e293b" },
-      { name: "标尺基准", hex: "#2563eb" },
-      { name: "公区动线", hex: "#3b82f6" },
-      { name: "静区地面", hex: "#e2e8f0" }
+    lighting: "2700K 床头斜角防眩洗墙光 + 床底感应起夜微光 (0.5W/m)",
+    focalPoints: ["悬浮床底夜灯", "整墙隐形衣柜", "无边框微水泥背景", "全遮光睡眠舱"],
+    views: [
+      {
+        key: "A",
+        label: "视角 A: 全景主视角",
+        sublabel: "正对 1.8m 悬浮大床与背景墙",
+        imageUrl: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80",
+        highlight: "悬浮床体呈现脱离地面的轻盈感，床头背景墙上方 2700K 暖光柔和洒下",
+        prompt: "Photorealistic modern minimalist master bedroom interior, 1.8m floating platform bed with light grey tech fabric upholstery, micro-cement feature wall, concealed 2700K warm LED wall-washer strip light above headboard, floor-to-ceiling floor tiles, architectural interior photography, calm serene ambiance, 8k --ar 16:9 --style raw"
+      },
+      {
+        key: "B",
+        label: "视角 B: 材质光影特写",
+        sublabel: "床头软包与床底悬浮微光",
+        imageUrl: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=1200&q=80",
+        highlight: "亲肤科技布细腻缝线，床底内缩 150mm 防踢脚结构与微光洗地效果",
+        prompt: "Close up interior detail of a floating designer bed in modern bedroom, warm 2700K toe-kick ambient LED light glowing beneath the bed frame, plush linen bedding, matte wall texture, cozy luxury hotel feel, shallow depth of field, 8k resolution --ar 16:9 --style raw"
+      },
+      {
+        key: "C",
+        label: "视角 C: 侧角收纳视角",
+        sublabel: "门洞望向大床与满墙衣柜",
+        imageUrl: "https://images.unsplash.com/photo-1540518614846-7ede433c4550?auto=format&fit=crop&w=1200&q=80",
+        highlight: "西墙整面纯白哑光无把手衣柜，预留 1.1m 宽敞更衣回旋走道",
+        prompt: "Side angle interior photo of a minimalist modern bedroom, showing full-wall matte white seamless floor-to-ceiling wardrobe with integrated vertical recessed handles, floating king bed on right, warm morning side lighting, clean architectural lines, 8k --ar 16:9 --style raw"
+      }
     ]
   },
   {
-    id: "scheme-tech-minimal",
-    title: "现代极简科技风 2D 流线图",
-    subtitle: "极客工作站与悬浮中岛高能联动",
-    category: "极客科技",
-    tag: "极客优选",
-    themeStyleId: "modern-minimalist",
-    primaryColor: "#2563eb",
-    accentColor: "#0284c7",
-    bgFill: "#f0f9ff",
-    description: "太空灰微水泥与哑光纯白打底，配置 2.0m 双电机升降桌、85寸巨幕与 1.8m 岩板悬浮中岛。公区通铺 800×800mm 浅灰大砖，形成开阔畅达的极客研发与影音生活流线。",
-    specs: [
-      "公区 1.8m 悬浮中岛连接 85寸贴墙大屏",
-      "极客工位 2.0m×0.8m 升降桌 + 双32寸屏",
-      "大件收纳高柜（可直推 28寸大行李箱）",
-      "主卧 1.8m×2.0m 科技布悬浮大床"
-    ],
-    focalPoints: ["2.0m 升降工位", "1.8m 岩板中岛", "85寸悬浮巨幕", "微水泥极简地台"],
-    mepHighlights: ["8组桌面抗涌浪插座", "RJ45千兆网口", "FP2人体雷达", "电视流光溢彩"],
-    palette: [
-      { name: "太空微水泥", hex: "#94a3b8" },
-      { name: "哑光纯白", hex: "#f8fafc" },
-      { name: "极客深蓝", hex: "#2563eb" },
-      { name: "碳素黑", hex: "#0f172a" }
-    ]
-  },
-  {
-    id: "scheme-italian-luxury",
-    title: "意式暗调高级黑 2D 光影图",
-    subtitle: "劳伦黑金与五星级酒店奢雅卫浴",
-    category: "奢雅暗调",
-    tag: "酒店级奢华",
+    id: "room-bathroom",
+    roomName: "五星级独立卫浴室",
+    enName: "Hotel Suite Bathroom",
+    category: "bathroom",
+    styleTheme: "意式暗调奢华",
     themeStyleId: "italian-luxury",
-    primaryColor: "#d97706",
-    accentColor: "#f59e0b",
-    bgFill: "#fffbeb",
-    description: "黑胡桃木纹与劳伦黑金岩板交织，2700K 琥珀洗墙光环绕。卫浴定制 1.5m 贯穿式黑金大理石大平台延伸至马桶上方，搭配暗装枪灰瀑布龙头与满墙通体 LED 触控除雾无框镜柜。",
-    specs: [
-      "1.5m 贯穿式黑金大理石悬浮大台面",
-      "满墙通体除雾镜柜 (上下 3000K 漫射洗墙)",
-      "黑胡桃抗指纹哑光高定通顶衣柜",
-      "主卧深灰皮质软包床头墙 + 双侧氛围吊灯"
+    accentColor: "#d97706",
+    title: "1.5m 贯穿式黑金大平台与满墙除雾镜柜",
+    subtitle: "劳伦黑金岩板 · 暗装枪灰瀑布龙头 · 2700K 琥珀洗墙光",
+    description: "打破传统紧凑小卫浴格局，定制整面 1.5m 贯穿式大理石大台面横向延伸至马桶上方，上方配备满墙触控智能除雾大镜柜，搭配暗装枪灰入墙五金与干湿分离超白长虹玻璃门。",
+    materials: [
+      { name: "贯穿台面", spec: "1500mm 劳伦黑金哑光岩板 (延伸至马桶上方)" },
+      { name: "满墙镜柜", spec: "通宽 LED 智能恒温除雾镜门 (双向 45° 侧发光)" },
+      { name: "五金龙头", spec: "暗装枪灰拉丝瀑布入墙式冷热龙头" },
+      { name: "淋浴隔断", spec: "超白极窄长虹防爆钢化玻璃推拉门" }
     ],
-    focalPoints: ["1.5m 卫浴大台面", "满墙除雾镜柜", "黑胡桃木饰面", "劳伦黑金中岛"],
-    mepHighlights: ["镜柜隐藏防溅插座", "20A热水器专线", "暗装瀑布龙头", "低位感应地脚灯"],
-    palette: [
-      { name: "黑胡桃木", hex: "#1e293b" },
-      { name: "劳伦黑金", hex: "#0f172a" },
-      { name: "2700K琥珀光", hex: "#d97706" },
-      { name: "枪灰色金属", hex: "#475569" }
+    lighting: "Ra>98 高显色无影美妆面光 + 镜柜上下 2700K 琥珀洗墙灯带",
+    focalPoints: ["1.5m 贯穿大台面", "满墙超薄除雾镜柜", "暗装枪灰入墙龙头", "一体成型无缝岩板盆"],
+    views: [
+      {
+        key: "A",
+        label: "视角 A: 全景主视角",
+        sublabel: "正对 1.5m 贯穿大台面与满墙镜柜",
+        imageUrl: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80",
+        highlight: "1.5m 整体大台面气势恢宏，满墙镜柜上下透出奢华琥珀光，完全消除台面杂乱",
+        prompt: "Luxury modern Italian style bathroom interior design, 1.5m continuous black marble countertop seamlessly extending over wall-hung toilet, full-wall frameless LED fogless mirror cabinet, gunmetal concealed waterfall faucet, dark walnut wood wall panels, 2700K amber wash light, high-end 5-star hotel suite style, photorealistic 8k --ar 16:9 --style raw"
+      },
+      {
+        key: "B",
+        label: "视角 B: 材质特写",
+        sublabel: "枪灰入墙龙头与岩板水波纹",
+        imageUrl: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80",
+        highlight: "暗装入墙龙头金属拉丝质感，流水轻柔抚过黑金大理石一体盆",
+        prompt: "Macro interior photography of a gunmetal wall-mounted waterfall faucet over a Laurent black gold marble floating basin, ambient amber 2700K LED lighting reflecting on polished dark stone, water droplets, ultra-detailed texture, luxury bathroom craftsmanship, 8k --ar 16:9 --style raw"
+      },
+      {
+        key: "C",
+        label: "视角 C: 淋浴区回看",
+        sublabel: "透过超白玻回看干区洗漱台",
+        imageUrl: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80",
+        highlight: "长虹玻璃透光不透影，干湿分区清晰，壁挂马桶上方大平台置物从容",
+        prompt: "Interior perspective looking from the frameless glass shower enclosure towards the luxury dark vanity and wall-hung toilet, glowing mirror cabinet, warm amber mood lighting, clean dry-wet separation, hotel suite bathroom rendering, 8k resolution --ar 16:9 --style raw"
+      }
     ]
   },
   {
-    id: "scheme-warm-japandi",
-    title: "温暖治愈原木风 2D 水电管线图",
-    subtitle: "白橡木质感与全屋 Aqara 智能挂载",
-    category: "温馨治愈",
-    tag: "居家高舒适",
+    id: "room-workstation",
+    roomName: "极客工作站 (1+1房)",
+    enName: "Geek Workstation & Battlestation",
+    category: "workstation",
+    styleTheme: "现代极简极客风",
+    themeStyleId: "modern-minimalist",
+    accentColor: "#0284c7",
+    title: "2.0m 双电机升降桌与双 32 吋 4K 悬浮屏",
+    subtitle: "实木木作大板 · 隐藏式走线槽 · 行李箱直推高柜",
+    description: "独立静音研发区，2.0m×0.8m 加深升降大板桌配置双 32 吋屏幕机械臂悬浮，桌面 8 组防涌浪插座与千兆网口，侧面 600mm 深度大收纳柜下层直通，可直接推入 28 吋大行李箱。",
+    materials: [
+      { name: "升降大板", spec: "2000×800mm 天然白橡木实木直拼大板 (厚 35mm)" },
+      { name: "升降系统", spec: "双电机三节正装静音升降桌腿 (载重 120kg)" },
+      { name: "大件收纳柜", spec: "600mm 深度通顶柜 (下层无底板推行李箱)" },
+      { name: "人体工学椅", spec: "Herman Miller 顶级人体工学网布椅" }
+    ],
+    lighting: "4000K 护眼专注桌面照明 + 赛博冷蓝背景环境呼吸光 (屏幕挂灯)",
+    focalPoints: ["2.0m 升降大板桌", "双屏悬浮机械臂", "行李箱直推高柜", "抗涌浪隐藏走线槽"],
+    views: [
+      {
+        key: "A",
+        label: "视角 A: 全景主视角",
+        sublabel: "正对 2.0m 极客双屏工位全貌",
+        imageUrl: "https://images.unsplash.com/photo-1593062096033-9a26b09da705?auto=format&fit=crop&w=1200&q=80",
+        highlight: "2.0m 宽阔大板桌面，双 32 吋屏幕悬浮空中，桌面零杂线，科技感十足",
+        prompt: "High-end minimalist geek home office battlestation, 2.0m solid white oak motorized standing desk, dual 32-inch 4K monitors on floating heavy-duty monitor arms, premium mechanical keyboard, Herman Miller ergonomic chair, clean cable management, ambient cyber blue backlighting, soft natural daylight from side, 8k --ar 16:9 --style raw"
+      },
+      {
+        key: "B",
+        label: "视角 B: 材质特写",
+        sublabel: "实木桌面倒角与隐藏走线槽",
+        imageUrl: "https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=1200&q=80",
+        highlight: "天然橡木温润木纹，圆弧倒角防压手肘，铝合金嵌入式毛刷走线盒细节",
+        prompt: "Macro photography of a luxury solid white oak standing desk surface, aluminum wire grommet box with clean woven cables, high-end mechanical keyboard with custom keycaps, studio monitor speakers, matte finish wood grain, depth of field, 8k --ar 16:9 --style raw"
+      },
+      {
+        key: "C",
+        label: "视角 C: 侧角收纳视角",
+        sublabel: "门洞望向工位与行李箱高柜",
+        imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=1200&q=80",
+        highlight: "侧面定制 600mm 深度通顶储物柜，底部直通推入 28 吋大行李箱，整洁利落",
+        prompt: "Side angle shot of a modern home workstation room in apartment, tall seamless storage cabinets on side with lower open luggage bay, motorized standing desk, clean acoustic wall felt paneling, soft architectural lighting, organized professional developer workspace, 8k --ar 16:9 --style raw"
+      }
+    ]
+  },
+  {
+    id: "room-balcony",
+    roomName: "南向景观阳台 (SSE 165°)",
+    enName: "Landscape Sky Balcony",
+    category: "balcony",
+    styleTheme: "自然治愈微气候",
     themeStyleId: "warm-japandi",
-    primaryColor: "#059669",
-    accentColor: "#10b981",
-    bgFill: "#f0fdf4",
-    description: "温润天然白橡木与米白可丽耐营造治愈归家感。全屋水电与 Aqara 智能点位标准挂载：玄关 D200 人脸门锁、卫浴 IP44 隐藏插座、生活阳台扫拖机器人自动上下水管路。",
-    specs: [
-      "玄关 Aqara D200 3D人脸锁 (门厚 50mm)",
-      "卫浴 1.5m 镜柜内隐藏防溅插座 (IP44)",
-      "生活阳台扫拖机专用给排水管与防溢自切阀",
-      "主卧与阳台 220mm 顶面双轨智能窗帘盒"
+    accentColor: "#059669",
+    title: "24F 高空城市天际线与晨曦休闲吧台",
+    subtitle: "SSE 165° 晨光斜照 · 零西晒 · 西南季风微气候对流",
+    description: "24楼高空南偏东 165° 绝佳朝向，彻底避开正西西晒暴晒。清晨享受柔和日光沐浴，配置高空休闲吧台椅、户外防腐木地板与绿植角，推拉门 10mm 极窄平嵌地轨与客厅无缝相连。",
+    materials: [
+      { name: "阳台地面", spec: "户外防滑防水木塑地板 (模块化快拆排污)" },
+      { name: "高空吧台", spec: "耐候铝合金烤漆高脚吧台 + 防水吧椅" },
+      { name: "推拉门轨", spec: "10mm 极窄无障碍平嵌地轨 (步入无绊脚)" },
+      { name: "微气候", spec: "太阳能微光感应射灯 + 温湿度环境传感器" }
     ],
-    focalPoints: ["D200 人脸门锁", "自动上下水基站", "C3 双轨静音帘", "温润白橡木柜"],
-    mepHighlights: ["洗衣机上下水点", "扫拖机自动排污", "双控无边框开关", "厨下RO净水电源"],
-    palette: [
-      { name: "天然白橡木", hex: "#d4a373" },
-      { name: "暖白可丽耐", hex: "#fef3c7" },
-      { name: "治愈柔绿", hex: "#059669" },
-      { name: "素雅米灰", hex: "#e2e8f0" }
-    ]
-  },
-  {
-    id: "scheme-industrial-cyber",
-    title: "硬核工业未来感 2D 微气候日照图",
-    subtitle: "SSE 165° 黄金日照与季风微气候推演",
-    category: "硬核工业",
-    tag: "气候分析",
-    themeStyleId: "industrial-loft",
-    primaryColor: "#0891b2",
-    accentColor: "#06b6d4",
-    bgFill: "#ecfeff",
-    description: "拉丝不锈钢、清水混凝土与赛博青光效。24F 高层南偏东 SSE 165° 黄金朝向，晨光柔和穿透景观阳台漫射至中岛，全天零西晒，西南季风贯穿北向生活阳台形成自然空气对流。",
-    specs: [
-      "南向景观阳台 SSE 165° (晨光 08:00 角度 165°)",
-      "正午 12:00 高角日照 (68.2° 绝无西晒直射)",
-      "西南季风对流 (阳台至北侧生活阳台微风循环)",
-      "外机位集中于北侧百叶平台 (隔绝振动噪音)"
-    ],
-    focalPoints: ["SSE 165° 采光面", "北侧 Yard 散热百叶", "24F 城市天际视野", "拉丝金属岛台"],
-    mepHighlights: ["阳台防水动力点", "3组外机独立回路", "微气候气象雷达", "全彩智能泛光"],
-    palette: [
-      { name: "拉丝不锈钢", hex: "#64748b" },
-      { name: "赛博青", hex: "#06b6d4" },
-      { name: "日照暖金", hex: "#f59e0b" },
-      { name: "清水混凝土", hex: "#334155" }
+    lighting: "晨曦自然漫射光 (08:00 方位 165°/高度 28.5°) + 夜间防水洗墙射灯",
+    focalPoints: ["24F 城市天际视野", "SSE 165° 黄金朝向", "10mm 极窄平嵌移门", "户外防腐木地台"],
+    views: [
+      {
+        key: "A",
+        label: "视角 A: 全景主视角",
+        sublabel: "24F 高空俯瞰新山天际线",
+        imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+        highlight: "24楼开阔视野，清晨柔和阳光斜照在阳台吧台上，远眺新山市区与低密洋房",
+        prompt: "High-floor luxury apartment balcony interior photography, 24th floor overlooking sunny city skyline, sleek minimalist outdoor bar counter with modern bar stools, composite wood decking, lush potted plants, gentle morning sunlight coming from south-south-east, architectural digest, ultra-sharp 8k --ar 16:9 --style raw"
+      },
+      {
+        key: "B",
+        label: "视角 B: 材质特写",
+        sublabel: "户外木塑地台与绿植晨光",
+        imageUrl: "https://images.unsplash.com/photo-1533779283484-8da797e0d430?auto=format&fit=crop&w=1200&q=80",
+        highlight: "木塑地台细腻防滑纹理，晨光在咖啡杯与绿植叶片上留下金色光斑",
+        prompt: "Close up detail on modern balcony deck, warm morning sunlight hitting a ceramic coffee cup on black metal railing bar table, potted monstera plant, wood texture, golden hour morning light reflection, high aesthetic, 8k --ar 16:9 --style raw"
+      },
+      {
+        key: "C",
+        label: "视角 C: 室内联通视角",
+        sublabel: "推拉门开启连通客厅公区",
+        imageUrl: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80",
+        highlight: "超窄边框移门完全收起，室内外地面齐平延伸，季风自然对流穿透公区",
+        prompt: "Perspective shot from balcony looking seamlessly through open sliding glass doors into the modern apartment living room and kitchen island, flat flush door track, indoor-outdoor seamless flow, bright natural diffused lighting, architectural render, 8k --ar 16:9 --style raw"
+      }
     ]
   }
 ];
@@ -183,41 +292,65 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
   setSelectedStyleId
 }) => {
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [activeModalScheme, setActiveModalScheme] = useState<BlueprintScheme | null>(null);
+  const [activeViews, setActiveViews] = useState<{ [roomId: string]: "A" | "B" | "C" }>({
+    "room-living": "A",
+    "room-bedroom": "A",
+    "room-bathroom": "A",
+    "room-workstation": "A",
+    "room-balcony": "A"
+  });
 
-  const filteredSchemes = BLUEPRINT_SCHEMES.filter(
-    (s) => activeCategory === "all" || s.category === activeCategory
+  const [activeModalRoom, setActiveModalRoom] = useState<{
+    room: MultiViewRoom;
+    activeViewKey: "A" | "B" | "C";
+  } | null>(null);
+
+  const [copiedPromptKey, setCopiedPromptKey] = useState<string | null>(null);
+
+  const handleCopyPrompt = (prompt: string, key: string) => {
+    navigator.clipboard.writeText(prompt);
+    setCopiedPromptKey(key);
+    setTimeout(() => setCopiedPromptKey(null), 2500);
+  };
+
+  const handleViewChange = (roomId: string, viewKey: "A" | "B" | "C", e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setActiveViews((prev) => ({ ...prev, [roomId]: viewKey }));
+  };
+
+  const filteredRooms = MULTI_VIEW_ROOMS.filter(
+    (r) => activeCategory === "all" || r.category === activeCategory
   );
 
   return (
     <div className="space-y-8">
-      {/* Header & Category Controls */}
+      {/* Header & Filter Controls */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 font-mono">
-              2D / 3D ARCHITECTURAL BLUEPRINT MATRIX
+              3-VIEW AI PHOTOREALISTIC RENDER GALLERY
             </span>
-            <span className="text-xs text-slate-500 font-semibold">Paragon Gateway Type B · 60.22 ㎡ (648 sq ft)</span>
+            <span className="text-xs text-slate-500 font-semibold">Paragon Gateway A-24-10 (60.22 ㎡ / Type B)</span>
           </div>
           <h2 className="text-2xl font-black text-slate-900 mt-1 flex items-center">
             <Sparkles className="w-6 h-6 mr-2 text-blue-600" />
-            全屋空间渲染画廊与 2D 户型设计方案参考
+            全屋 3D / AI 室内效果渲染图集 (3 大视角切换)
           </h2>
           <p className="text-xs text-slate-600 mt-1 max-w-3xl">
-            严格基于 <strong>右侧公区 (3.8m 宽) + 左侧私区 (3.1m 宽)</strong> 真实拓扑结构，提供 5 套深度推演的 2D 建筑标尺图、流线图、奢雅光影图、Aqara 智能水电分布图与微气候日照图
+            提供 <strong>[📷 视角 A: 全景视角]</strong>、<strong>[🔍 视角 B: 材质特写]</strong> 与 <strong>[↺ 视角 C: 反向视角]</strong> 多维度沉浸预览真实木纹、岩板、枪灰五金与 2700K 洗墙光影
           </p>
         </div>
 
-        {/* Category Filter Pills */}
+        {/* Space Category Filter Tabs */}
         <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 border border-slate-200 p-1.5 rounded-2xl text-xs">
           {[
-            { id: "all", label: "全部 5 套方案" },
-            { id: "物理拓扑", label: "📐 基准标尺" },
-            { id: "极客科技", label: "💻 极客流线" },
-            { id: "奢雅暗调", label: "✨ 意式奢雅" },
-            { id: "温馨治愈", label: "🌿 智能水电" },
-            { id: "硬核工业", label: "☀️ 微气候日照" }
+            { id: "all", label: "全部核心空间 (5大分区)" },
+            { id: "living", label: "🛋️ 客厅与中岛" },
+            { id: "bedroom", label: "🛏️ 主卧深睡" },
+            { id: "bathroom", label: "🚿 奢华卫浴" },
+            { id: "workstation", label: "💻 极客工位" },
+            { id: "balcony", label: "☀️ 景观阳台" }
           ].map((cat) => (
             <button
               key={cat.id}
@@ -234,162 +367,140 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
         </div>
       </div>
 
-      {/* 5 Curated 2D Blueprint & Moodboard Cards Grid */}
+      {/* Multi-View Photorealistic Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredSchemes.map((scheme) => {
-          const isSelected = selectedStyleId === scheme.themeStyleId;
+        {filteredRooms.map((room) => {
+          const currentViewKey = activeViews[room.id] || "A";
+          const currentView = room.views.find((v) => v.key === currentViewKey) || room.views[0];
+          const isStyleSelected = selectedStyleId === room.themeStyleId;
 
           return (
             <div
-              key={scheme.id}
-              onClick={() => setActiveModalScheme(scheme)}
-              className="bg-white rounded-3xl overflow-hidden border border-slate-200 hover:border-blue-400 hover:shadow-lg transition-all duration-200 cursor-pointer flex flex-col justify-between group"
+              key={room.id}
+              onClick={() => setActiveModalRoom({ room, activeViewKey: currentViewKey })}
+              className="bg-white rounded-3xl overflow-hidden border border-slate-200 hover:border-blue-400 hover:shadow-xl transition-all duration-200 cursor-pointer flex flex-col justify-between group"
             >
-              {/* 1. 2D Floor Plan Blueprint Vector Preview Header (Aspect 16:9) */}
-              <div className="aspect-[16/10] bg-slate-50 relative overflow-hidden border-b border-slate-200 p-3 flex flex-col justify-between">
-                {/* SVG 2D Floorplan Blueprint Drawing */}
-                <div className="absolute inset-0 p-3 flex items-center justify-center pointer-events-none">
-                  <svg
-                    viewBox="0 0 690 972.5"
-                    className="w-full h-full max-h-[190px] drop-shadow-xs transition-transform duration-300 group-hover:scale-105"
-                  >
-                    {/* Floor Slab Base */}
-                    <rect x="0" y="0" width="690" height="972.5" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="4" rx="16" />
+              {/* 1. Photorealistic Render Image Hero with Multi-View Tabs */}
+              <div className="relative aspect-[16/10] bg-slate-900 overflow-hidden">
+                {/* Real High-Resolution Interior Render Image */}
+                <img
+                  src={currentView.imageUrl}
+                  alt={room.title}
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                  loading="lazy"
+                />
 
-                    {/* Subtle 600mm Floor Tile Grid */}
-                    <pattern id={`grid-${scheme.id}`} width="60" height="60" patternUnits="userSpaceOnUse">
-                      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#e2e8f0" strokeWidth="1" />
-                    </pattern>
-                    <rect x="0" y="0" width="690" height="972.5" fill={`url(#grid-${scheme.id})`} />
+                {/* Subtle Gradient Shadow for Top and Bottom Badges */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40 pointer-events-none" />
 
-                    {/* Left Private Zone (3.1m width / 310px, X: 0 to 310) */}
-                    {/* Yard */}
-                    <rect x="12" y="12" width="298" height="160" fill={scheme.bgFill} stroke="#94a3b8" strokeWidth="3" rx="8" />
-                    <text x="160" y="100" fill="#475569" fontSize="28" fontWeight="bold" textAnchor="middle">生活阳台 YARD</text>
-
-                    {/* Study (Geek Workstation) */}
-                    <rect x="12" y="180" width="298" height="170" fill={scheme.bgFill} stroke={scheme.primaryColor} strokeWidth="3" rx="8" />
-                    <text x="160" y="275" fill={scheme.primaryColor} fontSize="28" fontWeight="bold" textAnchor="middle">极客工位 STUDY</text>
-
-                    {/* Bathroom */}
-                    <rect x="12" y="360" width="298" height="240" fill={scheme.bgFill} stroke="#94a3b8" strokeWidth="3" rx="8" />
-                    <text x="160" y="490" fill="#475569" fontSize="28" fontWeight="bold" textAnchor="middle">独立卫浴 BATH</text>
-
-                    {/* Master Bedroom */}
-                    <rect x="12" y="610" width="298" height="350" fill={scheme.bgFill} stroke={scheme.primaryColor} strokeWidth="3" rx="8" />
-                    <text x="160" y="800" fill={scheme.primaryColor} fontSize="30" fontWeight="bold" textAnchor="middle">主卧深睡 BEDROOM</text>
-
-                    {/* Longitudinal Main Spine Wall at X = 310px */}
-                    <line x1="310" y1="12" x2="310" y2="960" stroke="#1e293b" strokeWidth="12" strokeLinecap="round" />
-
-                    {/* Right Public Zone (3.8m width / 380px, X: 310 to 690) */}
-                    {/* Foyer */}
-                    <rect x="320" y="12" width="358" height="150" fill={scheme.bgFill} stroke="#94a3b8" strokeWidth="3" rx="8" />
-                    <text x="500" y="95" fill="#475569" fontSize="28" fontWeight="bold" textAnchor="middle">入户玄关 ENTR</text>
-
-                    {/* Kitchen */}
-                    <rect x="320" y="170" width="358" height="150" fill={scheme.bgFill} stroke="#94a3b8" strokeWidth="3" rx="8" />
-                    <text x="500" y="255" fill="#475569" fontSize="28" fontWeight="bold" textAnchor="middle">开放厨房 KITCHEN</text>
-
-                    {/* Dining Island */}
-                    <rect x="320" y="330" width="358" height="180" fill={scheme.bgFill} stroke="#94a3b8" strokeWidth="3" rx="8" />
-                    <text x="500" y="430" fill="#475569" fontSize="28" fontWeight="bold" textAnchor="middle">中岛吧台 DINING</text>
-
-                    {/* Living Room */}
-                    <rect x="320" y="520" width="358" height="300" fill={scheme.bgFill} stroke={scheme.primaryColor} strokeWidth="3" rx="8" />
-                    <text x="500" y="680" fill={scheme.primaryColor} fontSize="30" fontWeight="bold" textAnchor="middle">客厅影音 LIVING</text>
-
-                    {/* Balcony */}
-                    <rect x="320" y="830" width="358" height="130" fill="#e0f2fe" stroke="#38bdf8" strokeWidth="3" rx="8" />
-                    <text x="500" y="905" fill="#0369a1" fontSize="26" fontWeight="bold" textAnchor="middle">南向阳台 BALCONY (SSE 165°)</text>
-
-                    {/* Active Accent Highlights */}
-                    <circle cx="500" cy="680" r="14" fill={scheme.accentColor} />
-                    <circle cx="160" cy="275" r="14" fill={scheme.accentColor} />
-                  </svg>
-                </div>
-
-                {/* Top Overlay Badges */}
-                <div className="relative z-10 flex items-center justify-between">
-                  <span className="bg-white/95 backdrop-blur-md text-[10px] font-bold text-slate-800 px-2.5 py-1 rounded-lg border border-slate-200 shadow-2xs flex items-center space-x-1">
+                {/* Top Floating Badges */}
+                <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
+                  <span className="bg-white/95 backdrop-blur-md text-[10px] font-black text-slate-900 px-2.5 py-1 rounded-lg border border-slate-200 shadow-sm flex items-center space-x-1">
                     <Building2 className="w-3 h-3 text-blue-600" />
-                    <span>{scheme.category}</span>
+                    <span>{room.roomName}</span>
                   </span>
                   <span
-                    style={{ backgroundColor: scheme.primaryColor }}
-                    className="text-[10px] font-bold text-white px-2.5 py-0.5 rounded-full shadow-2xs font-mono"
+                    style={{ backgroundColor: room.accentColor }}
+                    className="text-[10px] font-bold text-white px-2.5 py-0.5 rounded-full shadow-sm font-mono"
                   >
-                    {scheme.tag}
+                    {room.styleTheme}
                   </span>
                 </div>
 
-                {/* Bottom Overlay Hint */}
-                <div className="relative z-10 flex items-center justify-between text-[10px] text-slate-700 font-semibold bg-white/90 backdrop-blur-md px-2.5 py-1 rounded-xl border border-slate-200 shadow-2xs">
-                  <span>6.9m × 9.725m 标准 1:1.41</span>
-                  <div className="flex items-center space-x-1 text-blue-600">
-                    <span>展开大图</span>
-                    <Maximize2 className="w-3 h-3" />
-                  </div>
-                </div>
-              </div>
-
-              {/* 2. High-Contrast Card Body (Dark Text on Clean White) */}
-              <div className="p-5 bg-white space-y-4 flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-mono font-bold text-blue-600 tracking-wider uppercase">
-                      2D BLUEPRINT REF
-                    </span>
-                    <div className="flex items-center space-x-1">
-                      {scheme.palette.map((c, i) => (
-                        <span
-                          key={i}
-                          title={c.name}
-                          style={{ backgroundColor: c.hex }}
-                          className="w-3 h-3 rounded-full border border-slate-300 shadow-2xs inline-block"
-                        />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Title & Subtitle in High-Contrast Slate-900 & Slate-700 */}
-                  <h3 className="text-base font-black text-slate-900 group-hover:text-blue-600 transition-colors">
-                    {scheme.title}
-                  </h3>
-                  <p className="text-xs font-semibold text-slate-700 mt-0.5">
-                    {scheme.subtitle}
-                  </p>
-
-                  <p className="text-xs text-slate-600 leading-relaxed mt-2.5 line-clamp-3">
-                    {scheme.description}
-                  </p>
-                </div>
-
-                {/* Key Dimensions Specs */}
-                <div className="space-y-2 pt-2 border-t border-slate-100">
-                  <div className="grid grid-cols-2 gap-1.5 text-[10px] text-slate-700">
-                    {scheme.specs.slice(0, 4).map((spec, i) => (
-                      <div key={i} className="flex items-center space-x-1 truncate bg-slate-50 px-2 py-1 rounded-lg border border-slate-200/70 font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0" />
-                        <span className="truncate">{spec}</span>
-                      </div>
+                {/* Bottom View Switcher Tabs (3 Distinct Perspective Angles) */}
+                <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-between">
+                  <div className="flex items-center space-x-1 bg-black/60 backdrop-blur-md p-1 rounded-xl border border-white/20">
+                    {room.views.map((v) => (
+                      <button
+                        key={v.key}
+                        onClick={(e) => handleViewChange(room.id, v.key, e)}
+                        className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all flex items-center space-x-1 ${
+                          currentViewKey === v.key
+                            ? "bg-blue-600 text-white shadow-sm"
+                            : "text-white/80 hover:text-white hover:bg-white/10"
+                        }`}
+                        title={v.sublabel}
+                      >
+                        {v.key === "A" && <Camera className="w-2.5 h-2.5" />}
+                        {v.key === "B" && <Search className="w-2.5 h-2.5" />}
+                        {v.key === "C" && <RotateCw className="w-2.5 h-2.5" />}
+                        <span>{v.key}</span>
+                      </button>
                     ))}
                   </div>
 
-                  {/* Action Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedStyleId(scheme.themeStyleId);
-                    }}
-                    className={`w-full mt-3 py-2 rounded-xl text-xs font-bold transition-all ${
-                      isSelected
-                        ? "bg-blue-600 text-white shadow-xs font-semibold"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    }`}
-                  >
-                    {isSelected ? "✓ 当前 3D 关联风格" : "切换为此设计模式"}
-                  </button>
+                  <span className="text-[10px] text-white/90 font-medium bg-black/50 backdrop-blur-md px-2 py-0.5 rounded-lg flex items-center space-x-1">
+                    <span>{currentView.sublabel}</span>
+                    <Maximize2 className="w-2.5 h-2.5 ml-1" />
+                  </span>
+                </div>
+              </div>
+
+              {/* 2. High-Contrast Dark Card Typography */}
+              <div className="p-5 bg-white space-y-4 flex-1 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-mono font-bold text-blue-600 tracking-wider uppercase">
+                      {room.enName}
+                    </span>
+                    <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
+                      {currentView.label}
+                    </span>
+                  </div>
+
+                  {/* Title & Subtitle in High-Contrast Slate-900 & Slate-600 */}
+                  <h3 className="text-base font-black text-slate-900 group-hover:text-blue-600 transition-colors leading-snug">
+                    {room.title}
+                  </h3>
+                  <p className="text-xs font-semibold text-slate-600 mt-1">
+                    {room.subtitle}
+                  </p>
+
+                  <p className="text-xs text-slate-600 leading-relaxed mt-2 line-clamp-2">
+                    {currentView.highlight}
+                  </p>
+                </div>
+
+                {/* Material & Lighting Highlights */}
+                <div className="space-y-3 pt-2 border-t border-slate-100">
+                  <div className="flex flex-wrap gap-1">
+                    {room.focalPoints.map((fp, i) => (
+                      <span
+                        key={i}
+                        className="text-[9px] bg-slate-50 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200/80 font-medium"
+                      >
+                        {fp}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Fast Action Buttons */}
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveModalRoom({ room, activeViewKey: currentViewKey });
+                      }}
+                      className="w-full py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all flex items-center justify-center space-x-1"
+                    >
+                      <Eye className="w-3 h-3" />
+                      <span>查看 3 视角大图</span>
+                    </button>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedStyleId(room.themeStyleId);
+                      }}
+                      className={`w-full py-1.5 rounded-xl text-xs font-bold transition-all ${
+                        isStyleSelected
+                          ? "bg-blue-600 text-white shadow-xs font-semibold"
+                          : "bg-blue-50 text-blue-700 hover:bg-blue-100"
+                      }`}
+                    >
+                      {isStyleSelected ? "✓ 当前 3D 风格" : "应用此风格"}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -397,152 +508,199 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
         })}
       </div>
 
-      {/* Fullscreen Interactive Deep-Dive Modal */}
-      {activeModalScheme && (
+      {/* Fullscreen Multi-View Deep-Dive Modal with Midjourney Prompt & Materials */}
+      {activeModalRoom && (
         <div
-          onClick={() => setActiveModalScheme(null)}
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+          onClick={() => setActiveModalRoom(null)}
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-6"
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white w-full max-w-4xl rounded-3xl border border-slate-200 overflow-hidden shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto"
+            className="bg-white w-full max-w-5xl rounded-3xl border border-slate-200 overflow-hidden shadow-2xl space-y-0 max-h-[94vh] flex flex-col"
           >
             {/* Modal Header */}
-            <div className="p-6 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+            <div className="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex items-center justify-between flex-shrink-0">
               <div>
                 <div className="flex items-center space-x-2">
                   <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-blue-100 text-blue-800 font-mono">
-                    2D ARCHITECTURAL SPECIFICATION
+                    AI MULTI-VIEW STUDIO
                   </span>
-                  <span className="text-xs font-bold text-slate-500">{activeModalScheme.category}</span>
+                  <span className="text-xs font-bold text-slate-500">{activeModalRoom.room.roomName}</span>
                 </div>
-                <h3 className="text-xl font-black text-slate-900 mt-1">
-                  {activeModalScheme.title}
+                <h3 className="text-lg sm:text-xl font-black text-slate-900 mt-0.5">
+                  {activeModalRoom.room.title}
                 </h3>
               </div>
               <button
-                onClick={() => setActiveModalScheme(null)}
+                onClick={() => setActiveModalRoom(null)}
                 className="w-8 h-8 rounded-full bg-white text-slate-700 hover:text-slate-950 flex items-center justify-center font-bold text-sm shadow-sm border border-slate-200"
               >
                 ✕
               </button>
             </div>
 
-            {/* Modal Content */}
-            <div className="p-6 space-y-6">
-              {/* Detailed 2D Blueprint Graphic View */}
-              <div className="bg-slate-100 p-6 rounded-2xl border border-slate-200 flex items-center justify-center">
-                <svg viewBox="0 0 690 972.5" className="w-full max-w-[420px] max-h-[380px] drop-shadow-md">
-                  <rect x="0" y="0" width="690" height="972.5" fill="#ede8df" stroke="#334155" strokeWidth="6" rx="16" />
+            {/* Modal Scrollable Body */}
+            <div className="p-4 sm:p-6 space-y-6 overflow-y-auto flex-1">
+              {/* Active Hero Image Display */}
+              {(() => {
+                const currentView =
+                  activeModalRoom.room.views.find((v) => v.key === activeModalRoom.activeViewKey) ||
+                  activeModalRoom.room.views[0];
 
-                  {/* Left Private Zone (3.1m width / 310px) */}
-                  <rect x="12" y="12" width="298" height="160" fill="#f8fafc" stroke="#94a3b8" strokeWidth="3" rx="8" />
-                  <text x="160" y="70" fill="#1e293b" fontSize="26" fontWeight="bold" textAnchor="middle">生活阳台 YARD</text>
-                  <text x="160" y="105" fill="#64748b" fontSize="20" textAnchor="middle">3.1m × 1.6m · 洗烘扫拖</text>
-
-                  <rect x="12" y="180" width="298" height="170" fill="#f8fafc" stroke={activeModalScheme.primaryColor} strokeWidth="4" rx="8" />
-                  <text x="160" y="245" fill="#1e293b" fontSize="26" fontWeight="bold" textAnchor="middle">极客工位 STUDY</text>
-                  <text x="160" y="280" fill={activeModalScheme.primaryColor} fontSize="20" fontWeight="bold" textAnchor="middle">3.1m × 1.7m · 2.0m 升降桌</text>
-
-                  <rect x="12" y="360" width="298" height="240" fill="#f8fafc" stroke="#94a3b8" strokeWidth="3" rx="8" />
-                  <text x="160" y="460" fill="#1e293b" fontSize="26" fontWeight="bold" textAnchor="middle">独立卫浴 BATH</text>
-                  <text x="160" y="495" fill="#64748b" fontSize="20" textAnchor="middle">3.1m × 2.5m · 1.5m 贯穿大台面</text>
-
-                  <rect x="12" y="610" width="298" height="350" fill="#f8fafc" stroke={activeModalScheme.primaryColor} strokeWidth="4" rx="8" />
-                  <text x="160" y="760" fill="#1e293b" fontSize="28" fontWeight="bold" textAnchor="middle">主卧深睡 BEDROOM</text>
-                  <text x="160" y="795" fill={activeModalScheme.primaryColor} fontSize="20" fontWeight="bold" textAnchor="middle">3.1m × 3.8m · 1.8m 大床</text>
-
-                  {/* Main Spine Wall at X = 310px */}
-                  <line x1="310" y1="12" x2="310" y2="960" stroke="#1e293b" strokeWidth="12" strokeLinecap="round" />
-
-                  {/* Right Public Zone (3.8m width / 380px) */}
-                  <rect x="320" y="12" width="358" height="150" fill="#f8fafc" stroke="#94a3b8" strokeWidth="3" rx="8" />
-                  <text x="500" y="70" fill="#1e293b" fontSize="26" fontWeight="bold" textAnchor="middle">入户玄关 ENTRANCE</text>
-                  <text x="500" y="105" fill="#64748b" fontSize="20" textAnchor="middle">3.8m × 1.5m · D200 门锁</text>
-
-                  <rect x="320" y="170" width="358" height="150" fill="#f8fafc" stroke="#94a3b8" strokeWidth="3" rx="8" />
-                  <text x="500" y="235" fill="#1e293b" fontSize="26" fontWeight="bold" textAnchor="middle">开放厨房 KITCHEN</text>
-                  <text x="500" y="270" fill="#64748b" fontSize="20" textAnchor="middle">3.8m × 1.5m · 20A 电磁灶</text>
-
-                  <rect x="320" y="330" width="358" height="180" fill="#f8fafc" stroke="#94a3b8" strokeWidth="3" rx="8" />
-                  <text x="500" y="405" fill="#1e293b" fontSize="26" fontWeight="bold" textAnchor="middle">中岛吧台 DINING</text>
-                  <text x="500" y="440" fill="#64748b" fontSize="20" textAnchor="middle">3.8m × 1.8m · 弹出轨道插座</text>
-
-                  <rect x="320" y="520" width="358" height="300" fill="#f8fafc" stroke={activeModalScheme.primaryColor} strokeWidth="4" rx="8" />
-                  <text x="500" y="650" fill="#1e293b" fontSize="28" fontWeight="bold" textAnchor="middle">客厅极简影音 LIVING</text>
-                  <text x="500" y="685" fill={activeModalScheme.primaryColor} fontSize="20" fontWeight="bold" textAnchor="middle">3.8m × 3.4m · 85寸巨幕</text>
-
-                  <rect x="320" y="830" width="358" height="130" fill="#e0f2fe" stroke="#0284c7" strokeWidth="3" rx="8" />
-                  <text x="500" y="885" fill="#0369a1" fontSize="26" fontWeight="bold" textAnchor="middle">南向景观阳台 BALCONY</text>
-                  <text x="500" y="915" fill="#0284c7" fontSize="20" fontWeight="bold" textAnchor="middle">3.8m × 1.5m · SSE 165° 黄金朝向</text>
-                </svg>
-              </div>
-
-              {/* Specs & Detailed Breakdown */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    空间布局与工程落地规范 (Engineering Specs)
-                  </h4>
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 text-xs text-slate-800 font-medium">
-                    {activeModalScheme.specs.map((spec, i) => (
-                      <div key={i} className="flex items-start space-x-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 flex-shrink-0" />
-                        <span>{spec}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                    机电与智能挂载点位 (MEP & Smart Points)
-                  </h4>
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 text-xs text-slate-800 font-medium">
-                    {activeModalScheme.mepHighlights.map((mep, i) => (
-                      <div key={i} className="flex items-start space-x-2">
-                        <Zap className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
-                        <span>{mep}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Material Palette Breakdown */}
-              <div>
-                <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
-                  本案采用材质配色情绪板 (Color & Material Palette)
-                </h4>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {activeModalScheme.palette.map((p, i) => (
-                    <div key={i} className="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex items-center space-x-2.5">
-                      <div style={{ backgroundColor: p.hex }} className="w-6 h-6 rounded-xl border border-slate-300 shadow-2xs flex-shrink-0" />
-                      <div>
-                        <div className="text-xs font-bold text-slate-900">{p.name}</div>
-                        <div className="text-[10px] font-mono text-slate-500">{p.hex}</div>
+                return (
+                  <div className="space-y-3">
+                    <div className="relative aspect-[16/9] w-full bg-slate-950 rounded-2xl overflow-hidden shadow-md border border-slate-200">
+                      <img
+                        src={currentView.imageUrl}
+                        alt={currentView.label}
+                        className="w-full h-full object-cover object-center"
+                      />
+                      <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-md p-3 rounded-xl border border-white/20 text-white flex items-center justify-between">
+                        <div>
+                          <div className="text-xs font-bold flex items-center space-x-1.5">
+                            <Camera className="w-3.5 h-3.5 text-blue-400" />
+                            <span>{currentView.label}</span>
+                            <span className="text-white/60">·</span>
+                            <span className="text-white/90 font-normal">{currentView.sublabel}</span>
+                          </div>
+                          <div className="text-[11px] text-white/80 mt-0.5">
+                            {currentView.highlight}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  ))}
+
+                    {/* 3 Views Thumbnail Switcher Tabs */}
+                    <div className="grid grid-cols-3 gap-3">
+                      {activeModalRoom.room.views.map((view) => {
+                        const isViewActive = activeModalRoom.activeViewKey === view.key;
+                        return (
+                          <button
+                            key={view.key}
+                            onClick={() =>
+                              setActiveModalRoom({
+                                room: activeModalRoom.room,
+                                activeViewKey: view.key
+                              })
+                            }
+                            className={`p-2 rounded-2xl border transition-all text-left flex items-center space-x-3 ${
+                              isViewActive
+                                ? "bg-blue-50 border-blue-600 shadow-sm ring-2 ring-blue-500/20"
+                                : "bg-slate-50 border-slate-200 hover:bg-slate-100"
+                            }`}
+                          >
+                            <img
+                              src={view.imageUrl}
+                              alt={view.label}
+                              className="w-16 h-12 rounded-xl object-cover flex-shrink-0"
+                            />
+                            <div className="overflow-hidden">
+                              <div className={`text-xs font-black truncate ${isViewActive ? "text-blue-900" : "text-slate-900"}`}>
+                                {view.label}
+                              </div>
+                              <div className="text-[10px] text-slate-500 truncate mt-0.5">
+                                {view.sublabel}
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Midjourney / Flux Prompt Box (One-Click Copy) */}
+              {(() => {
+                const currentView =
+                  activeModalRoom.room.views.find((v) => v.key === activeModalRoom.activeViewKey) ||
+                  activeModalRoom.room.views[0];
+
+                return (
+                  <div className="bg-slate-900 text-white p-4 sm:p-5 rounded-2xl space-y-3 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <Sparkles className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-200">
+                          Midjourney v6 / Flux.1 真实渲染提示词 (Photorealistic Prompt)
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleCopyPrompt(currentView.prompt, currentView.key)}
+                        className="px-3 py-1 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white flex items-center space-x-1.5 transition-all shadow-sm"
+                      >
+                        {copiedPromptKey === currentView.key ? (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" />
+                            <span>已成功复制!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>复制 Prompt</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                    <div className="p-3 bg-black/50 rounded-xl font-mono text-[11px] text-slate-300 leading-relaxed break-words border border-slate-800">
+                      {currentView.prompt}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Materials & Lighting Detailed Specs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Material Specs */}
+                <div className="space-y-3">
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center space-x-1">
+                    <Palette className="w-3.5 h-3.5 text-blue-600" />
+                    <span>本案物理材质落地清单 (Materials Spec)</span>
+                  </h4>
+                  <div className="divide-y divide-slate-100 bg-slate-50 rounded-2xl border border-slate-200 text-xs">
+                    {activeModalRoom.room.materials.map((mat, idx) => (
+                      <div key={idx} className="p-3 flex items-center justify-between">
+                        <span className="font-semibold text-slate-800">{mat.name}</span>
+                        <span className="text-slate-600 font-mono text-[11px]">{mat.spec}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Lighting Strategy */}
+                <div className="space-y-3">
+                  <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center space-x-1">
+                    <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                    <span>光影与灯光氛围策略 (Lighting Strategy)</span>
+                  </h4>
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs space-y-2">
+                    <p className="text-slate-800 leading-relaxed font-medium">
+                      {activeModalRoom.room.lighting}
+                    </p>
+                    <div className="border-t border-slate-200/80 pt-2 flex items-center space-x-2 text-[11px] text-slate-500">
+                      <Sun className="w-3.5 h-3.5 text-amber-500" />
+                      <span>南偏东 SSE 165° 晨光斜照路径 · 全天高品质漫射无西晒</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {/* Action Footer */}
               <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-100">
                 <button
-                  onClick={() => setActiveModalScheme(null)}
+                  onClick={() => setActiveModalRoom(null)}
                   className="px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200"
                 >
                   关闭
                 </button>
                 <button
                   onClick={() => {
-                    setSelectedStyleId(activeModalScheme.themeStyleId);
-                    setActiveModalScheme(null);
+                    setSelectedStyleId(activeModalRoom.room.themeStyleId);
+                    setActiveModalRoom(null);
                   }}
                   className="px-5 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm hover:bg-blue-700"
                 >
-                  在 3D 视口中载入此设计
+                  在 3D 视口中载入此空间风格
                 </button>
               </div>
             </div>
