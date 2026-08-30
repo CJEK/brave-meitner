@@ -43,7 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-2">
+        <div className="flex flex-wrap items-center justify-between min-h-[64px] py-2 gap-2">
           {/* Brand Logo & Property Meta */}
           <div className="flex items-center space-x-2.5 flex-shrink-0">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/10 text-white font-black tracking-wider text-sm sm:text-base">
@@ -59,13 +59,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 hidden sm:block whitespace-nowrap">
-                Type B · 648 sq ft · 24F 高层
+                Type B · 648 sq ft (60.22 ㎡) · 24F 高层
               </p>
             </div>
           </div>
 
-          {/* Desktop Navigation Links (Responsive Compact Padding on 13-15" Displays) */}
-          <nav className="hidden 2xl:flex items-center space-x-1">
+          {/* Desktop Navigation Links (Responsive Compact Padding on Large Screens) */}
+          <nav className="hidden xl:flex items-center space-x-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 whitespace-nowrap ${
+                  className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 whitespace-nowrap ${
                     isActive
                       ? "bg-slate-900 text-white shadow-sm"
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
@@ -86,8 +86,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Medium Screen Compact Navigation (1024px - 1535px) */}
-          <nav className="hidden lg:flex 2xl:hidden items-center space-x-0.5">
+          {/* Medium Screen Compact Navigation (1024px - 1279px) */}
+          <nav className="hidden lg:flex xl:hidden items-center space-x-0.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -132,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Export Decision Report Button */}
             <button
               onClick={onOpenReport}
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-all shadow-sm shadow-blue-500/20 active:scale-95 whitespace-nowrap"
+              className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition-all shadow-sm shadow-blue-500/20 active:scale-95 whitespace-nowrap"
             >
               <Download className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">导出决策报告</span>

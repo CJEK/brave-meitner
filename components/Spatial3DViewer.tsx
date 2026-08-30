@@ -36,7 +36,7 @@ interface Spatial3DViewerProps {
 // 1:1 Standard Coordinate System: Width X [-3.45, +3.45], Depth Z [-4.86, +4.86], Origin (0,0,0) at Center
 const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: number; label: string; mep: string[]; smart: string[] } } = {
   "entrance": {
-    x: 2.2, z: -4.0, w: 2.3, d: 1.6,
+    x: 2.1, z: -4.0, w: 2.3, d: 1.5,
     label: "入户玄关",
     mep: ["⚡ 入户照明双控开关", "⚡ DB 配电箱与弱电光纤"],
     smart: ["🤖 D200 3D人脸门锁", "🤖 入户迎宾微波感应"]
@@ -54,13 +54,13 @@ const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: num
     smart: ["🤖 吧台调光色温旋钮", "🤖 中岛氛围悬浮吊灯"]
   },
   "living": {
-    x: 1.6, z: 1.6, w: 3.5, d: 3.1,
+    x: 1.6, z: 1.6, w: 3.4, d: 3.2,
     label: "客厅极简影音区",
     mep: ["⚡ SMATV 电视点位", "⚡ 15A 空调专用点", "⚡ 5组五孔插座", "⚡ 沙发侧 USB-C 快充"],
     smart: ["🤖 FP2 人体存在毫米波雷达", "🤖 空调伴侣 P3", "🤖 电视背景同步流光溢彩"]
   },
   "balcony": {
-    x: 1.6, z: 4.0, w: 3.5, d: 1.5,
+    x: 1.6, z: 4.0, w: 3.4, d: 1.5,
     label: "南向景观阳台",
     mep: ["⚡ 防水动力插座", "⚡ 景观洗墙射灯"],
     smart: ["🤖 C3 智能双轨电动帘", "🤖 阳台温湿度传感器"]
@@ -91,18 +91,18 @@ const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: num
   }
 };
 
-// 3D Anchor Points for Screen-Projected Badges (Anchored to Real Physical Walls & Fixtures)
+// 3D Anchor Points with Distinct Physical Height (Y-Offset) and Dispersed Positions to prevent overlap
 const MARKER_ANCHORS = [
-  { id: "d200-lock", pos: [2.5, 1.4, -4.8], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
-  { id: "smatv", pos: [3.3, 1.4, 1.6], label: "SMATV 电视点", type: "mep", icon: "⚡" },
-  { id: "ac-living", pos: [3.3, 2.5, 3.0], label: "15A 空调动力", type: "mep", icon: "⚡" },
-  { id: "fp2-living", pos: [1.6, 2.7, 1.6], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
+  { id: "d200-lock", pos: [2.5, 1.6, -4.6], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
+  { id: "smatv", pos: [3.2, 1.2, 1.4], label: "SMATV 电视点", type: "mep", icon: "⚡" },
+  { id: "ac-living", pos: [3.2, 2.6, 2.8], label: "15A 空调动力", type: "mep", icon: "⚡" },
+  { id: "fp2-living", pos: [1.6, 2.8, 1.6], label: "FP2 存在雷达", type: "smart", icon: "🤖" },
   { id: "desk-power", pos: [-1.6, 1.0, -1.6], label: "8组桌面插座", type: "mep", icon: "⚡" },
-  { id: "fp2-study", pos: [-1.6, 2.7, -1.6], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
-  { id: "vanity-power", pos: [-3.3, 1.3, 0.0], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
-  { id: "roborock", pos: [-3.0, 0.9, -3.8], label: "扫拖机自动上下水", type: "smart", icon: "🤖" },
-  { id: "curtain-c3", pos: [1.6, 2.5, 4.6], label: "C3 南向双轨帘", type: "smart", icon: "🤖" },
-  { id: "curtain-bed", pos: [-3.3, 2.5, 3.8], label: "C3 主卧静音帘", type: "smart", icon: "🤖" }
+  { id: "fp2-study", pos: [-1.6, 2.8, -1.6], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" }, // Y: 2.8m (Ceiling) vs Y: 1.0m (Desk)
+  { id: "vanity-power", pos: [-3.2, 1.4, 0.0], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
+  { id: "roborock", pos: [-2.8, 0.6, -3.8], label: "扫拖机自动上下水", type: "smart", icon: "🤖" },
+  { id: "curtain-c3", pos: [1.6, 2.5, 4.4], label: "C3 南向双轨帘", type: "smart", icon: "🤖" },
+  { id: "curtain-bed", pos: [-3.2, 2.5, 3.6], label: "C3 主卧静音帘", type: "smart", icon: "🤖" }
 ];
 
 export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleId }) => {
@@ -163,7 +163,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, []);
 
-  // 1. Initialize Three.js Scene: 6,900 × 9,725 mm Strict Coordinates & Topological Physical Walls
+  // 1. Initialize Three.js Scene: 6,900 × 9,725 mm Strict Coordinates & 0.15m Architectural Partition Walls
   useEffect(() => {
     if (!mountRef.current || viewMode !== "3d") return;
 
@@ -317,7 +317,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       return group;
     };
 
-    // Helper: Create Solid Architectural Partition Wall with Crisp Outlines
+    // Helper: Create Standard 0.15m (150mm) Architectural Partition Wall
     const createWall = (w: number, h: number, d: number, x: number, y: number, z: number, opacity = 1, color = 0xffffff) => {
       const group = new THREE.Group();
       const geom = new THREE.BoxGeometry(w, h, d);
@@ -343,42 +343,41 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     };
 
     // =========================================================================
-    // 🧱 1:1 REAL ARCHITECTURAL PARTITION WALLS & DOORWAYS (Type B Topology)
+    // 🧱 1:1 REAL ARCHITECTURAL PARTITION WALLS (Standard 0.15m Thickness)
     // =========================================================================
 
-    // 1. Perimeter Walls: 6.90m (W) × 9.725m (D) × 2.75m (H)
-    const northWallLeft = createWall(3.45, 2.75, 0.18, -1.725, 1.375, -4.86); // Yard side
-    const northWallRight = createWall(2.4, 2.75, 0.18, 1.2, 1.375, -4.86);   // Kitchen side (leaving entrance door at x: 2.4~3.45)
-    const westWall = createWall(0.18, 2.75, 9.725, -3.45, 1.375, 0);         // Solid west exterior wall
-    const eastWall = createWall(0.18, 2.75, 9.725, 3.45, 1.375, 0);          // Solid east party wall
-    const southWallBed = createWall(3.45, 2.75, 0.18, -1.725, 1.375, 4.86);  // Bedroom south wall
+    // 1. Outer Perimeter Walls (0.15m / 150mm thickness)
+    const northWallLeft = createWall(3.45, 2.75, 0.15, -1.725, 1.375, -4.86); // Yard side
+    const northWallRight = createWall(2.3, 2.75, 0.15, 1.15, 1.375, -4.86);   // Kitchen side (entrance door opening at x: 2.3~3.45)
+    const westWall = createWall(0.15, 2.75, 9.725, -3.45, 1.375, 0);         // Solid west exterior wall
+    const eastWall = createWall(0.15, 2.75, 9.725, 3.45, 1.375, 0);          // Solid east party wall
+    const southWallBed = createWall(3.45, 2.75, 0.15, -1.725, 1.375, 4.86);  // Bedroom south wall
     scene.add(northWallLeft, northWallRight, westWall, eastWall, southWallBed);
 
-    // 2. 纵向主隔墙 (Longitudinal Spine Wall at X = -0.15m)
-    // Separates Left Private Zone (Yard, Bath, Bedroom) from Right Public Zone (Entrance, Kitchen, Living, Balcony)
+    // 2. 纵向主隔墙 (Longitudinal Spine Wall at X = -0.15m, 0.15m thickness)
     const spineWallYard = createWall(0.15, 2.75, 2.36, -0.15, 1.375, -3.68); // Between Yard & Entrance/Kitchen
     const spineWallBathTop = createWall(0.15, 2.75, 0.8, -0.15, 1.375, -0.8); // Bathroom east wall top
-    const spineWallBathBottom = createWall(0.15, 2.75, 0.6, -0.15, 1.375, 0.9); // Bathroom east wall bottom (900mm Bath Door opening at z: -0.2)
+    const spineWallBathBottom = createWall(0.15, 2.75, 0.6, -0.15, 1.375, 0.9); // (900mm Bath Door opening at z: -0.2)
     const spineWallBed = createWall(0.15, 2.75, 3.66, -0.15, 1.375, 3.03);    // Solid wall between Bedroom & Living/Balcony
     scene.add(spineWallYard, spineWallBathTop, spineWallBathBottom, spineWallBed);
 
-    // 3. 独立封闭卫浴室 (Bathroom Partitions at Z: [-1.2, +1.2], X: [-3.45, -0.15])
+    // 3. 独立封闭卫浴室隔墙 (Bathroom Partitions at Z: [-1.2, +1.2], 0.15m thickness)
     const bathNorthWall = createWall(3.3, 2.75, 0.15, -1.8, 1.375, -1.2);     // Solid wall between Bath & Yard
     const bathSouthWallLeft = createWall(2.0, 2.75, 0.15, -2.45, 1.375, 1.2); // Wall between Bath & Master Bed
     const bathSouthWallRight = createWall(0.4, 2.75, 0.15, -0.35, 1.375, 1.2); // (900mm Master Bed Door opening at x: -1.0)
     scene.add(bathNorthWall, bathSouthWallLeft, bathSouthWallRight);
 
-    // 4. 生活阳台 (Yard Partition at Z: -2.5m)
+    // 4. 生活阳台隔墙 (Yard Partition at Z: -2.5m, 0.15m thickness)
     const yardSouthWall = createWall(3.3, 2.75, 0.15, -1.8, 1.375, -2.5);
     scene.add(yardSouthWall);
 
-    // 5. 客厅南向阳台推拉门与玻璃栏杆 (Balcony Glass Sliding Doors at Z: 3.2m & Railing at Z: 4.86m)
+    // 5. 客厅南向景观阳台推拉门与玻璃栏杆
     const balconySlidingGlass = createWall(3.45, 2.5, 0.05, 1.65, 1.25, 3.2, 0.45, 0x93c5fd);
     const balconyGlassRailing = createWall(3.45, 1.1, 0.06, 1.65, 0.55, 4.86, 0.5, 0x60a5fa);
     scene.add(balconySlidingGlass, balconyGlassRailing);
 
     // =========================================================================
-    // 🛋️ FURNITURE & FIXTURES (Aligned to Real Room Coordinates)
+    // 🛋️ FURNITURE & FIXTURES (Structured & Aligned)
     // =========================================================================
 
     // --- 1. [右侧动区] 客厅极简影音区 (X: +1.6, Z: +1.6) ---
@@ -423,7 +422,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const washer = createFurniture(1.0, 1.2, 0.9, -2.7, 0.65, -3.8, 0xe2e8f0, 0x64748b);
     scene.add(washer);
 
-    // --- 7. Interactive Zone Highlight Floor Mesh & Outline ---
+    // --- 7. Interactive Zone Highlight Floor Mesh & Outline (Strict rectangular bounds) ---
     const highlightGeom = new THREE.PlaneGeometry(1, 1);
     highlightGeom.rotateX(-Math.PI / 2);
     const highlightMat = new THREE.MeshBasicMaterial({
@@ -843,7 +842,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                         transform: "translate(-50%, -100%)",
                         transition: "left 0.05s linear, top 0.05s linear, z-index 0.2s ease"
                       }}
-                      className="pointer-events-auto cursor-pointer group hover:z-50"
+                      className="pointer-events-auto cursor-pointer group z-10 hover:z-50"
                     >
                       <div className={`flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-bold border transition-all duration-200 ease-out whitespace-nowrap group-hover:scale-110 group-hover:shadow-2xl group-hover:z-50 ${
                         isMEP
@@ -932,8 +931,8 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           )}
 
-          {/* Bottom 9 Zones Selector */}
-          <div className="relative p-2.5 bg-white border-t border-slate-200 flex items-center">
+          {/* Bottom 9 Zones Selector with Flex-Shrink-0 & Smooth Scroll Fade Mask */}
+          <div className="relative p-2.5 bg-white border-t border-slate-200 flex items-center overflow-hidden">
             {/* Scroll Left Button */}
             <button
               onClick={() => scrollBottom("left")}
@@ -948,7 +947,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               ref={bottomScrollRef}
               className="flex-1 overflow-x-auto no-scrollbar flex items-center space-x-2 scroll-smooth px-1"
             >
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1 flex-shrink-0">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider pl-1 flex-shrink-0 whitespace-nowrap">
                 9大功能分区:
               </span>
               {ZONES_DATA.map((z) => (
@@ -973,7 +972,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
 
             {/* Scroll Right Button & Fade Mask */}
-            <div className="absolute right-9 top-0 bottom-0 w-12 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none" />
+            <div className="absolute right-9 top-0 bottom-0 w-16 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none" />
             <button
               onClick={() => scrollBottom("right")}
               className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-slate-900 transition-all flex-shrink-0 ml-1 z-10 shadow-2xs bg-white border border-slate-200"

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import * as SunCalc from "suncalc";
 
-// Paragon Gateway, Taman Suria, Johor Bahru, Malaysia
+// Paragon Gateway, Taman Suria, Johor Bahru, Malaysia (1.4927° N, 103.7414° E)
 export const JB_LOCATION = {
   latitude: 1.4927,
   longitude: 103.7414,
@@ -65,25 +65,25 @@ export function getJohorSunData(presetId: "morning" | "noon" | "sunset" | "night
   // Compute using SunCalc astronomical algorithms
   const sunPos = SunCalc.getPosition(date, JB_LOCATION.latitude, JB_LOCATION.longitude);
 
+  // SunCalc altitude is in radians (0 to PI/2). Strict conversion to degrees between 0° and 90.0°
+  const altDeg = (sunPos.altitude * 180) / Math.PI;
+  const altitudeDegrees = presetId === "night" 
+    ? "0.0" 
+    : Math.max(0, Math.min(90, altDeg)).toFixed(1);
+
   // SunCalc azimuth: 0 = South, -PI/2 = East, PI/2 = West, PI/-PI = North
   const distance = 24;
-  const rawAltitudeRad = sunPos.altitude;
-  const altitude = Math.max(0.08, rawAltitudeRad);
-  const y = Math.sin(altitude) * distance;
-  const groundRadius = Math.cos(altitude) * distance;
+  const rawAltitudeRad = Math.max(0.05, (parseFloat(altitudeDegrees) * Math.PI) / 180);
+  const y = Math.sin(rawAltitudeRad) * distance;
+  const groundRadius = Math.cos(rawAltitudeRad) * distance;
 
   // In our Three.js scene: +Z is South (Balcony), +X is East, -X is West, -Z is North
   const z = Math.cos(sunPos.azimuth) * groundRadius;
   const x = -Math.sin(sunPos.azimuth) * groundRadius;
 
-  // Format Azimuth & Altitude to exactly 1 decimal place (e.g. 165.2°, 28.5°)
+  // Format Azimuth to 0° - 360° (e.g. 108.5°, 165.2°)
   const rawAzimuthDeg = ((sunPos.azimuth * 180) / Math.PI + 180) % 360;
   const azimuthDegrees = (Math.round(rawAzimuthDeg * 10) / 10).toFixed(1);
-
-  const rawAltitudeDeg = (rawAltitudeRad * 180) / Math.PI;
-  const altitudeDegrees = presetId === "night" 
-    ? "0.0" 
-    : (Math.max(0.1, Math.round(rawAltitudeDeg * 10) / 10)).toFixed(1);
 
   let lightColor = 0xfff7ed;
   let lightIntensity = 1.4;
