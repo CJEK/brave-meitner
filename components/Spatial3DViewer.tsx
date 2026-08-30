@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import * as THREE from "three";
 import { 
   Layers, 
@@ -18,7 +18,8 @@ import {
   ChevronRight,
   ShieldCheck,
   Building2,
-  Navigation
+  Navigation,
+  MousePointerClick
 } from "lucide-react";
 import { ZONES_DATA, STYLES_DATA, PROPERTY_DATA, ZoneData } from "@/data/projectData";
 
@@ -108,8 +109,39 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const ambientLightRef = useRef<THREE.AmbientLight | null>(null);
   const markerGroupRef = useRef<THREE.Group | null>(null);
   const dimensionGroupRef = useRef<THREE.Group | null>(null);
+  const clickableZonesRef = useRef<THREE.Mesh[]>([]);
 
-  // 1. Initialize Three.js Scene
+  // Smooth Camera Lerp Targets
+  const targetCamPosRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 25, 24));
+  const targetLookAtRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+  const currentLookAtRef = useRef<THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+
+  // Handle Raycasting Pointer Click
+  const handleCanvasClick = useCallback((event: MouseEvent) => {
+    if (!mountRef.current || !cameraRef.current || !sceneRef.current) return;
+    const rect = mountRef.current.getBoundingClientRect();
+    const mouse = new THREE.Vector2(
+      ((event.clientX - rect.left) / rect.width) * 2 - 1,
+      -((event.clientY - rect.top) / rect.height) * 2 + 1
+    );
+
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, cameraRef.current);
+    const intersects = raycaster.intersectObjects(clickableZonesRef.current, false);
+
+    if (intersects.length > 0) {
+      const hit = intersects[0];
+      const zoneId = hit.object.userData.zoneId;
+      if (zoneId) {
+        const found = ZONES_DATA.find((z) => z.id === zoneId);
+        if (found) {
+          setActiveZone(found);
+        }
+      }
+    }
+  }, []);
+
+  // 1. Initialize Three.js Scene with Robust Memory Management & preserveDrawingBuffer
   useEffect(() => {
     if (!mountRef.current || viewMode !== "3d") return;
 
@@ -129,8 +161,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     camera.position.set(0, 25, 24);
     camera.lookAt(0, 0, 0);
 
-    // High Performance WebGL Renderer
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // WebGL Renderer with preserveDrawingBuffer: true for PDF/Canvas snapshot exports
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      preserveDrawingBuffer: true,
+      powerPreference: "high-performance"
+    });
     rendererRef.current = renderer;
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -139,6 +176,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
     mountRef.current.innerHTML = "";
     mountRef.current.appendChild(renderer.domElement);
+
+    // Attach Raycasting Click Handler
+    const domElem = renderer.domElement;
+    domElem.addEventListener("click", handleCanvasClick);
 
     // Ambient Lighting for Studio Clarity
     const ambientLight = new THREE.AmbientLight(
@@ -154,7 +195,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       timeOfDay === "night" ? 0x93c5fd : 0xffffff,
       timeOfDay === "night" ? 0.4 : 2.2
     );
-    // Vector pointing from SSE (X: 8, Y: 14, Z: 18) towards interior (0, 0, 0)
     sunLight.position.set(8, 14, 18);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
@@ -174,7 +214,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     fillLight.position.set(-10, 12, -12);
     scene.add(fillLight);
 
-    // Architectural Ground Grid (Main: #cbd5e1, Sub: #e2e8f0)
+    // Architectural Ground Grid
     const gridHelper = new THREE.GridHelper(34, 34, 0xcbd5e1, 0xe2e8f0);
     gridHelper.position.y = -0.02;
     scene.add(gridHelper);
@@ -196,6 +236,19 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const floorLine = new THREE.LineSegments(floorEdges, new THREE.LineBasicMaterial({ color: 0x94a3b8 }));
     floorLine.position.y = -0.1;
     scene.add(floorLine);
+
+    // Clickable Invisible Raycasting Floor Meshes for each zone
+    clickableZonesRef.current = [];
+    Object.entries(ZONE_3D_COORDS).forEach(([zoneId, coord]) => {
+      const planeGeom = new THREE.PlaneGeometry(coord.w, coord.d);
+      planeGeom.rotateX(-Math.PI / 2);
+      const planeMat = new THREE.MeshBasicMaterial({ visible: false });
+      const zoneFloor = new THREE.Mesh(planeGeom, planeMat);
+      zoneFloor.position.set(coord.x, 0.01, coord.z);
+      zoneFloor.userData = { zoneId };
+      scene.add(zoneFloor);
+      clickableZonesRef.current.push(zoneFloor);
+    });
 
     // Helper: Create Architect-Grade Clean Furniture with Wireframe Border
     const createFurniture = (w: number, h: number, d: number, x: number, y: number, z: number, color = 0xe2e8f0, edgeColor = 0x94a3b8) => {
@@ -246,46 +299,33 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     };
 
     // --- 1. Living Room & Balcony Furniture (Neutral Light Aesthetic) ---
-    // Sofa (Light Soft Grey Linen)
     const sofa = createFurniture(4.5, 0.75, 1.6, -3.5, 0.45, 2.2, 0xd1d5db, 0x64748b);
-    // Sofa Cushions
     const cushion1 = createFurniture(1.2, 0.25, 0.6, -4.5, 0.85, 2.2, 0x93c5fd, 0x3b82f6);
     const cushion2 = createFurniture(1.2, 0.25, 0.6, -2.5, 0.85, 2.2, 0xfde68a, 0xd97706);
-    // Floating TV Stand & Screen
     const tvStand = createFurniture(5.2, 0.35, 0.6, -3.5, 0.3, -0.4, 0xe2e8f0, 0x94a3b8);
     const tvScreen = createFurniture(4.6, 2.3, 0.08, -3.5, 1.7, -0.6, 0x334155, 0x0f172a);
-    // Balcony Glass Railing
     const balconyRailing = createWall(6.2, 1.1, 0.08, -3.5, 0.65, 7.8, 0.4, 0x93c5fd);
     scene.add(sofa, cushion1, cushion2, tvStand, tvScreen, balconyRailing);
 
     // --- 2. Kitchen & Island (White Sintered Stone + Warm Oak) ---
-    // Kitchen L-Counter
     const kitchenCounter = createFurniture(4.0, 1.0, 1.2, -4.8, 0.55, -4.5, 0xe2e8f0, 0x94a3b8);
-    // Sintered Stone Island Bar
     const island = createFurniture(3.4, 1.1, 1.4, -3.2, 0.6, -1.8, 0xffffff, 0x94a3b8);
-    // Island Wood Extension
     const islandWood = createFurniture(1.2, 0.08, 1.4, -1.0, 1.05, -1.8, 0xe8d5b5, 0xb45309);
     scene.add(kitchenCounter, island, islandWood);
 
     // --- 3. 1+1 Geek Workstation (2.0m Lifting Desk + Glass Partition) ---
-    // Glass Partition
     const studyGlass = createWall(0.08, 2.6, 4.8, 1.2, 1.35, 2.2, 0.35, 0xbfdbfe);
-    // Solid Oak Lifting Desk (2.0m x 0.8m)
     const liftDesk = createFurniture(3.4, 0.1, 1.4, 4.2, 1.1, 2.2, 0xe8d5b5, 0xb45309);
-    // Metal Desk Legs
     const leg1 = createFurniture(0.18, 1.05, 1.2, 2.8, 0.55, 2.2, 0x64748b, 0x334155);
     const leg2 = createFurniture(0.18, 1.05, 1.2, 5.6, 0.55, 2.2, 0x64748b, 0x334155);
-    // Dual Screens (32" Curved & Vertical)
     const screen1 = createFurniture(1.4, 0.8, 0.06, 3.7, 1.75, 2.0, 0x2563eb, 0x1e40af);
     const screen2 = createFurniture(0.8, 1.3, 0.06, 4.9, 1.85, 2.0, 0x2563eb, 0x1e40af);
     scene.add(studyGlass, liftDesk, leg1, leg2, screen1, screen2);
 
     // --- 4. Master Bedroom (1.8m Floating Bed + Wardrobe) ---
-    // Floating Bed Base + Mattress
     const bedBase = createFurniture(3.4, 0.45, 3.6, 4.2, 0.3, -3.5, 0xd1d5db, 0x94a3b8);
     const mattress = createFurniture(3.0, 0.4, 3.2, 4.2, 0.65, -3.5, 0xffffff, 0xcbd5e1);
     const headboard = createFurniture(3.4, 1.3, 0.15, 4.2, 0.85, -5.35, 0xe2e8f0, 0x94a3b8);
-    // Full Height Wardrobe (PET Matte White)
     const wardrobe = createFurniture(0.7, 2.6, 4.2, 7.3, 1.35, -3.5, 0xffffff, 0xcbd5e1);
     scene.add(bedBase, mattress, headboard, wardrobe);
 
@@ -306,7 +346,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const highlightMat = new THREE.MeshBasicMaterial({
       color: 0x3b82f6,
       transparent: true,
-      opacity: 0.25,
+      opacity: 0.28,
       side: THREE.DoubleSide
     });
     const highlightMesh = new THREE.Mesh(highlightGeom, highlightMat);
@@ -331,7 +371,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     dimensionGroupRef.current = dimensionGroup;
     scene.add(dimensionGroup);
 
-    // Animation Loop
+    // Animation Loop with Smooth Camera Lerp
     let animationFrameId: number;
     let clock = new THREE.Clock();
 
@@ -339,9 +379,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       animationFrameId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      // Gentle pulsing of the active zone highlight
+      // Smooth Camera Lerp
+      camera.position.lerp(targetCamPosRef.current, 0.055);
+      currentLookAtRef.current.lerp(targetLookAtRef.current, 0.055);
+      camera.lookAt(currentLookAtRef.current);
+
+      // Gentle breathing pulsation on active zone highlight
       if (highlightMeshRef.current) {
-        highlightMat.opacity = 0.2 + Math.sin(elapsedTime * 3) * 0.08;
+        highlightMat.opacity = 0.22 + Math.sin(elapsedTime * 3.2) * 0.08;
       }
 
       renderer.render(scene, camera);
@@ -359,17 +404,39 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     };
     window.addEventListener("resize", handleResize);
 
+    // Strict WebGL Cleanup on Unmount (Memory Leak Prevention & Context Loss Prevention)
     return () => {
+      domElem.removeEventListener("click", handleCanvasClick);
       window.removeEventListener("resize", handleResize);
       cancelAnimationFrame(animationFrameId);
+
+      // Recursively dispose all scene geometries and materials
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          if (obj.geometry) obj.geometry.dispose();
+          if (obj.material) {
+            if (Array.isArray(obj.material)) {
+              obj.material.forEach((m) => m.dispose());
+            } else {
+              obj.material.dispose();
+            }
+          }
+        }
+        if (obj instanceof THREE.LineSegments || obj instanceof THREE.Line) {
+          if (obj.geometry) obj.geometry.dispose();
+          if (obj.material) obj.material.dispose();
+        }
+      });
+
       if (mountRef.current && renderer.domElement) {
         mountRef.current.innerHTML = "";
       }
       renderer.dispose();
+      renderer.forceContextLoss();
     };
-  }, [viewMode, selectedStyleId]);
+  }, [viewMode, selectedStyleId, handleCanvasClick]);
 
-  // 2. Update Highlight Mesh when `activeZone` changes (Fixing Error 1: Mesh ID / Coordinate Misalignment)
+  // 2. Update Highlight Mesh when `activeZone` changes
   useEffect(() => {
     if (!highlightMeshRef.current || !highlightBorderRef.current) return;
     const coords = ZONE_3D_COORDS[activeZone.id] || ZONE_3D_COORDS["zone-living"];
@@ -392,7 +459,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     highlightBorderRef.current.position.set(coords.x, 0.06, coords.z);
   }, [activeZone]);
 
-  // 3. Update Sunlight and Ambience when `timeOfDay` changes (Fixing Error 2: SSE 165° Sunlight Rendering)
+  // 3. Update Sunlight and Ambience when `timeOfDay` changes
   useEffect(() => {
     if (!sunLightRef.current || !ambientLightRef.current || !sceneRef.current) return;
 
@@ -423,7 +490,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, [timeOfDay]);
 
-  // 4. Update 3D Markers & Dimensions (Fixing Error 3: Layer Toggles and Inspector Linking)
+  // 4. Update 3D Markers & Dimensions
   useEffect(() => {
     if (!markerGroupRef.current || !dimensionGroupRef.current) return;
 
@@ -440,14 +507,12 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     // Helper: Create 3D Floating Pin Marker
     const create3DPin = (x: number, y: number, z: number, colorHex: number, label: string) => {
       const pinGroup = new THREE.Group();
-      // Sphere
       const sphereGeom = new THREE.SphereGeometry(0.2, 16, 16);
       const sphereMat = new THREE.MeshBasicMaterial({ color: colorHex });
       const sphere = new THREE.Mesh(sphereGeom, sphereMat);
       sphere.position.set(0, 0, 0);
       pinGroup.add(sphere);
 
-      // Stem Line down to floor
       const stemGeom = new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(0, -y, 0)
@@ -480,7 +545,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
     // Render Dimensions Measurement Lines (Blue 0x2563eb)
     if (showDimensions) {
-      // Helper: Draw dimension line
       const drawDimLine = (p1: [number, number, number], p2: [number, number, number], color = 0x2563eb) => {
         const geom = new THREE.BufferGeometry().setFromPoints([
           new THREE.Vector3(...p1),
@@ -490,40 +554,34 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
         return new THREE.Line(geom, mat);
       };
 
-      // Living Room Clear Width Line (3,800 mm)
       dimensionGroupRef.current.add(drawDimLine([-6.6, 0.15, 4.5], [-0.4, 0.15, 4.5], 0x2563eb));
-      // Living Room Depth Line (3,600 mm)
       dimensionGroupRef.current.add(drawDimLine([-0.4, 0.15, -0.4], [-0.4, 0.15, 4.5], 0x2563eb));
-      // Full Width 6,900 mm Reference Line at Balcony
       dimensionGroupRef.current.add(drawDimLine([-6.6, 0.15, 7.8], [6.6, 0.15, 7.8], 0x059669));
     }
   }, [showMEP, showSmartHome, showDimensions]);
 
-  // Adjust Camera Position on Preset Change
+  // 5. Smooth Camera Preset Lerp Targets
   useEffect(() => {
-    if (!cameraRef.current) return;
-    const cam = cameraRef.current;
-    
     switch (cameraPreset) {
       case "birds-eye":
-        cam.position.set(0, 25, 24);
-        cam.lookAt(0, 0, 0);
+        targetCamPosRef.current.set(0, 25, 24);
+        targetLookAtRef.current.set(0, 0, 0);
         break;
       case "living":
-        cam.position.set(-3.5, 7, 10);
-        cam.lookAt(-3.5, 1.5, 1.0);
+        targetCamPosRef.current.set(-3.5, 7.5, 10);
+        targetLookAtRef.current.set(-3.5, 1.5, 1.0);
         break;
       case "workstation":
-        cam.position.set(4.2, 6, 9);
-        cam.lookAt(4.2, 1.5, 2.2);
+        targetCamPosRef.current.set(4.2, 6.5, 9);
+        targetLookAtRef.current.set(4.2, 1.5, 2.2);
         break;
       case "bedroom":
-        cam.position.set(4.2, 6, 2);
-        cam.lookAt(4.2, 1.2, -3.5);
+        targetCamPosRef.current.set(4.2, 6.5, 2);
+        targetLookAtRef.current.set(4.2, 1.2, -3.5);
         break;
       case "balcony":
-        cam.position.set(-3.5, 3.5, 3);
-        cam.lookAt(-3.5, 1.5, 8.0);
+        targetCamPosRef.current.set(-3.5, 3.8, 3.2);
+        targetLookAtRef.current.set(-3.5, 1.5, 8.0);
         break;
     }
   }, [cameraPreset]);
@@ -648,11 +706,11 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* 3D Viewport (8 Columns) */}
         <div className="lg:col-span-8 relative rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-sm flex flex-col min-h-[560px]">
-          {/* Top Camera Presets Overlay */}
+          {/* Top Camera Presets Overlay with Smooth Lerp */}
           <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-1.5 bg-white/90 backdrop-blur-md p-1.5 rounded-xl border border-slate-200 shadow-sm">
             <span className="text-[10px] text-slate-500 font-semibold px-2 py-1 flex items-center">
               <Eye className="w-3 h-3 mr-1 text-blue-600" />
-              视角:
+              平滑视角:
             </span>
             <button
               onClick={() => setCameraPreset("birds-eye")}
@@ -717,12 +775,18 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           </div>
 
+          {/* Direct 3D Raycasting Hint Badge */}
+          <div className="absolute bottom-16 left-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl flex items-center space-x-1.5 shadow-sm text-[11px] text-slate-700">
+            <MousePointerClick className="w-3.5 h-3.5 text-blue-600 animate-bounce" />
+            <span>可直接在 3D 画布中<strong>点击任意房间</strong>实时拾取联动</span>
+          </div>
+
           {/* 3D WebGL Canvas Container */}
           {viewMode === "3d" ? (
-            <div ref={mountRef} className="w-full flex-1 h-full min-h-[500px] cursor-grab active:cursor-grabbing bg-[#eef2f6]" />
+            <div ref={mountRef} className="w-full flex-1 h-full min-h-[520px] cursor-pointer bg-[#eef2f6]" />
           ) : (
             /* 2.5D BIM Vector Floor Plan (Architectural Blueprints) */
-            <div className="w-full flex-1 min-h-[500px] p-6 bg-slate-50 relative overflow-hidden flex items-center justify-center">
+            <div className="w-full flex-1 min-h-[520px] p-6 bg-slate-50 relative overflow-hidden flex items-center justify-center">
               <div className="relative w-full max-w-[620px] aspect-[4/3] bg-white rounded-2xl border-2 border-slate-300 p-3 shadow-md">
                 {ZONES_DATA.map((zone) => {
                   const isSelected = activeZone.id === zone.id;
@@ -790,7 +854,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           )}
 
-          {/* Bottom Interactive Zone Selector (Correctly triggers 3D Mesh Highlight at target coords) */}
+          {/* Bottom Interactive Zone Selector */}
           <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center overflow-x-auto space-x-2 no-scrollbar">
             <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider pl-2 flex-shrink-0">
               9大功能分区:

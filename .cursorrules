@@ -1,0 +1,28 @@
+# Paragon Gateway A-24-10 3D SaaS 平台开发规范与 AI 编码规则
+
+## 1. 项目基础架构与元数据
+- **框架与技术栈**：Next.js 14 (App Router) + Tailwind CSS + Three.js + TypeScript + Lucide Icons
+- **部署平台**：Vercel Production ([https://brave-meitner.vercel.app](https://brave-meitner.vercel.app))
+- **标的物业**：马来西亚柔佛新山 Paragon Gateway (Suria Paragon Phase 1)
+- **户型数据**：Tower A, 24楼, A-24-10 (Type B 右向户型，648 sq ft / 60.22 ㎡, 6,900 mm × 9,725 mm)
+- **朝向与微气候**：主采光 SSE 165° (零西晒·全天漫射光·西南季风对流穿堂)
+
+## 2. 3D 渲染与 WebGL 架构规范
+1. **Light Minimalist（明亮极简建筑风）配色体系**：
+   - 3D 视口背景：浅灰工作室色 `#eef2f6` (日景) / `#1e293b` (夜景)，禁止纯黑。
+   - 地面辅助网格：主线 `#cbd5e1`，副线 `#e2e8f0`。
+   - 家具材质：浅灰 `#d1d5db` / 象牙白 `#ffffff` / 温润橡木 `#e8d5b5`，带 `#94a3b8` 细线 Wireframe 微边框。
+   - 选区高亮：柔和天蓝 `#3b82f6`，透明度 0.25~0.35，带呼吸呼吸淡入淡出。
+   - 晨光光影：`DirectionalLight` 严格按 SSE 165° 太阳方位角由南向阳台 (`Vector3(8, 14, 18)`) 斜射入室。
+2. **WebGL 内存管理与稳定性**：
+   - 所有 Three.js Geometry/Material/Texture 在组件卸载（unmount）或图层重建时必须显式调用 `.dispose()`。
+   - `THREE.WebGLRenderer` 必须显式开启 `{ preserveDrawingBuffer: true }`，以确保报告导出与截图不黑屏。
+3. **双向射线拾取与平滑运镜 (Raycasting & Camera Lerp)**：
+   - 3D 视口内必须挂载 `THREE.Raycaster`，点击 3D 空间内的房间地板或家具时，必须联动高亮并激活右侧 Zone Inspector。
+   - 视角切换必须采用帧级平滑插值（`camera.position.lerp()` 与目标点插值），禁止生硬瞬移。
+
+## 3. UI/UX 与设计系统规范
+- 全局底色：`bg-slate-50` (`#f8fafc`)。
+- 卡片面板：纯白半透明玻璃拟态 `bg-white border border-slate-200 shadow-sm`。
+- 文本层级：标题大字 `#0f172a` (`text-slate-900`)，副标题与说明文字 `#475569` (`text-slate-600`)，参数采用 `font-mono`。
+- 人体工学核心：卫浴 1.5m 悬浮大平台 (高度 870mm) + 满墙除雾镜柜 (1500x850mm) + 2.0m 升降大桌 (深度 800mm)。

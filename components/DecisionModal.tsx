@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { 
   Download, 
   Printer, 
@@ -11,7 +11,8 @@ import {
   Cpu, 
   Calculator, 
   Sparkles,
-  Share2
+  Share2,
+  Camera
 } from "lucide-react";
 import { PROPERTY_DATA, STYLES_DATA, ZONES_DATA } from "@/data/projectData";
 
@@ -26,6 +27,25 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
   onClose,
   selectedStyleId
 }) => {
+  const [canvasSnapshot, setCanvasSnapshot] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      // Capture high-res snapshot from WebGL canvas (supported via preserveDrawingBuffer: true)
+      try {
+        const canvas = document.querySelector("canvas");
+        if (canvas) {
+          const dataUrl = canvas.toDataURL("image/png");
+          if (dataUrl && dataUrl.length > 500) {
+            setCanvasSnapshot(dataUrl);
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to capture 3D canvas snapshot:", err);
+      }
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const style = STYLES_DATA.find((s) => s.id === selectedStyleId) || STYLES_DATA[0];
@@ -97,7 +117,24 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
             </div>
           </div>
 
-          {/* Section 2: Selected Interior Style */}
+          {/* Section 2: 3D BIM Live Snapshot */}
+          {canvasSnapshot && (
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
+                <Camera className="w-4 h-4 text-blue-600" />
+                <span>3D BIM 空间推演实景快照 (Live 3D Snapshot)</span>
+              </div>
+              <div className="rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 max-h-72 flex items-center justify-center p-2">
+                <img
+                  src={canvasSnapshot}
+                  alt="3D Space Snapshot"
+                  className="max-h-64 object-contain rounded-xl shadow-xs"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Section 3: Selected Interior Style */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
               <Palette className="w-4 h-4 text-blue-600" />
@@ -129,7 +166,7 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
             </div>
           </div>
 
-          {/* Section 3: Smart Home & Automation Profile */}
+          {/* Section 4: Smart Home & Automation Profile */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
               <Cpu className="w-4 h-4 text-purple-600" />
@@ -152,7 +189,7 @@ export const DecisionModal: React.FC<DecisionModalProps> = ({
             </div>
           </div>
 
-          {/* Section 4: Budget & Cost Estimation */}
+          {/* Section 5: Budget & Cost Estimation */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2 text-sm font-bold text-slate-900 border-b border-slate-200 pb-2">
               <Calculator className="w-4 h-4 text-amber-600" />
