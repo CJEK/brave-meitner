@@ -1,26 +1,22 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { 
   Palette, 
-  Sliders, 
-  Check, 
   Sparkles, 
+  CheckCircle2, 
   ShieldAlert, 
-  TrendingUp, 
   Award, 
-  ArrowRight,
-  Eye,
-  Zap,
-  DollarSign,
-  Maximize,
-  Moon,
-  SunMedium,
-  CheckCircle2,
-  Layers,
-  Box,
-  AlertCircle,
-  HelpCircle
+  Sliders, 
+  Zap, 
+  Sun, 
+  Maximize, 
+  Moon, 
+  DollarSign, 
+  TrendingUp, 
+  Layers, 
+  Maximize2,
+  AlertCircle
 } from "lucide-react";
 import { STYLES_DATA, StyleData } from "@/data/projectData";
 
@@ -33,90 +29,79 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
   selectedStyleId,
   setSelectedStyleId
 }) => {
-  const [compareStyleA, setCompareStyleA] = useState<string>(selectedStyleId);
-  const [compareStyleB, setCompareStyleB] = useState<string>(
-    selectedStyleId === "dark-luxury" ? "tech-minimal" : "dark-luxury"
-  );
-  const [compareRoomIndex, setCompareRoomIndex] = useState<number>(0);
-  const [sliderPos, setSliderPos] = useState<number>(50); // 0-100%
+  // A/B Comparison State (Default to Tech Minimal vs Italian Dark Luxury)
+  const [compareStyleA, setCompareStyleA] = useState<string>("tech-minimal");
+  const [compareStyleB, setCompareStyleB] = useState<string>("dark-luxury");
+  const [sliderPos, setSliderPos] = useState<number>(50);
+  const [compareRoomIndex, setCompareRoomIndex] = useState<number>(0); // 0: Living, 1: Study, 2: Bedroom
 
-  // Sync compareStyleA when global selectedStyleId changes
-  useEffect(() => {
-    setCompareStyleA(selectedStyleId);
-    if (selectedStyleId === compareStyleB) {
-      const alternative = STYLES_DATA.find((s) => s.id !== selectedStyleId)?.id || "dark-luxury";
-      setCompareStyleB(alternative);
-    }
-  }, [selectedStyleId]);
-
-  // User Custom Decision Weights (0 - 10)
+  // Custom User Importance Weights (1-10)
   const [weightGeek, setWeightGeek] = useState<number>(9);
   const [weightOpenness, setWeightOpenness] = useState<number>(8);
-  const [weightMaintenance, setWeightMaintenance] = useState<number>(8);
+  const [weightMaintenance, setWeightMaintenance] = useState<number>(9);
   const [weightBudget, setWeightBudget] = useState<number>(7);
   const [weightSleep, setWeightSleep] = useState<number>(8);
 
   const styleA = STYLES_DATA.find((s) => s.id === compareStyleA) || STYLES_DATA[0];
   const styleB = STYLES_DATA.find((s) => s.id === compareStyleB) || STYLES_DATA[1];
-
   const isSameStyle = compareStyleA === compareStyleB;
 
-  // Calculate Weighted Scores
+  // Calculate Weighted Preference Score (Normalized to 100)
   const calculateScore = (style: StyleData) => {
-    const totalWeights = weightGeek + weightOpenness + weightMaintenance + weightBudget + weightSleep;
-    if (totalWeights === 0) return 0;
-
-    const raw = (
-      style.radarScores.geekSynergy * weightGeek +
-      style.radarScores.openness * weightOpenness +
-      style.radarScores.maintenance * weightMaintenance +
-      style.radarScores.costEfficiency * weightBudget +
-      style.radarScores.sleepComfort * weightSleep
-    ) / totalWeights;
-
-    return Math.round(raw);
+    const r = style.radarScores;
+    const totalWeight = weightGeek + weightOpenness + weightMaintenance + weightBudget + weightSleep;
+    const weightedSum =
+      r.geekSynergy * weightGeek +
+      r.openness * weightOpenness +
+      r.maintenance * weightMaintenance +
+      r.costEfficiency * weightBudget +
+      r.sleepComfort * weightSleep;
+    return Math.round(weightedSum / totalWeight);
   };
 
+  // Sorted Styles based on user customized weights
   const rankedStyles = [...STYLES_DATA].sort((a, b) => calculateScore(b) - calculateScore(a));
 
-  // Helper: Render Rich Architectural Vector Illustration for a given Style & Room
-  const renderRoomIllustration = (style: StyleData, roomIdx: number, isRight = false) => {
-    const isDark = style.id === "dark-luxury";
+  // High-Fidelity SVG Vector Rendering for A/B Visual Comparison
+  const renderRoomIllustration = (style: StyleData, roomIdx: number, isRightLayer: boolean) => {
+    const isDark = style.id === "dark-luxury" || style.id === "italian-luxury";
     const isJapandi = style.id === "japandi-wood";
     const isCyber = style.id === "industrial-cyber";
 
-    const wallBg = isDark ? "#1c1917" : isJapandi ? "#fef3c7" : isCyber ? "#334155" : "#f1f5f9";
-    const floorBg = isDark ? "#292524" : isJapandi ? "#e2cfb5" : isCyber ? "#1e293b" : "#e2e8f0";
-    const sofaColor = isDark ? "#451a03" : isJapandi ? "#d6d3d1" : isCyber ? "#0284c7" : "#cbd5e1";
-    const accentLight = isDark ? "#f59e0b" : isJapandi ? "#fbbf24" : isCyber ? "#00f0ff" : "#3b82f6";
-    const tvBorder = isDark ? "#78350f" : isJapandi ? "#b45309" : isCyber ? "#00f0ff" : "#2563eb";
+    const wallColor = isDark ? "#1c1917" : isJapandi ? "#fafaf9" : isCyber ? "#334155" : "#f8fafc";
+    const floorBg = isDark ? "#09090b" : isJapandi ? "#fef3c7" : isCyber ? "#1e293b" : "#ede8df";
+    const sofaColor = isDark ? "#451a03" : isJapandi ? "#e7d8c9" : isCyber ? "#0284c7" : "#e2e8f0";
+    const accentLight = isDark ? "#f59e0b" : isJapandi ? "#d4a373" : isCyber ? "#06b6d4" : "#38bdf8";
+    const tvBorder = isDark ? "#78350f" : isJapandi ? "#b45309" : isCyber ? "#0284c7" : "#64748b";
 
     return (
-      <svg viewBox="0 0 800 500" className="w-full h-full object-cover select-none">
-        {/* Background Wall Cladding */}
-        <rect x="0" y="0" width="800" height="360" fill={wallBg} />
-        
-        {/* Wall Texture Patterns */}
+      <svg viewBox="0 0 800 500" className="w-full h-full object-cover">
+        {/* Background Wall Texture & Mood Ambient */}
+        <rect x="0" y="0" width="800" height="500" fill={wallColor} />
+        {/* Architectural Linear Wall Fluting / Sintered Stone Veins */}
         {isDark && (
-          <g opacity="0.3">
-            {[...Array(40)].map((_, i) => (
-              <line key={i} x1={i * 20} y1="0" x2={i * 20} y2="360" stroke="#44403c" strokeWidth="2" />
-            ))}
+          <g opacity="0.25">
+            <line x1="80" y1="0" x2="200" y2="400" stroke="#f59e0b" strokeWidth="1.5" />
+            <line x1="300" y1="0" x2="450" y2="400" stroke="#f59e0b" strokeWidth="1" />
+            <line x1="600" y1="0" x2="720" y2="400" stroke="#f59e0b" strokeWidth="2" />
           </g>
         )}
         {isJapandi && (
-          <g opacity="0.4">
-            {[...Array(50)].map((_, i) => (
-              <line key={i} x1={i * 16} y1="0" x2={i * 16} y2="360" stroke="#fcd34d" strokeWidth="1.5" />
+          <g opacity="0.3">
+            {[...Array(20)].map((_, i) => (
+              <line key={i} x1={i * 40} y1="0" x2={i * 40} y2="360" stroke="#d4a373" strokeWidth="2" strokeDasharray="6 3" />
+            ))}
+          </g>
+        )}
+        {isCyber && (
+          <g opacity="0.2">
+            {[...Array(12)].map((_, i) => (
+              <line key={i} x1="0" y1={i * 35} x2="800" y2={i * 35} stroke="#06b6d4" strokeWidth="1" />
             ))}
           </g>
         )}
 
-        {/* Ceiling Drop with Hidden LED Wash Light */}
-        <rect x="0" y="0" width="800" height="40" fill={isDark ? "#0c0a09" : "#ffffff"} />
-        <line x1="0" y1="42" x2="800" y2="42" stroke={accentLight} strokeWidth="6" opacity="0.8" />
-
-        {/* Flooring */}
+        {/* Floor Horizon & Large Format Tiles */}
         <rect x="0" y="360" width="800" height="140" fill={floorBg} />
         {/* Floor Herringbone / Tile Grout Lines */}
         <g opacity="0.35">
@@ -198,7 +183,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
           </div>
         </div>
 
-        {/* 4 Style Cards Grid (Fully Dense, Zero Blank Containers, 3 Bullet Points) */}
+        {/* 4 Style Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {STYLES_DATA.map((style) => {
             const isSelected = selectedStyleId === style.id;
@@ -246,69 +231,29 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                   </p>
                 </div>
 
-                {/* 3 Structured Key Highlights (Replacing Truncated Text) */}
+                {/* 3 Structured Key Highlights */}
                 <div className="space-y-1.5 mb-3 bg-white/80 p-3 rounded-2xl border border-slate-200/70 text-xs">
-                  {style.pros.slice(0, 3).map((pro, pIdx) => (
-                    <div key={pIdx} className="flex items-start space-x-1.5 text-slate-700 text-[11px] leading-tight">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 mt-0.5 flex-shrink-0" />
-                      <span>{pro}</span>
+                  {style.keyMaterials.slice(0, 3).map((mat, i) => (
+                    <div key={i} className="flex justify-between items-center text-[11px]">
+                      <span className="text-slate-500 font-medium">{mat.category}:</span>
+                      <span className="font-bold text-slate-800 truncate ml-1">{mat.item}</span>
                     </div>
                   ))}
                 </div>
 
-                {/* Core Material Swatches Pills */}
-                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200/80 space-y-2 mb-4">
-                  <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider flex items-center justify-between">
-                    <span>核心色系与材质色卡</span>
-                    <span className="font-mono text-blue-600">4大主材</span>
-                  </div>
-
-                  {/* Palette Swatches */}
-                  <div className="grid grid-cols-4 gap-1.5">
-                    {style.palette.map((p, idx) => (
-                      <div key={idx} className="flex flex-col items-center space-y-1">
-                        <div
-                          style={{ backgroundColor: p.hex }}
-                          className="w-full h-7 rounded-lg border border-slate-300 shadow-2xs transition-transform hover:scale-105"
-                          title={`${p.name} (${p.role})`}
-                        />
-                        <span className="text-[9px] text-slate-600 truncate w-full text-center font-medium">
-                          {p.name}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Key Material Spec Badges */}
-                  <div className="flex flex-wrap gap-1 pt-1 border-t border-slate-200/60">
-                    {style.keyMaterials.slice(0, 2).map((m, idx) => (
-                      <span key={idx} className="text-[9px] bg-white text-slate-700 px-1.5 py-0.5 rounded border border-slate-200 font-mono truncate">
-                        {m.item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Select Button with Hover Feedback */}
+                {/* Bottom Select Action */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelectedStyleId(style.id);
                   }}
-                  className={`w-full py-2.5 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center space-x-1.5 hover:shadow-md hover:-translate-y-0.5 ${
+                  className={`w-full py-2 rounded-xl text-xs font-bold transition-all shadow-2xs ${
                     isSelected
-                      ? "bg-blue-600 text-white shadow-sm ring-2 ring-blue-400/30"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900"
+                      ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                   }`}
                 >
-                  {isSelected ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 stroke-[3]" />
-                      <span>已选定为主推演风格</span>
-                    </>
-                  ) : (
-                    <span>选择此风格推演</span>
-                  )}
+                  {isSelected ? "✓ 当前选定方案" : "切换为此风格"}
                 </button>
               </div>
             );
@@ -316,34 +261,45 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
         </div>
       </div>
 
-      {/* Split-Screen Interactive Comparison Slider (Architectural Vector Renderings) */}
+      {/* A/B Split Screen Visual Comparison */}
       <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h3 className="text-xl font-black text-slate-900 flex items-center">
-              <Eye className="w-5 h-5 mr-2 text-blue-600" />
-              分屏滑块视觉比对 (Split-Screen Comparison)
+              <Layers className="w-5 h-5 mr-2 text-blue-600" />
+              A/B 风格分屏动态滑块实时对比
             </h3>
             <p className="text-xs text-slate-500 mt-1">
-              左右拖动中缝滑块，在同一空间视角下直接对比两种设计风格的材质质感与氛围
+              左右拖动中央分界线，实时对比两种不同风格在同一空间维度下的材质与光影表现
             </p>
           </div>
 
-          {/* Room Perspective Switcher */}
-          <div className="flex items-center bg-slate-100 border border-slate-200 rounded-xl p-1 text-xs">
-            {["客厅与中岛", "极客工作站", "主卧深睡", "卫浴与阳台"].map((room, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCompareRoomIndex(idx)}
-                className={`px-3.5 py-1.5 rounded-lg font-bold transition-all ${
-                  compareRoomIndex === idx
-                    ? "bg-slate-900 text-white shadow-2xs"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                {room}
-              </button>
-            ))}
+          {/* Room Viewport Selector */}
+          <div className="flex items-center space-x-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
+            <button
+              onClick={() => setCompareRoomIndex(0)}
+              className={`px-3 py-1.5 rounded-lg transition-all ${
+                compareRoomIndex === 0 ? "bg-white text-slate-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              客厅影音
+            </button>
+            <button
+              onClick={() => setCompareRoomIndex(1)}
+              className={`px-3 py-1.5 rounded-lg transition-all ${
+                compareRoomIndex === 1 ? "bg-white text-slate-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              极客书房
+            </button>
+            <button
+              onClick={() => setCompareRoomIndex(2)}
+              className={`px-3 py-1.5 rounded-lg transition-all ${
+                compareRoomIndex === 2 ? "bg-white text-slate-900 shadow-xs" : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              主卧深睡
+            </button>
           </div>
         </div>
 
@@ -388,7 +344,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
           </div>
         )}
 
-        {/* Interactive Comparison Canvas Container (Rich SVG Vector Elevation) */}
+        {/* Interactive Comparison Canvas Container */}
         <div className="relative w-full aspect-video min-h-[380px] rounded-3xl overflow-hidden border-2 border-slate-200 select-none shadow-md bg-slate-100">
           {/* Style B Layer (Right / Background) */}
           <div className="absolute inset-0 w-full h-full">
@@ -665,15 +621,15 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
             </p>
           </div>
 
-          {/* SVG Radar Chart Visualization */}
+          {/* SVG Radar Chart Visualization (Optimized ViewBox with generous margins to prevent text clipping) */}
           <div className="relative w-full aspect-[16/10] bg-slate-50 rounded-2xl border border-slate-200 p-4 flex items-center justify-center overflow-hidden">
-            <svg viewBox="0 0 400 320" className="w-full h-full max-w-[460px]">
-              {/* Concentric Hexagonal Grids */}
+            <svg viewBox="0 0 540 340" className="w-full h-full max-w-[500px]">
+              {/* Concentric Hexagonal Grids (Center at 270, 170, Radius 110 = 62% calibrated) */}
               {[0.2, 0.4, 0.6, 0.8, 1.0].map((level, i) => (
                 <polygon
                   key={i}
-                  points="200,30 330,95 330,225 200,290 70,225 70,95"
-                  transform={`scale(${level}) translate(${200 * (1 - level) / level}, ${160 * (1 - level) / level})`}
+                  points="270,60 365,115 365,225 270,280 175,225 175,115"
+                  transform={`scale(${level}) translate(${270 * (1 - level) / level}, ${170 * (1 - level) / level})`}
                   fill="none"
                   stroke="#cbd5e1"
                   strokeWidth="1"
@@ -681,32 +637,35 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
               ))}
 
               {/* Axis Lines */}
-              <line x1="200" y1="160" x2="200" y2="30" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="200" y1="160" x2="330" y2="95" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="200" y1="160" x2="330" y2="225" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="200" y1="160" x2="200" y2="290" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="200" y1="160" x2="70" y2="225" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="200" y1="160" x2="70" y2="95" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="270" y2="60" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="365" y2="115" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="365" y2="225" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="270" y2="280" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="175" y2="225" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="175" y2="115" stroke="#cbd5e1" strokeWidth="1" />
 
-              {/* Dimension Labels */}
-              <text x="200" y="20" textAnchor="middle" fill="#0284c7" fontSize="11" fontWeight="bold">空间通透采光 (Openness)</text>
-              <text x="340" y="95" textAnchor="start" fill="#d97706" fontSize="11" fontWeight="bold">耐脏低打理 (Maintenance)</text>
-              <text x="340" y="235" textAnchor="start" fill="#059669" fontSize="11" fontWeight="bold">造价性价比 (Cost)</text>
-              <text x="200" y="310" textAnchor="middle" fill="#7c3aed" fontSize="11" fontWeight="bold">极客工位契合 (Geek)</text>
-              <text x="60" y="235" textAnchor="end" fill="#db2777" fontSize="11" fontWeight="bold">睡眠舒缓感 (Sleep)</text>
-              <text x="60" y="95" textAnchor="end" fill="#4f46e5" fontSize="11" fontWeight="bold">资产保值率 (Resale)</text>
+              {/* Dimension Labels with Generous Clear Padding */}
+              <text x="270" y="42" textAnchor="middle" fill="#0284c7" fontSize="11" fontWeight="bold">空间通透采光</text>
+              <text x="380" y="118" textAnchor="start" fill="#d97706" fontSize="11" fontWeight="bold">耐脏低打理</text>
+              <text x="380" y="232" textAnchor="start" fill="#059669" fontSize="11" fontWeight="bold">造价性价比</text>
+              <text x="270" y="304" textAnchor="middle" fill="#7c3aed" fontSize="11" fontWeight="bold">极客工位契合</text>
+              <text x="160" y="232" textAnchor="end" fill="#db2777" fontSize="11" fontWeight="bold">睡眠舒缓感</text>
+              <text x="160" y="118" textAnchor="end" fill="#4f46e5" fontSize="11" fontWeight="bold">资产保值率</text>
 
               {/* Render Active Selected Style Radar Polygon */}
               {(() => {
                 const s = STYLES_DATA.find((x) => x.id === selectedStyleId) || STYLES_DATA[0];
                 const r = s.radarScores;
+                const maxR = 110;
+                const cx = 270;
+                const cy = 170;
                 
-                const p1 = [200, 160 - (r.openness / 100) * 130];
-                const p2 = [200 + (r.maintenance / 100) * 130 * Math.cos(Math.PI / 6), 160 - (r.maintenance / 100) * 130 * Math.sin(Math.PI / 6)];
-                const p3 = [200 + (r.costEfficiency / 100) * 130 * Math.cos(Math.PI / 6), 160 + (r.costEfficiency / 100) * 130 * Math.sin(Math.PI / 6)];
-                const p4 = [200, 160 + (r.geekSynergy / 100) * 130];
-                const p5 = [200 - (r.sleepComfort / 100) * 130 * Math.cos(Math.PI / 6), 160 + (r.sleepComfort / 100) * 130 * Math.sin(Math.PI / 6)];
-                const p6 = [200 - (r.resaleValue / 100) * 130 * Math.cos(Math.PI / 6), 160 - (r.resaleValue / 100) * 130 * Math.sin(Math.PI / 6)];
+                const p1 = [cx, cy - (r.openness / 100) * maxR];
+                const p2 = [cx + (r.maintenance / 100) * maxR * Math.cos(Math.PI / 6), cy - (r.maintenance / 100) * maxR * Math.sin(Math.PI / 6)];
+                const p3 = [cx + (r.costEfficiency / 100) * maxR * Math.cos(Math.PI / 6), cy + (r.costEfficiency / 100) * maxR * Math.sin(Math.PI / 6)];
+                const p4 = [cx, cy + (r.geekSynergy / 100) * maxR];
+                const p5 = [cx - (r.sleepComfort / 100) * maxR * Math.cos(Math.PI / 6), cy + (r.sleepComfort / 100) * maxR * Math.sin(Math.PI / 6)];
+                const p6 = [cx - (r.resaleValue / 100) * maxR * Math.cos(Math.PI / 6), cy - (r.resaleValue / 100) * maxR * Math.sin(Math.PI / 6)];
 
                 const pointsStr = `${p1[0]},${p1[1]} ${p2[0]},${p2[1]} ${p3[0]},${p3[1]} ${p4[0]},${p4[1]} ${p5[0]},${p5[1]} ${p6[0]},${p6[1]}`;
 
@@ -714,7 +673,7 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
                   <>
                     <polygon
                       points={pointsStr}
-                      fill="rgba(37, 99, 235, 0.18)"
+                      fill="rgba(37, 99, 235, 0.22)"
                       stroke="#2563eb"
                       strokeWidth="2.5"
                     />

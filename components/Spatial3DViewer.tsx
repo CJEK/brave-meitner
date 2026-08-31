@@ -207,7 +207,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const currentStyleObj = STYLES_DATA.find((s) => s.id === selectedStyleId) || STYLES_DATA[0];
   
   const [activeZone, setActiveZone] = useState<ZoneData>(ZONES_DATA[3]); // Default to Living Room
-  const [isOverviewMode, setIsOverviewMode] = useState<boolean>(false); // Overview mode vs Zone mode
+  const [isOverviewMode, setIsOverviewMode] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<"3d" | "2.5d">("3d");
   const [cameraPreset, setCameraPreset] = useState<"birds-eye" | "iso-2.5d" | "living" | "workstation" | "bedroom" | "balcony">("birds-eye");
   const [isAutoRotating, setIsAutoRotating] = useState<boolean>(false);
@@ -337,7 +337,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     domElem.addEventListener("webglcontextlost", handleContextLost);
 
     // Calibrated Lighting
-    const ambientLight = new THREE.AmbientLight(currentTheme.lightAmbient, timeOfDay === "night" ? 0.35 : 0.95);
+    const ambientLight = new THREE.AmbientLight(currentTheme.lightAmbient, timeOfDay === "night" ? 0.4 : 1.1);
     ambientLightRef.current = ambientLight;
     scene.add(ambientLight);
 
@@ -350,7 +350,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     sunLightRef.current = sunLight;
     scene.add(sunLight);
 
-    const fillLight = new THREE.DirectionalLight(0xe2e8f0, 0.4);
+    const fillLight = new THREE.DirectionalLight(0xe2e8f0, 0.5);
     fillLight.position.set(-8, 10, -10);
     scene.add(fillLight);
 
@@ -789,6 +789,19 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   };
 
+  const handleSwitchViewMode = (mode: "3d" | "2.5d") => {
+    setViewMode(mode);
+    if (mode === "3d") {
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+        if (controlsRef.current && cameraRef.current && rendererRef.current && sceneRef.current) {
+          controlsRef.current.update(0.016);
+          rendererRef.current.render(sceneRef.current, cameraRef.current);
+        }
+      }, 50);
+    }
+  };
+
   // Time of day lighting filter for 2.5D SVG
   const timeFilterStyle = 
     timeOfDay === "morning"
@@ -806,7 +819,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
         {/* Group 1: 3D vs 2.5D Mode Toggle */}
         <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
           <button
-            onClick={() => setViewMode("3d")}
+            onClick={() => handleSwitchViewMode("3d")}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 ${
               viewMode === "3d"
                 ? "bg-slate-900 text-white shadow-xs"
@@ -817,7 +830,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             <span>3D 真实推演 (Three.js 1:1)</span>
           </button>
           <button
-            onClick={() => setViewMode("2.5d")}
+            onClick={() => handleSwitchViewMode("2.5d")}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 ${
               viewMode === "2.5d"
                 ? "bg-blue-600 text-white shadow-xs"
