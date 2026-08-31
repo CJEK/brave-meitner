@@ -133,15 +133,15 @@ const ZONE_VIEWBOXES: { [key: string]: string } = {
 
 // 1:1 Standard Coordinate System: Width X [-3.45, +3.45] (6.9m), Depth Z [-4.8625, +4.8625] (9.725m), Origin (0,0,0) at Center
 const PROCEDURAL_3D_ROOMS = [
-  { id: "bedroom", name: "主卧深睡", sqm: "14.2㎡", pos: [-1.725, 0.4, 2.97], size: [3.3, 0.8, 3.94], colorHex: 0x4f46e5 },
-  { id: "living", name: "景观客厅", sqm: "13.5㎡", pos: [1.725, 0.4, 1.875], size: [3.45, 0.8, 3.75], colorHex: 0x0ea5e9 },
-  { id: "balcony", name: "南向阳台", sqm: "4.2㎡", pos: [1.725, 0.25, 4.335], size: [3.45, 0.5, 1.17], colorHex: 0x10b981 },
-  { id: "study", name: "极客工位", sqm: "6.8㎡", pos: [-1.725, 0.4, 0.03], size: [3.3, 0.8, 1.94], colorHex: 0x8b5cf6 },
-  { id: "dining", name: "多功能中岛", sqm: "4.2㎡", pos: [1.725, 0.4, -0.875], size: [3.45, 0.8, 1.75], colorHex: 0xf59e0b },
-  { id: "kitchen", name: "开放厨房", sqm: "5.2㎡", pos: [1.725, 0.4, -2.47], size: [3.45, 0.8, 1.44], colorHex: 0xec4899 },
-  { id: "entrance", name: "入户玄关", sqm: "3.8㎡", pos: [1.725, 0.4, -3.97], size: [3.45, 0.8, 1.56], colorHex: 0x64748b },
-  { id: "bathroom", name: "独立卫浴", sqm: "4.5㎡", pos: [-1.725, 0.4, -2.0], size: [3.3, 0.8, 2.12], colorHex: 0x06b6d4 },
-  { id: "yard", name: "生活阳台", sqm: "3.8㎡", pos: [-1.725, 0.25, -3.97], size: [3.3, 0.5, 1.82], colorHex: 0x14b8a6 }
+  { id: "bedroom", name: "主卧深睡", sqm: "14.2㎡", pos: [-1.75, 0.4, 2.95], size: [3.2, 0.8, 3.8], colorHex: 0x6366f1 },
+  { id: "living", name: "景观客厅", sqm: "13.5㎡", pos: [1.75, 0.4, 1.85], size: [3.2, 0.8, 3.8], colorHex: 0x38bdf8 },
+  { id: "balcony", name: "南向阳台", sqm: "4.2㎡", pos: [1.75, 0.25, 4.35], size: [3.2, 0.4, 1.0], colorHex: 0x34d399 },
+  { id: "study", name: "极客工位", sqm: "6.8㎡", pos: [-1.75, 0.4, 0.05], size: [3.2, 0.8, 1.9], colorHex: 0xa855f7 },
+  { id: "dining", name: "多功能中岛", sqm: "4.2㎡", pos: [1.75, 0.4, -0.85], size: [3.2, 0.8, 1.6], colorHex: 0xf59e0b },
+  { id: "kitchen", name: "开放厨房", sqm: "5.2㎡", pos: [1.75, 0.4, -2.45], size: [3.2, 0.8, 1.4], colorHex: 0xf43f5e },
+  { id: "entrance", name: "入户玄关", sqm: "3.8㎡", pos: [1.75, 0.4, -3.95], size: [3.2, 0.8, 1.5], colorHex: 0x64748b },
+  { id: "bathroom", name: "独立卫浴", sqm: "4.5㎡", pos: [-1.75, 0.4, -1.95], size: [3.2, 0.8, 2.0], colorHex: 0x06b6d4 },
+  { id: "yard", name: "生活阳台", sqm: "3.8㎡", pos: [-1.75, 0.25, -3.95], size: [3.2, 0.4, 1.8], colorHex: 0x14b8a6 }
 ];
 
 const MARKER_ANCHORS = [
@@ -226,16 +226,16 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, []);
 
-  // Helper to create a sharp 3D Text Sprite Badge (Zero external fonts)
+  // Helper to create sharp, luminous 3D Text Sprite Badges
   const createTextSprite = (text: string, subText: string, colorHex: string) => {
     const canvas = document.createElement("canvas");
     canvas.width = 256;
     canvas.height = 128;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+      ctx.fillStyle = "rgba(15, 23, 42, 0.92)";
       ctx.beginPath();
-      ctx.roundRect(10, 10, 236, 108, 16);
+      ctx.roundRect(8, 8, 240, 112, 16);
       ctx.fill();
       ctx.lineWidth = 4;
       ctx.strokeStyle = colorHex;
@@ -259,29 +259,29 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     return sprite;
   };
 
-  // 1. Initialize Zero-Dependency Procedural 3D Scene
+  // 1. Initialize Zero-Dependency Procedural 3D Scene with Full Ambient Lighting
   useEffect(() => {
     if (!mountRef.current) return;
 
     const width = mountRef.current.clientWidth || 720;
     const height = mountRef.current.clientHeight || 560;
 
-    // Dark Technical Grid Studio Background
+    // Dark Technical Slate Studio Background
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color(0x0b0f19);
+    scene.background = new THREE.Color(0x0b0f17);
 
     // Perspective Camera
-    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 1000);
     cameraRef.current = camera;
-    camera.position.set(0, 12, 11);
+    camera.position.set(0, 16, 14);
 
     // WebGL Renderer with graceful fallback
     let renderer: THREE.WebGLRenderer;
     try {
       renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: true,
+        alpha: false,
         preserveDrawingBuffer: true,
         powerPreference: "high-performance"
       });
@@ -302,15 +302,15 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
     // Initialize CameraControls
     const controls = new CameraControls(camera, renderer.domElement);
-    controls.smoothTime = 0.3;
-    controls.draggingSmoothTime = 0.1;
-    controls.maxDistance = 26;
-    controls.minDistance = 4;
+    controls.smoothTime = 0.25;
+    controls.draggingSmoothTime = 0.08;
+    controls.maxDistance = 30;
+    controls.minDistance = 6;
     controls.maxPolarAngle = Math.PI / 2.15;
     controlsRef.current = controls;
 
     // Default Camera LookAt Center
-    controls.setLookAt(0, 12, 11, 0, 0, 0, false);
+    controls.setLookAt(0, 16, 14, 0, 0, 0, false);
 
     // Raycasting Click & WebGL Context Protection
     const domElem = renderer.domElement;
@@ -323,13 +323,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     };
     domElem.addEventListener("webglcontextlost", handleContextLost);
 
-    // Dynamic Calibrated Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+    // 🌟 FULL AMBIENT & MULTI-DIRECTIONAL LIGHTING SYSTEM (Guarantees zero black screen)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.6);
     ambientLightRef.current = ambientLight;
     scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xffedd5, 1.6);
-    sunLight.position.set(4, 14, 8);
+    const sunLight = new THREE.DirectionalLight(0xffedd5, 2.2);
+    sunLight.position.set(8, 18, 12);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
@@ -337,31 +337,35 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     sunLightRef.current = sunLight;
     scene.add(sunLight);
 
-    const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.6);
-    fillLight.position.set(-8, 10, -10);
+    const fillLight = new THREE.DirectionalLight(0x93c5fd, 1.2);
+    fillLight.position.set(-10, 14, -10);
     scene.add(fillLight);
 
+    const centerPointLight = new THREE.PointLight(0xffffff, 1.0, 40);
+    centerPointLight.position.set(0, 6, 0);
+    scene.add(centerPointLight);
+
     // Ground Tech Grid Helper
-    const gridHelper = new THREE.GridHelper(26, 26, 0x1e293b, 0x0f172a);
+    const gridHelper = new THREE.GridHelper(26, 26, 0x334155, 0x1e293b);
     gridHelper.position.y = -0.15;
     scene.add(gridHelper);
 
-    // Procedural Base Slab: Exactly 7.2m (Width) × 0.2m (Height) × 10.0m (Depth)
-    const baseGeo = new THREE.BoxGeometry(7.2, 0.2, 10.0);
+    // Base Slab: Exactly 7.4m (Width) × 0.25m (Height) × 10.2m (Depth)
+    const baseGeo = new THREE.BoxGeometry(7.4, 0.25, 10.2);
     const baseMat = new THREE.MeshStandardMaterial({
-      color: 0x111827,
-      roughness: 0.5,
-      metalness: 0.1
+      color: 0x1e293b,
+      roughness: 0.4,
+      metalness: 0.2
     });
     const baseMesh = new THREE.Mesh(baseGeo, baseMat);
-    baseMesh.position.y = -0.1;
+    baseMesh.position.y = -0.125;
     baseMesh.receiveShadow = true;
     scene.add(baseMesh);
 
     // Base Slab Chamfered Edge Line
     const baseEdgeGeo = new THREE.EdgesGeometry(baseGeo);
-    const baseEdgeLine = new THREE.LineSegments(baseEdgeGeo, new THREE.LineBasicMaterial({ color: 0x0284c7, linewidth: 2 }));
-    baseEdgeLine.position.y = -0.1;
+    const baseEdgeLine = new THREE.LineSegments(baseEdgeGeo, new THREE.LineBasicMaterial({ color: 0x38bdf8, linewidth: 2.5 }));
+    baseEdgeLine.position.y = -0.125;
     scene.add(baseEdgeLine);
 
     // 9 Procedural 3D Room Box Meshes + Billboards
@@ -373,14 +377,14 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       const group = new THREE.Group();
       group.position.set(room.pos[0], room.pos[1], room.pos[2]);
 
-      // Translucent Tinted 3D Room Box
+      // Luminous Translucent 3D Room Box
       const roomGeo = new THREE.BoxGeometry(room.size[0], room.size[1], room.size[2]);
       const roomMat = new THREE.MeshStandardMaterial({
         color: room.colorHex,
         transparent: true,
-        opacity: 0.78,
-        roughness: 0.25,
-        metalness: 0.15
+        opacity: 0.88,
+        roughness: 0.2,
+        metalness: 0.1
       });
       const roomMesh = new THREE.Mesh(roomGeo, roomMat);
       roomMesh.castShadow = true;
@@ -389,11 +393,11 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       group.add(roomMesh);
       clickableZonesRef.current.push(roomMesh);
 
-      // Wireframe Outline for Architectural Crispness
+      // White Wireframe Outline
       const edges = new THREE.EdgesGeometry(roomGeo);
       const edgeLine = new THREE.LineSegments(
         edges,
-        new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1.5, transparent: true, opacity: 0.6 })
+        new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2, transparent: true, opacity: 0.85 })
       );
       group.add(edgeLine);
 
@@ -409,10 +413,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       roomsGroup.add(group);
     });
 
-    // Helper: Create High-Contrast Furniture
+    // Helper: High-Contrast Furniture
     const createFurn = (w: number, h: number, d: number, x: number, y: number, z: number, color = 0xffffff) => {
       const geom = new THREE.BoxGeometry(w, h, d);
-      const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.4 });
+      const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.3, metalness: 0.1 });
       const mesh = new THREE.Mesh(geom, mat);
       mesh.position.set(x, y, z);
       mesh.castShadow = true;
@@ -420,13 +424,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       return mesh;
     };
 
-    // Add Furniture Highlights
-    const sofa = createFurn(2.2, 0.35, 0.8, 1.725, 0.2, 1.8, 0xe2e8f0);
-    const tvStand = createFurn(2.2, 0.2, 0.3, 3.2, 0.15, 1.8, 0x334155);
+    // Add Key Furniture
+    const sofa = createFurn(2.2, 0.35, 0.8, 1.75, 0.2, 1.8, 0xe2e8f0);
+    const tvStand = createFurn(2.2, 0.2, 0.3, 3.2, 0.15, 1.8, 0x475569);
     const tvScreen = createFurn(1.8, 0.6, 0.05, 3.25, 0.55, 1.8, 0x0284c7);
-    const desk = createFurn(1.8, 0.1, 0.75, -1.725, 0.4, 0.03, 0xd4a373);
-    const bed = createFurn(1.8, 0.35, 2.0, -1.725, 0.2, 3.0, 0xf8fafc);
-    const island = createFurn(1.6, 0.45, 0.8, 1.725, 0.25, -0.875, 0xffffff);
+    const desk = createFurn(1.8, 0.1, 0.75, -1.75, 0.4, 0.05, 0xd4a373);
+    const bed = createFurn(1.8, 0.35, 2.0, -1.75, 0.2, 3.0, 0xf8fafc);
+    const island = createFurn(1.6, 0.45, 0.8, 1.75, 0.25, -0.85, 0xffffff);
     scene.add(sofa, tvStand, tvScreen, desk, bed, island);
 
     // Interactive Highlight Mesh & Outline
@@ -575,10 +579,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const data = getJohorSunData(timeOfDay);
     sunLightRef.current.position.copy(data.position);
     sunLightRef.current.color.setHex(data.lightColor);
-    sunLightRef.current.intensity = data.lightIntensity * 1.4;
+    sunLightRef.current.intensity = data.lightIntensity * 1.6;
 
     ambientLightRef.current.color.setHex(data.ambientColor);
-    ambientLightRef.current.intensity = data.ambientIntensity * 1.2;
+    ambientLightRef.current.intensity = data.ambientIntensity * 1.4;
   }, [timeOfDay]);
 
   // 4. Update 3D Dimension Lines
@@ -645,22 +649,22 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       const ctrl = controlsRef.current;
       switch (preset) {
         case "birds-eye":
-          ctrl.setLookAt(0, 12, 11, 0, 0, 0, true);
+          ctrl.setLookAt(0, 16, 14, 0, 0, 0, true);
           break;
         case "iso-2.5d":
-          ctrl.setLookAt(8, 9, 8, 0, 0, 0, true);
+          ctrl.setLookAt(8, 10, 8, 0, 0, 0, true);
           break;
         case "living":
-          ctrl.setLookAt(1.725, 4.5, 5.0, 1.725, 0.4, 1.875, true);
+          ctrl.setLookAt(1.75, 4.5, 5.0, 1.75, 0.4, 1.85, true);
           break;
         case "workstation":
-          ctrl.setLookAt(-1.725, 3.8, 2.6, -1.725, 0.4, 0.03, true);
+          ctrl.setLookAt(-1.75, 3.8, 2.6, -1.75, 0.4, 0.05, true);
           break;
         case "bedroom":
-          ctrl.setLookAt(-1.725, 4.2, 5.5, -1.725, 0.4, 2.97, true);
+          ctrl.setLookAt(-1.75, 4.2, 5.5, -1.75, 0.4, 2.95, true);
           break;
         case "balcony":
-          ctrl.setLookAt(1.725, 2.8, 4.8, 1.725, 0.3, 4.335, true);
+          ctrl.setLookAt(1.75, 2.8, 4.8, 1.75, 0.3, 4.35, true);
           break;
       }
     }
@@ -681,7 +685,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       setTimeout(() => {
         window.dispatchEvent(new Event("resize"));
         if (controlsRef.current && cameraRef.current && rendererRef.current && sceneRef.current) {
-          controlsRef.current.update(0.016);
+          controlsRef.current.setLookAt(0, 16, 14, 0, 0, 0, true);
           rendererRef.current.render(sceneRef.current, cameraRef.current);
         }
       }, 50);
@@ -928,9 +932,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
           {/* 3D WebGL Status Badge */}
           {viewMode === "3d" && (
-            <div className="absolute bottom-16 left-4 z-20 bg-black/70 backdrop-blur-md border border-white/20 px-3.5 py-1.5 rounded-xl flex items-center space-x-2 shadow-sm text-[11px] text-emerald-400 pointer-events-none">
+            <div className="absolute bottom-16 left-4 z-20 bg-slate-900/90 backdrop-blur-md border border-slate-700 px-3.5 py-1.5 rounded-xl flex items-center space-x-2 shadow-lg text-[11px] text-slate-300 pointer-events-none">
               <Box className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-              <span>Three.js 1:1 程序化 3D 网格运行中 · 支持 360° 旋转与缩放</span>
+              <span>🎮 3D 模式已就绪：左键 360° 旋转视角 · 右键平移 · 滚轮缩放</span>
             </div>
           )}
 
@@ -947,7 +951,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             {/* 3D WebGL Canvas Layer */}
             <div 
               style={{ display: viewMode === "3d" ? "block" : "none" }}
-              className="w-full h-full min-h-[520px] bg-[#0b0f19] relative"
+              className="w-full h-full min-h-[520px] bg-[#0b0f17] relative"
             >
               <div ref={mountRef} className="w-full h-full min-h-[520px] cursor-grab active:cursor-grabbing" />
 
@@ -1294,7 +1298,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   setIsOverviewMode(true);
                   setSvgViewBox("0 0 690 972.5");
                   if (controlsRef.current) {
-                    controlsRef.current.setLookAt(0, 12, 11, 0, 0, 0, true);
+                    controlsRef.current.setLookAt(0, 16, 14, 0, 0, 0, true);
                   }
                 }}
                 className={`flex-shrink-0 whitespace-nowrap min-w-max px-3.5 py-2 rounded-2xl text-xs font-black transition-all ${
