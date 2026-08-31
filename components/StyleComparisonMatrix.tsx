@@ -621,14 +621,14 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
             </p>
           </div>
 
-          {/* SVG Radar Chart Visualization (Optimized ViewBox with generous margins to prevent text clipping) */}
+          {/* SVG Radar Chart Visualization (52% Radius Calibrated with 100% Zero Overflow Protection) */}
           <div className="relative w-full aspect-[16/10] bg-slate-50 rounded-2xl border border-slate-200 p-4 flex items-center justify-center overflow-hidden">
             <svg viewBox="0 0 540 340" className="w-full h-full max-w-[500px]">
-              {/* Concentric Hexagonal Grids (Center at 270, 170, Radius 110 = 62% calibrated) */}
+              {/* Concentric Hexagonal Grids (Center at 270, 170, Radius 90 = 52% Calibrated) */}
               {[0.2, 0.4, 0.6, 0.8, 1.0].map((level, i) => (
                 <polygon
                   key={i}
-                  points="270,60 365,115 365,225 270,280 175,225 175,115"
+                  points="270,80 348,125 348,215 270,260 192,215 192,125"
                   transform={`scale(${level}) translate(${270 * (1 - level) / level}, ${170 * (1 - level) / level})`}
                   fill="none"
                   stroke="#cbd5e1"
@@ -637,26 +637,26 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
               ))}
 
               {/* Axis Lines */}
-              <line x1="270" y1="170" x2="270" y2="60" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="270" y1="170" x2="365" y2="115" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="270" y1="170" x2="365" y2="225" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="270" y1="170" x2="270" y2="280" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="270" y1="170" x2="175" y2="225" stroke="#cbd5e1" strokeWidth="1" />
-              <line x1="270" y1="170" x2="175" y2="115" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="270" y2="80" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="348" y2="125" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="348" y2="215" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="270" y2="260" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="192" y2="215" stroke="#cbd5e1" strokeWidth="1" />
+              <line x1="270" y1="170" x2="192" y2="125" stroke="#cbd5e1" strokeWidth="1" />
 
-              {/* Dimension Labels with Generous Clear Padding */}
-              <text x="270" y="42" textAnchor="middle" fill="#0284c7" fontSize="11" fontWeight="bold">空间通透采光</text>
-              <text x="380" y="118" textAnchor="start" fill="#d97706" fontSize="11" fontWeight="bold">耐脏低打理</text>
-              <text x="380" y="232" textAnchor="start" fill="#059669" fontSize="11" fontWeight="bold">造价性价比</text>
-              <text x="270" y="304" textAnchor="middle" fill="#7c3aed" fontSize="11" fontWeight="bold">极客工位契合</text>
-              <text x="160" y="232" textAnchor="end" fill="#db2777" fontSize="11" fontWeight="bold">睡眠舒缓感</text>
-              <text x="160" y="118" textAnchor="end" fill="#4f46e5" fontSize="11" fontWeight="bold">资产保值率</text>
+              {/* Dimension Labels with 52% Radius and Ultra-Wide Safe Margin */}
+              <text x="270" y="58" textAnchor="middle" fill="#0284c7" fontSize="12" fontWeight="bold">采光通透</text>
+              <text x="368" y="129" textAnchor="start" fill="#d97706" fontSize="12" fontWeight="bold">耐脏易打理</text>
+              <text x="368" y="219" textAnchor="start" fill="#059669" fontSize="12" fontWeight="bold">造价性价比</text>
+              <text x="270" y="288" textAnchor="middle" fill="#7c3aed" fontSize="12" fontWeight="bold">极客工位</text>
+              <text x="172" y="219" textAnchor="end" fill="#db2777" fontSize="12" fontWeight="bold">睡眠舒适度</text>
+              <text x="172" y="129" textAnchor="end" fill="#4f46e5" fontSize="12" fontWeight="bold">转售流动性</text>
 
               {/* Render Active Selected Style Radar Polygon */}
               {(() => {
                 const s = STYLES_DATA.find((x) => x.id === selectedStyleId) || STYLES_DATA[0];
                 const r = s.radarScores;
-                const maxR = 110;
+                const maxR = 90; // 52% radius
                 const cx = 270;
                 const cy = 170;
                 

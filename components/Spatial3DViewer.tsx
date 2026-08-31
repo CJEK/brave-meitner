@@ -131,72 +131,27 @@ const ZONE_VIEWBOXES: { [key: string]: string } = {
   "bedroom": "0 580 340 390"
 };
 
-// 1:1 Standard Coordinate System: Width X [-3.45, +3.45] (6.9m), Depth Z [-4.8625, +4.8625] (9.725m), Origin (0,0,0) at Geometric Center
-const ZONE_3D_COORDS: { [key: string]: { x: number; z: number; w: number; d: number; label: string; mep: string[]; smart: string[] } } = {
-  "entrance": {
-    x: 1.5, z: -4.03, w: 3.45, d: 1.56,
-    label: "入户玄关",
-    mep: ["⚡ 入户照明双控开关", "⚡ DB 配电箱与弱电光纤"],
-    smart: ["🤖 D200 3D人脸门锁", "🤖 入户迎宾微波感应"]
-  },
-  "kitchen": {
-    x: 1.5, z: -2.8, w: 3.45, d: 1.44,
-    label: "开放式厨房",
-    mep: ["⚡ 20A 烟机灶具专用", "⚡ 厨下 RO 净水动力"],
-    smart: ["🤖 烟雾/水浸传感器", "🤖 智能橱柜手扫感应"]
-  },
-  "dining": {
-    x: 1.5, z: -1.2, w: 3.45, d: 1.75,
-    label: "多功能中岛吧台",
-    mep: ["⚡ 弹出式隐藏轨道插座", "⚡ 吧台电水壶/咖啡机电源"],
-    smart: ["🤖 吧台调光色温旋钮", "🤖 中岛氛围悬浮吊灯"]
-  },
-  "living": {
-    x: 1.5, z: 1.8, w: 3.45, d: 3.75,
-    label: "客厅极简影音区",
-    mep: ["⚡ SMATV 电视点位", "⚡ 15A 空调专用点", "⚡ 5组五孔插座", "⚡ 沙发侧 USB-C 快充"],
-    smart: ["🤖 FP2 人体存在毫米波雷达", "🤖 空调伴侣 P3", "🤖 电视背景同步流光溢彩"]
-  },
-  "balcony": {
-    x: 1.5, z: 4.28, w: 3.45, d: 1.17,
-    label: "南向景观阳台",
-    mep: ["⚡ 防水动力插座", "⚡ 景观洗墙射灯"],
-    smart: ["🤖 C3 智能双轨电动帘", "🤖 阳台温湿度传感器"]
-  },
-  "yard": {
-    x: -2.3, z: -4.03, w: 2.3, d: 1.65,
-    label: "生活阳台与设备平台",
-    mep: ["⚡ 洗衣机专用冷水给水与电源", "⚡ 扫地机上下水排污管"],
-    smart: ["🤖 扫拖机器人自动上下水基站", "🤖 户外水浸漏水自切阀"]
-  },
-  "bathroom": {
-    x: -1.8, z: -0.8, w: 1.8, d: 2.3,
-    label: "独立卫浴室",
-    mep: ["⚡ 1.5m 镜柜内隐藏防溅插座", "⚡ 智能马桶预留电路", "⚡ 20A 电热水器"],
-    smart: ["🤖 镜面触控恒温除雾", "🤖 智能感应翻盖马桶", "🤖 地脚起夜微光感应"]
-  },
-  "study": {
-    x: -1.5, z: 0.8, w: 3.3, d: 2.06,
-    label: "极客工作站 (1+1房)",
-    mep: ["⚡ 8组桌面抗涌浪插座", "⚡ 千兆网络接口 RJ45"],
-    smart: ["🤖 FP2 极客坐姿姿态识别雷达", "🤖 极客工作模式自动化联动"]
-  },
-  "bedroom": {
-    x: -1.8, z: 3.0, w: 3.3, d: 3.94,
-    label: "主卧深睡空间",
-    mep: ["⚡ 床头双侧双控+Type-C", "⚡ 15A 空调独立回路"],
-    smart: ["🤖 C3 卧室静音电动窗帘", "🤖 FP2 睡眠监测雷达", "🤖 床底起夜感应地脚灯"]
-  }
-};
+// 1:1 Standard Coordinate System: Width X [-3.45, +3.45] (6.9m), Depth Z [-4.8625, +4.8625] (9.725m), Origin (0,0,0) at Center
+const PROCEDURAL_3D_ROOMS = [
+  { id: "bedroom", name: "主卧深睡", sqm: "14.2㎡", pos: [-1.725, 0.4, 2.97], size: [3.3, 0.8, 3.94], colorHex: 0x4f46e5 },
+  { id: "living", name: "景观客厅", sqm: "13.5㎡", pos: [1.725, 0.4, 1.875], size: [3.45, 0.8, 3.75], colorHex: 0x0ea5e9 },
+  { id: "balcony", name: "南向阳台", sqm: "4.2㎡", pos: [1.725, 0.25, 4.335], size: [3.45, 0.5, 1.17], colorHex: 0x10b981 },
+  { id: "study", name: "极客工位", sqm: "6.8㎡", pos: [-1.725, 0.4, 0.03], size: [3.3, 0.8, 1.94], colorHex: 0x8b5cf6 },
+  { id: "dining", name: "多功能中岛", sqm: "4.2㎡", pos: [1.725, 0.4, -0.875], size: [3.45, 0.8, 1.75], colorHex: 0xf59e0b },
+  { id: "kitchen", name: "开放厨房", sqm: "5.2㎡", pos: [1.725, 0.4, -2.47], size: [3.45, 0.8, 1.44], colorHex: 0xec4899 },
+  { id: "entrance", name: "入户玄关", sqm: "3.8㎡", pos: [1.725, 0.4, -3.97], size: [3.45, 0.8, 1.56], colorHex: 0x64748b },
+  { id: "bathroom", name: "独立卫浴", sqm: "4.5㎡", pos: [-1.725, 0.4, -2.0], size: [3.3, 0.8, 2.12], colorHex: 0x06b6d4 },
+  { id: "yard", name: "生活阳台", sqm: "3.8㎡", pos: [-1.725, 0.25, -3.97], size: [3.3, 0.5, 1.82], colorHex: 0x14b8a6 }
+];
 
 const MARKER_ANCHORS = [
   { id: "d200-lock", pos: [2.2, 1.2, -4.0], label: "D200 3D人脸锁", type: "smart", icon: "🤖" },
   { id: "smatv", pos: [3.25, 0.65, 1.8], label: "SMATV 电视点位", type: "mep", icon: "⚡" },
   { id: "ac-living", pos: [3.3, 2.2, 2.8], label: "15A 空调动力", type: "mep", icon: "⚡" },
   { id: "fp2-living", pos: [1.5, 2.6, 1.0], label: "FP2 客厅微动雷达", type: "smart", icon: "🤖" },
-  { id: "desk-power", pos: [-1.5, 0.9, 0.8], label: "8组桌面组合插座", type: "mep", icon: "⚡" },
-  { id: "fp2-study", pos: [-1.5, 1.5, 0.8], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
-  { id: "vanity-power", pos: [-1.8, 1.35, -0.8], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
+  { id: "desk-power", pos: [-1.5, 0.9, 0.0], label: "8组桌面组合插座", type: "mep", icon: "⚡" },
+  { id: "fp2-study", pos: [-1.5, 1.5, 0.0], label: "FP2 极客坐姿雷达", type: "smart", icon: "🤖" },
+  { id: "vanity-power", pos: [-1.8, 1.35, -2.0], label: "1.5m 镜柜隐藏插座", type: "mep", icon: "⚡" },
   { id: "roborock", pos: [-2.2, 0.3, -3.8], label: "扫拖机自动上下水", type: "smart", icon: "🤖" },
   { id: "curtain-c3", pos: [1.5, 2.6, 4.4], label: "C3 静音双轨电动帘", type: "smart", icon: "🤖" },
   { id: "curtain-bed", pos: [-1.8, 2.6, 4.4], label: "C3 主卧静音帘", type: "smart", icon: "🤖" }
@@ -238,7 +193,6 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   const sunLightRef = useRef<THREE.DirectionalLight | null>(null);
   const ambientLightRef = useRef<THREE.AmbientLight | null>(null);
   const dimensionGroupRef = useRef<THREE.Group | null>(null);
-  const furnitureGroupRef = useRef<THREE.Group | null>(null);
   const clickableZonesRef = useRef<THREE.Mesh[]>([]);
   const bottomScrollRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -272,22 +226,55 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
   }, []);
 
-  // 1. Initialize Three.js Scene: 6.9m × 9.725m Rectangular Slab, 0.25m Half-Walls (BIM Cutaway with 900mm Doorways), 1:1 Scaled Furniture
+  // Helper to create a sharp 3D Text Sprite Badge (Zero external fonts)
+  const createTextSprite = (text: string, subText: string, colorHex: string) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 128;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+      ctx.beginPath();
+      ctx.roundRect(10, 10, 236, 108, 16);
+      ctx.fill();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = colorHex;
+      ctx.stroke();
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 32px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(text, 128, 56);
+
+      ctx.fillStyle = colorHex;
+      ctx.font = "bold 24px monospace";
+      ctx.fillText(subText, 128, 96);
+    }
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.minFilter = THREE.LinearFilter;
+    const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true, depthWrite: false });
+    const sprite = new THREE.Sprite(spriteMat);
+    sprite.scale.set(1.4, 0.7, 1);
+    return sprite;
+  };
+
+  // 1. Initialize Zero-Dependency Procedural 3D Scene
   useEffect(() => {
     if (!mountRef.current) return;
 
     const width = mountRef.current.clientWidth || 720;
     const height = mountRef.current.clientHeight || 560;
 
-    // Architectural Studio Background
+    // Dark Technical Grid Studio Background
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.background = new THREE.Color(selectedStyleId === "dark-luxury" || selectedStyleId === "italian-luxury" ? 0x09090b : 0xf8fafc);
+    scene.background = new THREE.Color(0x0b0f19);
 
     // Perspective Camera
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 1000);
     cameraRef.current = camera;
-    camera.position.set(0, 9.5, 7.5);
+    camera.position.set(0, 12, 11);
 
     // WebGL Renderer with graceful fallback
     let renderer: THREE.WebGLRenderer;
@@ -313,19 +300,19 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     mountRef.current.innerHTML = "";
     mountRef.current.appendChild(renderer.domElement);
 
-    // Initialize CameraControls with maxPolarAngle limit & smooth inertia
+    // Initialize CameraControls
     const controls = new CameraControls(camera, renderer.domElement);
-    controls.smoothTime = 0.35;
-    controls.draggingSmoothTime = 0.12;
-    controls.maxDistance = 24;
-    controls.minDistance = 3.5;
-    controls.maxPolarAngle = Math.PI / 2.15; // prevents clipping below ground
+    controls.smoothTime = 0.3;
+    controls.draggingSmoothTime = 0.1;
+    controls.maxDistance = 26;
+    controls.minDistance = 4;
+    controls.maxPolarAngle = Math.PI / 2.15;
     controlsRef.current = controls;
 
-    // Clean 45-degree Isometric Bird's-eye Perspective
-    controls.setLookAt(0, 9.5, 7.5, 0, 0, 0, false);
+    // Default Camera LookAt Center
+    controls.setLookAt(0, 12, 11, 0, 0, 0, false);
 
-    // Attach Raycasting Click Handler & Context Lost Handler
+    // Raycasting Click & WebGL Context Protection
     const domElem = renderer.domElement;
     domElem.addEventListener("click", handleCanvasClick);
 
@@ -336,13 +323,13 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     };
     domElem.addEventListener("webglcontextlost", handleContextLost);
 
-    // Calibrated Lighting
-    const ambientLight = new THREE.AmbientLight(currentTheme.lightAmbient, timeOfDay === "night" ? 0.4 : 1.1);
+    // Dynamic Calibrated Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     ambientLightRef.current = ambientLight;
     scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(solarData.lightColor, solarData.lightIntensity);
-    sunLight.position.copy(solarData.position);
+    const sunLight = new THREE.DirectionalLight(0xffedd5, 1.6);
+    sunLight.position.set(4, 14, 8);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = 2048;
     sunLight.shadow.mapSize.height = 2048;
@@ -350,215 +337,116 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     sunLightRef.current = sunLight;
     scene.add(sunLight);
 
-    const fillLight = new THREE.DirectionalLight(0xe2e8f0, 0.5);
+    const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.6);
     fillLight.position.set(-8, 10, -10);
     scene.add(fillLight);
 
-    // Ground Grid
-    const gridHelper = new THREE.GridHelper(24, 24, 0xcbd5e1, 0xe2e8f0);
-    gridHelper.position.y = -0.01;
+    // Ground Tech Grid Helper
+    const gridHelper = new THREE.GridHelper(26, 26, 0x1e293b, 0x0f172a);
+    gridHelper.position.y = -0.15;
     scene.add(gridHelper);
 
-    // High-Resolution Blueprint Texture Canvas
-    const canvas = document.createElement("canvas");
-    canvas.width = 2048;
-    canvas.height = 2888;
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-      ctx.fillStyle = currentTheme.floorSvg;
-      ctx.fillRect(0, 0, 2048, 2888);
-
-      ctx.strokeStyle = "rgba(148, 163, 184, 0.25)";
-      ctx.lineWidth = 2;
-      for (let x = 0; x <= 2048; x += 178) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, 2888);
-        ctx.stroke();
-      }
-      for (let y = 0; y <= 2888; y += 178) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(2048, y);
-        ctx.stroke();
-      }
-
-      ctx.strokeStyle = currentTheme.wallEdgeSvg;
-      ctx.lineWidth = 12;
-      ctx.strokeRect(8, 8, 2032, 2872);
-
-      // Central Spine Wall
-      ctx.beginPath();
-      ctx.moveTo(980, 0);
-      ctx.lineTo(980, 2888);
-      ctx.stroke();
-    }
-
-    const blueprintTexture = new THREE.CanvasTexture(canvas);
-    blueprintTexture.anisotropy = 8;
-
-    // Base Floor Slab: Exactly 6.90m (Width) × 9.725m (Depth)
-    const floorGeometry = new THREE.BoxGeometry(6.90, 0.15, 9.725);
-    const floorMat = new THREE.MeshStandardMaterial({
-      map: blueprintTexture,
-      roughness: 0.4,
-      metalness: 0.05
+    // Procedural Base Slab: Exactly 7.2m (Width) × 0.2m (Height) × 10.0m (Depth)
+    const baseGeo = new THREE.BoxGeometry(7.2, 0.2, 10.0);
+    const baseMat = new THREE.MeshStandardMaterial({
+      color: 0x111827,
+      roughness: 0.5,
+      metalness: 0.1
     });
-    const floorMesh = new THREE.Mesh(floorGeometry, floorMat);
-    floorMesh.position.y = -0.075;
-    floorMesh.receiveShadow = true;
-    scene.add(floorMesh);
+    const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+    baseMesh.position.y = -0.1;
+    baseMesh.receiveShadow = true;
+    scene.add(baseMesh);
 
-    // Clickable Raycasting Floor Meshes
+    // Base Slab Chamfered Edge Line
+    const baseEdgeGeo = new THREE.EdgesGeometry(baseGeo);
+    const baseEdgeLine = new THREE.LineSegments(baseEdgeGeo, new THREE.LineBasicMaterial({ color: 0x0284c7, linewidth: 2 }));
+    baseEdgeLine.position.y = -0.1;
+    scene.add(baseEdgeLine);
+
+    // 9 Procedural 3D Room Box Meshes + Billboards
     clickableZonesRef.current = [];
-    Object.entries(ZONE_3D_COORDS).forEach(([zoneId, coord]) => {
-      const planeGeom = new THREE.PlaneGeometry(coord.w, coord.d);
-      planeGeom.rotateX(-Math.PI / 2);
-      const planeMat = new THREE.MeshBasicMaterial({ visible: false });
-      const zoneFloor = new THREE.Mesh(planeGeom, planeMat);
-      zoneFloor.position.set(coord.x, 0.01, coord.z);
-      zoneFloor.userData = { zoneId };
-      scene.add(zoneFloor);
-      clickableZonesRef.current.push(zoneFloor);
+    const roomsGroup = new THREE.Group();
+    scene.add(roomsGroup);
+
+    PROCEDURAL_3D_ROOMS.forEach((room) => {
+      const group = new THREE.Group();
+      group.position.set(room.pos[0], room.pos[1], room.pos[2]);
+
+      // Translucent Tinted 3D Room Box
+      const roomGeo = new THREE.BoxGeometry(room.size[0], room.size[1], room.size[2]);
+      const roomMat = new THREE.MeshStandardMaterial({
+        color: room.colorHex,
+        transparent: true,
+        opacity: 0.78,
+        roughness: 0.25,
+        metalness: 0.15
+      });
+      const roomMesh = new THREE.Mesh(roomGeo, roomMat);
+      roomMesh.castShadow = true;
+      roomMesh.receiveShadow = true;
+      roomMesh.userData = { zoneId: room.id };
+      group.add(roomMesh);
+      clickableZonesRef.current.push(roomMesh);
+
+      // Wireframe Outline for Architectural Crispness
+      const edges = new THREE.EdgesGeometry(roomGeo);
+      const edgeLine = new THREE.LineSegments(
+        edges,
+        new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1.5, transparent: true, opacity: 0.6 })
+      );
+      group.add(edgeLine);
+
+      // Floating 3D Text Billboard Badge
+      const textSprite = createTextSprite(
+        room.name,
+        room.sqm,
+        `#${room.colorHex.toString(16).padStart(6, "0")}`
+      );
+      textSprite.position.set(0, room.size[1] / 2 + 0.45, 0);
+      group.add(textSprite);
+
+      roomsGroup.add(group);
     });
 
-    // Helper: Soft Contact Shadow Generator
-    const createContactShadow = (w: number, d: number, x: number, z: number, opacity = 0.35) => {
-      const c = document.createElement("canvas");
-      c.width = 64;
-      c.height = 64;
-      const context = c.getContext("2d");
-      if (context) {
-        const gradient = context.createRadialGradient(32, 32, 4, 32, 32, 30);
-        gradient.addColorStop(0, "rgba(30, 41, 59, 0.95)");
-        gradient.addColorStop(0.5, "rgba(51, 65, 85, 0.35)");
-        gradient.addColorStop(1, "rgba(100, 116, 139, 0)");
-        context.fillStyle = gradient;
-        context.fillRect(0, 0, 64, 64);
-      }
-      const texture = new THREE.CanvasTexture(c);
-      const planeGeom = new THREE.PlaneGeometry(w * 1.15, d * 1.15);
-      planeGeom.rotateX(-Math.PI / 2);
-      const planeMat = new THREE.MeshBasicMaterial({
-        map: texture,
-        transparent: true,
-        opacity,
-        depthWrite: false
-      });
-      const shadowMesh = new THREE.Mesh(planeGeom, planeMat);
-      shadowMesh.position.set(x, 0.008, z);
-      return shadowMesh;
-    };
-
-    // Helper: Create High-Contrast Furniture with Wireframe Edges
-    const createFurniture = (w: number, h: number, d: number, x: number, y: number, z: number, color = currentTheme.sofaHex, edgeColor = currentTheme.wallEdgeHex) => {
-      const group = new THREE.Group();
+    // Helper: Create High-Contrast Furniture
+    const createFurn = (w: number, h: number, d: number, x: number, y: number, z: number, color = 0xffffff) => {
       const geom = new THREE.BoxGeometry(w, h, d);
-      const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.05 });
+      const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.4 });
       const mesh = new THREE.Mesh(geom, mat);
+      mesh.position.set(x, y, z);
       mesh.castShadow = true;
       mesh.receiveShadow = true;
-      group.add(mesh);
-
-      const edges = new THREE.EdgesGeometry(geom);
-      const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: edgeColor, linewidth: 1.5 }));
-      group.add(line);
-
-      group.position.set(x, y, z);
-      return group;
+      return mesh;
     };
 
-    // Helper: Create Standard 0.25m Architectural Half-Wall
-    const createHalfWall = (w: number, d: number, x: number, z: number, opacity = 0.95, color = currentTheme.wallHex) => {
-      const wallHeight = 0.25;
-      const group = new THREE.Group();
-      const geom = new THREE.BoxGeometry(w, wallHeight, d);
-      const mat = new THREE.MeshStandardMaterial({
-        color,
-        roughness: 0.8,
-        metalness: 0.05,
-        transparent: opacity < 1,
-        opacity
-      });
-      const wall = new THREE.Mesh(geom, mat);
-      wall.castShadow = true;
-      wall.receiveShadow = true;
-      group.add(wall);
-
-      const edges = new THREE.EdgesGeometry(geom);
-      const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: currentTheme.wallEdgeHex, linewidth: 1.5 }));
-      group.add(line);
-
-      group.position.set(x, wallHeight / 2, z);
-      return group;
-    };
-
-    const furnitureGroup = new THREE.Group();
-    furnitureGroupRef.current = furnitureGroup;
-    scene.add(furnitureGroup);
-
-    // BIM Half-Walls with 900mm Doorway Openings
-    const spineWallNorth = createHalfWall(0.15, 4.21, -0.15, -2.75);
-    const spineWallSouth = createHalfWall(0.15, 4.61, -0.15, 2.55);
-    const bathNorthWall = createHalfWall(1.8, 0.15, -1.8, -1.95);
-    const bathSouthWall = createHalfWall(1.8, 0.15, -1.8, 0.35);
-    const bedWallLeft = createHalfWall(2.1, 0.15, -2.4, 1.2);
-    const bedWallRight = createHalfWall(0.3, 0.15, -0.3, 1.2);
-    const yardWall = createHalfWall(3.3, 0.15, -1.8, -3.2);
-    const balconyGlassRailing = createHalfWall(3.6, 0.06, 1.5, 4.86, 0.6, currentTheme.accentHex);
-    furnitureGroup.add(spineWallNorth, spineWallSouth, bathNorthWall, bathSouthWall, bedWallLeft, bedWallRight, yardWall, balconyGlassRailing);
-
-    // Furniture: Living, Kitchen, Dining, Study, Bed, Bath
-    const sofa = createFurniture(0.85, 0.45, 2.4, 0.55, 0.225, 1.8, currentTheme.sofaHex, currentTheme.wallEdgeHex);
-    const sofaShadow = createContactShadow(1.0, 2.6, 0.55, 1.8, 0.35);
-    const tvStand = createFurniture(0.35, 0.20, 2.4, 3.125, 0.10, 1.8, currentTheme.woodHex, currentTheme.wallEdgeHex);
-    const tvScreen = createFurniture(0.04, 0.40, 1.8, 3.25, 0.35, 1.8, 0x94a3b8, 0xcbd5e1);
-    const coffeeTable = createFurniture(0.55, 0.22, 0.9, 1.85, 0.11, 1.8, currentTheme.wallHex, currentTheme.wallEdgeHex);
-
-    const kitchenCounter = createFurniture(3.2, 0.45, 0.6, 1.5, 0.225, -2.8, currentTheme.wallHex, currentTheme.wallEdgeHex);
-    const island = createFurniture(1.8, 0.55, 0.85, 1.5, 0.275, -1.2, currentTheme.floorHex, currentTheme.wallEdgeHex);
-    const islandWood = createFurniture(0.75, 0.06, 0.75, 2.1, 0.55, -1.2, currentTheme.woodHex, currentTheme.wallEdgeHex);
-
-    const vanityLedge = createFurniture(0.55, 0.25, 1.8, -2.425, 0.125, -0.8, currentTheme.floorHex, currentTheme.accentHex);
-    const mirrorCabinet = createFurniture(0.1, 0.25, 1.8, -2.65, 0.25, -0.8, 0xeff6ff, 0x1d4ed8);
-    const toilet = createFurniture(0.55, 0.22, 0.45, -2.425, 0.11, 0.05, 0xffffff, 0x64748b);
-
-    const liftDesk = createFurniture(1.8, 0.06, 0.75, -1.5, 0.35, 0.8, currentTheme.woodHex, currentTheme.wallEdgeHex);
-    const dualScreen = createFurniture(1.4, 0.35, 0.04, -1.5, 0.45, 0.45, currentTheme.accentHex, 0x1e40af);
-    const luggageCabinet = createFurniture(0.55, 0.25, 1.2, -3.125, 0.125, 0.8, currentTheme.wallHex, currentTheme.wallEdgeHex);
-
-    const bedBase = createFurniture(1.8, 0.22, 2.0, -1.8, 0.11, 3.0, currentTheme.sofaHex, currentTheme.wallEdgeHex);
-    const mattress = createFurniture(1.6, 0.15, 1.9, -1.8, 0.28, 3.0, 0xffffff, 0x64748b);
-    const wardrobe = createFurniture(0.55, 0.25, 2.6, -3.125, 0.125, 3.0, currentTheme.wallHex, currentTheme.wallEdgeHex);
-
-    const washer = createFurniture(0.75, 0.25, 0.75, -2.6, 0.125, -4.0, 0xe2e8f0, 0x475569);
-
-    furnitureGroup.add(
-      sofaShadow, sofa, tvStand, tvScreen, coffeeTable,
-      kitchenCounter, island, islandWood,
-      vanityLedge, mirrorCabinet, toilet,
-      liftDesk, dualScreen, luggageCabinet,
-      bedBase, mattress, wardrobe, washer
-    );
+    // Add Furniture Highlights
+    const sofa = createFurn(2.2, 0.35, 0.8, 1.725, 0.2, 1.8, 0xe2e8f0);
+    const tvStand = createFurn(2.2, 0.2, 0.3, 3.2, 0.15, 1.8, 0x334155);
+    const tvScreen = createFurn(1.8, 0.6, 0.05, 3.25, 0.55, 1.8, 0x0284c7);
+    const desk = createFurn(1.8, 0.1, 0.75, -1.725, 0.4, 0.03, 0xd4a373);
+    const bed = createFurn(1.8, 0.35, 2.0, -1.725, 0.2, 3.0, 0xf8fafc);
+    const island = createFurn(1.6, 0.45, 0.8, 1.725, 0.25, -0.875, 0xffffff);
+    scene.add(sofa, tvStand, tvScreen, desk, bed, island);
 
     // Interactive Highlight Mesh & Outline
     const highlightGeom = new THREE.PlaneGeometry(1, 1);
     highlightGeom.rotateX(-Math.PI / 2);
     const highlightMat = new THREE.MeshBasicMaterial({
-      color: currentTheme.accentHex,
+      color: 0x38bdf8,
       transparent: true,
-      opacity: 0.32,
+      opacity: 0.4,
       side: THREE.DoubleSide
     });
     const highlightMesh = new THREE.Mesh(highlightGeom, highlightMat);
-    highlightMesh.position.y = 0.02;
+    highlightMesh.position.y = 0.05;
     highlightMeshRef.current = highlightMesh;
     scene.add(highlightMesh);
 
     const borderGeom = new THREE.BufferGeometry();
-    const borderMat = new THREE.LineBasicMaterial({ color: currentTheme.accentHex, linewidth: 2.5 });
+    const borderMat = new THREE.LineBasicMaterial({ color: 0x38bdf8, linewidth: 3 });
     const highlightBorder = new THREE.LineSegments(borderGeom, borderMat);
-    highlightBorder.position.y = 0.03;
+    highlightBorder.position.y = 0.06;
     highlightBorderRef.current = highlightBorder;
     scene.add(highlightBorder);
 
@@ -584,7 +472,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       controls.update(delta);
 
       if (highlightMeshRef.current) {
-        highlightMat.opacity = 0.25 + Math.sin(elapsedTime * 3.2) * 0.09;
+        highlightMat.opacity = 0.3 + Math.sin(elapsedTime * 3.5) * 0.12;
       }
 
       // Update Screen Coordinates for 3D Markers
@@ -659,16 +547,16 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     };
   }, [selectedStyleId, handleCanvasClick, showMEP, showSmartHome, isAutoRotating]);
 
-  // 2. Update Highlight Mesh Position
+  // 2. Update Highlight Mesh Position on Active Zone Change
   useEffect(() => {
     if (!highlightMeshRef.current || !highlightBorderRef.current) return;
-    const coords = ZONE_3D_COORDS[activeZone.id] || ZONE_3D_COORDS["living"];
+    const room = PROCEDURAL_3D_ROOMS.find((r) => r.id === activeZone.id) || PROCEDURAL_3D_ROOMS[1];
 
-    highlightMeshRef.current.scale.set(coords.w, coords.d, 1);
-    highlightMeshRef.current.position.set(coords.x, 0.02, coords.z);
+    highlightMeshRef.current.scale.set(room.size[0] * 1.05, room.size[2] * 1.05, 1);
+    highlightMeshRef.current.position.set(room.pos[0], 0.05, room.pos[2]);
 
-    const hw = coords.w / 2;
-    const hd = coords.d / 2;
+    const hw = (room.size[0] * 1.05) / 2;
+    const hd = (room.size[2] * 1.05) / 2;
     const points = [
       new THREE.Vector3(-hw, 0, -hd), new THREE.Vector3(hw, 0, -hd),
       new THREE.Vector3(hw, 0, -hd), new THREE.Vector3(hw, 0, hd),
@@ -677,7 +565,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     ];
     highlightBorderRef.current.geometry.dispose();
     highlightBorderRef.current.geometry = new THREE.BufferGeometry().setFromPoints(points);
-    highlightBorderRef.current.position.set(coords.x, 0.03, coords.z);
+    highlightBorderRef.current.position.set(room.pos[0], 0.06, room.pos[2]);
   }, [activeZone]);
 
   // 3. Update Real-world Solar Simulation on `timeOfDay` change
@@ -687,10 +575,10 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     const data = getJohorSunData(timeOfDay);
     sunLightRef.current.position.copy(data.position);
     sunLightRef.current.color.setHex(data.lightColor);
-    sunLightRef.current.intensity = data.lightIntensity;
+    sunLightRef.current.intensity = data.lightIntensity * 1.4;
 
     ambientLightRef.current.color.setHex(data.ambientColor);
-    ambientLightRef.current.intensity = data.ambientIntensity;
+    ambientLightRef.current.intensity = data.ambientIntensity * 1.2;
   }, [timeOfDay]);
 
   // 4. Update 3D Dimension Lines
@@ -703,7 +591,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
     }
 
     if (showDimensions) {
-      const drawDimLine = (p1: [number, number, number], p2: [number, number, number], color = 0x2563eb) => {
+      const drawDimLine = (p1: [number, number, number], p2: [number, number, number], color = 0x38bdf8) => {
         const geom = new THREE.BufferGeometry().setFromPoints([
           new THREE.Vector3(...p1),
           new THREE.Vector3(...p2)
@@ -712,18 +600,17 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
         return new THREE.Line(geom, mat);
       };
 
-      dimensionGroupRef.current.add(drawDimLine([-3.45, 0.15, 4.95], [3.45, 0.15, 4.95], 0x059669));
-      dimensionGroupRef.current.add(drawDimLine([3.55, 0.15, -4.86], [3.55, 0.15, 4.86], 0x2563eb));
-      dimensionGroupRef.current.add(drawDimLine([-0.15, 0.15, 3.4], [3.45, 0.15, 3.4], 0x3b82f6));
-      dimensionGroupRef.current.add(drawDimLine([-3.45, 0.15, 1.8], [-0.15, 0.15, 1.8], 0x8b5cf6));
+      dimensionGroupRef.current.add(drawDimLine([-3.45, 0.15, 5.0], [3.45, 0.15, 5.0], 0x10b981));
+      dimensionGroupRef.current.add(drawDimLine([3.65, 0.15, -4.86], [3.65, 0.15, 4.86], 0x38bdf8));
+      dimensionGroupRef.current.add(drawDimLine([-0.05, 0.15, 3.4], [3.45, 0.15, 3.4], 0x818cf8));
+      dimensionGroupRef.current.add(drawDimLine([-3.45, 0.15, 1.8], [-0.05, 0.15, 1.8], 0xc084fc));
     }
   }, [showDimensions]);
 
-  // 5. Dual-Directional Camera Preset Navigation & SVG ViewBox Focus Transition
+  // 5. Camera Preset Navigation
   const applyCameraPreset = (preset: "birds-eye" | "iso-2.5d" | "living" | "workstation" | "bedroom" | "balcony") => {
     setCameraPreset(preset);
 
-    // (A) Dual-Directional Synchronization with Zone Inspector
     if (preset === "birds-eye") {
       setIsOverviewMode(true);
       setIsIsometricPerspective(false);
@@ -754,27 +641,26 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
       setSvgViewBox(ZONE_VIEWBOXES["balcony"]);
     }
 
-    // (B) 3D Camera Controls Glide Animation
     if (controlsRef.current) {
       const ctrl = controlsRef.current;
       switch (preset) {
         case "birds-eye":
-          ctrl.setLookAt(0, 10, 8, 0, 0, 0, true);
+          ctrl.setLookAt(0, 12, 11, 0, 0, 0, true);
           break;
         case "iso-2.5d":
-          ctrl.setLookAt(7.5, 7.5, 7.5, 0, 0, 0, true);
+          ctrl.setLookAt(8, 9, 8, 0, 0, 0, true);
           break;
         case "living":
-          ctrl.setLookAt(1.5, 3.4, 3.8, 1.5, 0.3, 1.8, true);
+          ctrl.setLookAt(1.725, 4.5, 5.0, 1.725, 0.4, 1.875, true);
           break;
         case "workstation":
-          ctrl.setLookAt(-1.5, 3.0, 2.2, -1.5, 0.3, 0.8, true);
+          ctrl.setLookAt(-1.725, 3.8, 2.6, -1.725, 0.4, 0.03, true);
           break;
         case "bedroom":
-          ctrl.setLookAt(-1.8, 3.0, 4.5, -1.8, 0.3, 3.0, true);
+          ctrl.setLookAt(-1.725, 4.2, 5.5, -1.725, 0.4, 2.97, true);
           break;
         case "balcony":
-          ctrl.setLookAt(1.5, 2.0, 3.0, 1.5, 0.3, 4.28, true);
+          ctrl.setLookAt(1.725, 2.8, 4.8, 1.725, 0.3, 4.335, true);
           break;
       }
     }
@@ -1042,9 +928,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
 
           {/* 3D WebGL Status Badge */}
           {viewMode === "3d" && (
-            <div className="absolute bottom-16 left-4 z-20 bg-white/90 backdrop-blur-md border border-slate-200 px-3 py-1.5 rounded-xl flex items-center space-x-1.5 shadow-sm text-[11px] text-slate-700 pointer-events-none">
-              <Box className="w-3.5 h-3.5 text-emerald-600 animate-pulse" />
-              <span>Three.js 1:1 WebGL 渲染引擎已激活 · 鼠标/触控 360° 旋转</span>
+            <div className="absolute bottom-16 left-4 z-20 bg-black/70 backdrop-blur-md border border-white/20 px-3.5 py-1.5 rounded-xl flex items-center space-x-2 shadow-sm text-[11px] text-emerald-400 pointer-events-none">
+              <Box className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+              <span>Three.js 1:1 程序化 3D 网格运行中 · 支持 360° 旋转与缩放</span>
             </div>
           )}
 
@@ -1056,12 +942,12 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           )}
 
-          {/* DUAL RENDER CONTAINER: 3D WebGL Canvas & 2.5D SVG Isometric Plan (Zero Delay Switching) */}
+          {/* DUAL RENDER CONTAINER: 3D WebGL Canvas & 2.5D SVG Isometric Plan */}
           <div className="relative w-full flex-1 h-full min-h-[520px] overflow-hidden">
             {/* 3D WebGL Canvas Layer */}
             <div 
               style={{ display: viewMode === "3d" ? "block" : "none" }}
-              className="w-full h-full min-h-[520px] bg-slate-100 relative"
+              className="w-full h-full min-h-[520px] bg-[#0b0f19] relative"
             >
               <div ref={mountRef} className="w-full h-full min-h-[520px] cursor-grab active:cursor-grabbing" />
 
@@ -1389,7 +1275,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </div>
           </div>
 
-          {/* Bottom 9 Zones Selector: Spacious flex-shrink-0 buttons */}
+          {/* Bottom 9 Zones Selector */}
           <div className="relative p-2.5 bg-white border-t border-slate-200 flex items-center">
             <button
               onClick={() => scrollBottom("left")}
@@ -1408,7 +1294,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                   setIsOverviewMode(true);
                   setSvgViewBox("0 0 690 972.5");
                   if (controlsRef.current) {
-                    controlsRef.current.setLookAt(0, 9.5, 7.5, 0, 0, 0, true);
+                    controlsRef.current.setLookAt(0, 12, 11, 0, 0, 0, true);
                   }
                 }}
                 className={`flex-shrink-0 whitespace-nowrap min-w-max px-3.5 py-2 rounded-2xl text-xs font-black transition-all ${
@@ -1428,9 +1314,9 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
                     if (ZONE_VIEWBOXES[z.id]) {
                       setSvgViewBox(ZONE_VIEWBOXES[z.id]);
                     }
-                    const coord = ZONE_3D_COORDS[z.id];
-                    if (coord && controlsRef.current) {
-                      controlsRef.current.setLookAt(coord.x, 4.5, coord.z + 4, coord.x, 0.3, coord.z, true);
+                    const room = PROCEDURAL_3D_ROOMS.find((r) => r.id === z.id);
+                    if (room && controlsRef.current) {
+                      controlsRef.current.setLookAt(room.pos[0], 5.0, room.pos[2] + 4.5, room.pos[0], 0.4, room.pos[2], true);
                     }
                   }}
                   className={`flex-shrink-0 whitespace-nowrap min-w-max px-4 py-2.5 rounded-2xl text-xs font-bold transition-all ${
