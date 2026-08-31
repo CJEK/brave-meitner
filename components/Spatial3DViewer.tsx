@@ -552,6 +552,8 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
   }, [selectedStyleId, handleCanvasClick, showMEP, showSmartHome, isAutoRotating]);
 
   // 2. Update Highlight Mesh Position on Active Zone Change
+  useEffect(() => { window.dispatchEvent(new Event('resize')); }, [viewMode]);
+
   useEffect(() => {
     if (!highlightMeshRef.current || !highlightBorderRef.current) return;
     const room = PROCEDURAL_3D_ROOMS.find((r) => r.id === activeZone.id) || PROCEDURAL_3D_ROOMS[1];
@@ -689,6 +691,15 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           rendererRef.current.render(sceneRef.current, cameraRef.current);
         }
       }, 50);
+    } else if (mode === "2.5d") {
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+        if (controlsRef.current && cameraRef.current && rendererRef.current && sceneRef.current) {
+          // Top down isometric perspective
+          controlsRef.current.setLookAt(0, 25, 0.1, 0, 0, 0, true);
+          rendererRef.current.render(sceneRef.current, cameraRef.current);
+        }
+      }, 50);
     }
   };
 
@@ -749,6 +760,31 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
             </button>
           ))}
         </div>
+        {/* Group 3: 24-Hour Life Flow */}
+        <div className="hidden lg:flex items-center bg-white p-1 rounded-xl border border-slate-200 shadow-sm text-xs">
+          {[
+            { time: "07:30", label: "晨光唤醒", icon: "☀️", desc: "电动纱帘拉开50%，主卧引入柔和晨光；卫浴自然光化妆" },
+            { time: "08:30", label: "健康早餐", icon: "🍳", desc: "厨房拿取食材，2步内完成洗切煎；餐边水吧一键出咖啡" },
+            { time: "09:30", label: "极客办公", icon: "💻", desc: "书房移门闭合隔音，双电机升降桌站立办公，双屏不反光" },
+            { time: "18:30", label: "傍晚放松", icon: "☕", desc: "步入南向阳台吹微风，零西晒不闷热，俯瞰新山与新加坡天际线" },
+            { time: "23:00", label: "深度睡眠", icon: "🌙", desc: "全屋一键关灯，窗帘全闭，空调超静音除湿，床底微光起夜不扰人" }
+          ].map((rt, idx) => (
+            <button
+              key={idx}
+              className="px-2 py-1.5 rounded-lg transition-all font-semibold flex items-center space-x-1 hover:bg-purple-50 hover:text-purple-700 text-slate-600 group relative"
+            >
+              <span>{rt.icon}</span>
+              <span>{rt.time}</span>
+              
+              {/* Tooltip */}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-slate-900 text-white p-2 rounded-xl shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                <div className="font-bold text-sm text-purple-300 mb-1">{rt.label}</div>
+                <div className="text-[10px] leading-relaxed">{rt.desc}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+
 
         {/* Group 3: 4 Layer Switches */}
         <div className="flex flex-wrap items-center gap-1.5">
@@ -889,24 +925,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               </button>
             )}
 
-            {/* 2.5D Isometric 3D Axonometric Tilt Toggle */}
-            {viewMode === "2.5d" && (
-              <button
-                onClick={() => {
-                  setIsIsometricPerspective(!isIsometricPerspective);
-                  setSvgViewBox("0 0 690 972.5");
-                }}
-                className={`ml-1 px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center space-x-1 ${
-                  isIsometricPerspective
-                    ? "bg-blue-600 text-white shadow-2xs"
-                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                }`}
-                title="切换等轴测 3D 透视角度"
-              >
-                <Layers className="w-3 h-3" />
-                <span>{isIsometricPerspective ? "3D 等轴测透视" : "正交俯视平面"}</span>
-              </button>
-            )}
+            
           </div>
 
           {/* Compass & Solar Altitude Badge */}
@@ -950,7 +969,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
           <div className="relative w-full flex-1 h-full min-h-[520px] overflow-hidden">
             {/* 3D WebGL Canvas Layer */}
             <div 
-              style={{ display: viewMode === "3d" ? "block" : "none" }}
+              style={{ visibility: "visible", opacity: 1, position: "relative" }}
               className="w-full h-full min-h-[520px] bg-[#0b0f17] relative"
             >
               <div ref={mountRef} className="w-full h-full min-h-[520px] cursor-grab active:cursor-grabbing" />
@@ -990,294 +1009,7 @@ export const Spatial3DViewer: React.FC<Spatial3DViewerProps> = ({ selectedStyleI
               </div>
             </div>
 
-            {/* 2.5D Isometric BIM Blueprint Layer */}
-            <div 
-              style={{ display: viewMode === "2.5d" ? "flex" : "none" }}
-              className="w-full h-full min-h-[520px] p-6 bg-slate-950 relative overflow-hidden items-center justify-center perspective-[1200px]"
-            >
-              {/* Dynamic Sunlight / Microclimate Filter Overlay */}
-              <div 
-                className={`absolute inset-0 pointer-events-none transition-all duration-700 z-10 ${
-                  timeOfDay === "morning"
-                    ? "bg-gradient-to-t from-amber-500/15 via-amber-200/5 to-transparent"
-                    : timeOfDay === "noon"
-                    ? "bg-white/10"
-                    : timeOfDay === "sunset"
-                    ? "bg-gradient-to-t from-orange-600/20 via-amber-600/10 to-purple-950/20"
-                    : "bg-slate-950/60"
-                }`} 
-              />
-
-              <div 
-                style={{
-                  backgroundColor: currentTheme.floorSvg,
-                  transform: isIsometricPerspective ? "rotateX(52deg) rotateZ(-40deg) scale(0.92)" : "none",
-                  transformStyle: "preserve-3d",
-                  transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)"
-                }}
-                className="relative w-full max-w-[580px] aspect-[690/972.5] rounded-3xl border-4 border-slate-700/80 p-4 shadow-2xl overflow-hidden flex flex-col justify-between"
-              >
-                {/* SVG Isometric Architectural Floor Plan with Dynamic ViewBox Transition & CSS Variables */}
-                <svg 
-                  ref={svgRef}
-                  viewBox={svgViewBox} 
-                  style={{
-                    filter: timeFilterStyle,
-                    transition: "viewBox 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease"
-                  }}
-                  className="w-full h-full select-none"
-                >
-                  {/* Outer Perimeter Wall */}
-                  <rect x="6" y="6" width="678" height="960.5" fill="none" stroke={currentTheme.wallEdgeSvg} strokeWidth="12" rx="14" />
-
-                  {/* Main Spine Wall */}
-                  <line x1="330" y1="6" x2="330" y2="966.5" stroke={currentTheme.wallEdgeSvg} strokeWidth="10" strokeLinecap="round" />
-
-                  {/* (1) 生活阳台 YARD */}
-                  <g onClick={() => {
-                    setIsOverviewMode(false);
-                    setActiveZone(ZONES_DATA[5]);
-                    setSvgViewBox(ZONE_VIEWBOXES["yard"]);
-                  }} className="cursor-pointer group">
-                    <rect
-                      x="12" y="12" width="312" height="154"
-                      fill={activeZone.id === "yard" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "yard" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
-                      strokeWidth="2.5" rx="8"
-                      className="transition-all"
-                    />
-                    <rect x="25" y="25" width="70" height="65" fill="#e2e8f0" stroke="#475569" strokeWidth="2" rx="4" />
-                    <circle cx="60" cy="57" r="18" fill="none" stroke="#64748b" strokeWidth="2" />
-                    <rect x="105" y="25" width="45" height="40" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5" rx="3" />
-                    <text x="127" y="50" fill="#2563eb" fontSize="11" fontWeight="bold" textAnchor="middle">扫拖机</text>
-                    <text x="168" y="120" fill={selectedStyleId === "dark-luxury" ? "#ffffff" : "#1e293b"} fontSize="17" fontWeight="bold" textAnchor="middle">生活阳台 YARD (3.8㎡)</text>
-                  </g>
-
-                  <line x1="12" y1="170" x2="330" y2="170" stroke={currentTheme.wallEdgeSvg} strokeWidth="8" />
-
-                  {/* (2) 独立卫浴室 BATH 1 */}
-                  <g onClick={() => {
-                    setIsOverviewMode(false);
-                    setActiveZone(ZONES_DATA[7]);
-                    setSvgViewBox(ZONE_VIEWBOXES["bathroom"]);
-                  }} className="cursor-pointer group">
-                    <rect
-                      x="12" y="175" width="312" height="220"
-                      fill={activeZone.id === "bathroom" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "bathroom" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
-                      strokeWidth="2.5" rx="8"
-                      className="transition-all"
-                    />
-                    <rect x="25" y="190" width="140" height="60" fill="#ffffff" stroke={currentTheme.accentSvg} strokeWidth="2" rx="3" />
-                    <ellipse cx="95" cy="220" rx="32" ry="20" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5" />
-                    <rect x="235" y="190" width="55" height="75" fill="#ffffff" stroke="#64748b" strokeWidth="2" rx="16" />
-                    <line x1="25" y1="290" x2="150" y2="290" stroke="#38bdf8" strokeWidth="3" strokeDasharray="4 2" />
-                    <text x="168" y="340" fill={selectedStyleId === "dark-luxury" ? "#ffffff" : "#1e293b"} fontSize="18" fontWeight="bold" textAnchor="middle">独立卫浴 BATH 1 (4.5㎡)</text>
-                  </g>
-
-                  {/* 900mm Bath Doorway */}
-                  <path d="M 330 350 A 55 55 0 0 0 275 405" fill="none" stroke="#2563eb" strokeWidth="2" strokeDasharray="4 4" />
-                  <line x1="330" y1="350" x2="275" y2="405" stroke={currentTheme.wallEdgeSvg} strokeWidth="3" />
-
-                  <line x1="12" y1="405" x2="330" y2="405" stroke={currentTheme.wallEdgeSvg} strokeWidth="8" />
-
-                  {/* (3) 极客多功能书房 STUDY */}
-                  <g onClick={() => {
-                    setIsOverviewMode(false);
-                    setActiveZone(ZONES_DATA[6]);
-                    setSvgViewBox(ZONE_VIEWBOXES["study"]);
-                  }} className="cursor-pointer group">
-                    <rect
-                      x="12" y="410" width="312" height="180"
-                      fill={activeZone.id === "study" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "study" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
-                      strokeWidth="2.5" rx="8"
-                      className="transition-all"
-                    />
-                    <rect x="55" y="435" width="190" height="70" fill={currentTheme.woodSvg} stroke="#c2410c" strokeWidth="2" rx="4" />
-                    <rect x="75" y="415" width="65" height="12" fill="#0f172a" stroke={currentTheme.accentSvg} strokeWidth="2" rx="2" />
-                    <rect x="150" y="415" width="65" height="12" fill="#0f172a" stroke={currentTheme.accentSvg} strokeWidth="2" rx="2" />
-                    <circle cx="150" cy="535" r="22" fill="#e2e8f0" stroke="#475569" strokeWidth="2" />
-                    <text x="168" y="490" fill={selectedStyleId === "dark-luxury" ? "#ffffff" : "#1e293b"} fontSize="17" fontWeight="bold" textAnchor="middle">极客工位 STUDY (6.8㎡)</text>
-                  </g>
-
-                  <line x1="12" y1="595" x2="245" y2="595" stroke={currentTheme.wallEdgeSvg} strokeWidth="8" />
-                  <line x1="315" y1="595" x2="330" y2="595" stroke={currentTheme.wallEdgeSvg} strokeWidth="8" />
-
-                  {/* (4) 主卧深睡空间 BEDROOM */}
-                  <g onClick={() => {
-                    setIsOverviewMode(false);
-                    setActiveZone(ZONES_DATA[8]);
-                    setSvgViewBox(ZONE_VIEWBOXES["bedroom"]);
-                  }} className="cursor-pointer group">
-                    <rect
-                      x="12" y="600" width="312" height="360"
-                      fill={activeZone.id === "bedroom" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "bedroom" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
-                      strokeWidth="2.5" rx="8"
-                      className="transition-all"
-                    />
-                    <rect x="70" y="650" width="175" height="210" fill="#ffffff" stroke={currentTheme.wallEdgeSvg} strokeWidth="2.5" rx="6" />
-                    <rect x="85" y="660" width="60" height="40" fill={currentTheme.sofaSvg} rx="4" />
-                    <rect x="170" y="660" width="60" height="40" fill={currentTheme.sofaSvg} rx="4" />
-                    <rect x="18" y="650" width="40" height="260" fill={currentTheme.wallSvg} stroke="#94a3b8" strokeWidth="1.5" rx="2" />
-                    <text x="38" y="780" fill="#64748b" fontSize="12" fontWeight="bold" transform="rotate(-90 38 780)">通顶定制衣柜 (深600mm)</text>
-                    <text x="168" y="900" fill={selectedStyleId === "dark-luxury" ? "#ffffff" : "#1e293b"} fontSize="19" fontWeight="bold" textAnchor="middle">主卧深睡 BEDROOM (14.2㎡)</text>
-                  </g>
-
-                  {/* 900mm Bedroom Doorway */}
-                  <path d="M 330 610 A 65 65 0 0 1 265 675" fill="none" stroke="#2563eb" strokeWidth="2" strokeDasharray="4 4" />
-                  <line x1="330" y1="610" x2="265" y2="675" stroke={currentTheme.wallEdgeSvg} strokeWidth="3" />
-
-                  {/* (5) 入户玄关 ENTRANCE */}
-                  <g onClick={() => {
-                    setIsOverviewMode(false);
-                    setActiveZone(ZONES_DATA[0]);
-                    setSvgViewBox(ZONE_VIEWBOXES["entrance"]);
-                  }} className="cursor-pointer group">
-                    <rect
-                      x="335" y="12" width="343" height="142"
-                      fill={activeZone.id === "entrance" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "entrance" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
-                      strokeWidth="2.5" rx="8"
-                      className="transition-all"
-                    />
-                    <rect x="580" y="20" width="85" height="40" fill="#e2e8f0" stroke="#475569" strokeWidth="2" rx="3" />
-                    <circle cx="660" cy="40" r="8" fill={currentTheme.accentSvg} />
-                    <text x="506" y="95" fill={selectedStyleId === "dark-luxury" ? "#ffffff" : "#1e293b"} fontSize="18" fontWeight="bold" textAnchor="middle">入户玄关 ENTRANCE (3.8㎡)</text>
-                  </g>
-
-                  {/* (6) 开放式厨房 KITCHEN */}
-                  <g onClick={() => {
-                    setIsOverviewMode(false);
-                    setActiveZone(ZONES_DATA[1]);
-                    setSvgViewBox(ZONE_VIEWBOXES["kitchen"]);
-                  }} className="cursor-pointer group">
-                    <rect
-                      x="335" y="162" width="343" height="145"
-                      fill={activeZone.id === "kitchen" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "kitchen" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
-                      strokeWidth="2.5" rx="8"
-                      className="transition-all"
-                    />
-                    <rect x="345" y="170" width="323" height="50" fill="#ffffff" stroke="#475569" strokeWidth="2" rx="3" />
-                    <circle cx="420" cy="195" r="14" fill="#334155" />
-                    <circle cx="460" cy="195" r="14" fill="#334155" />
-                    <rect x="550" y="180" width="60" height="30" fill="#eff6ff" stroke="#3b82f6" strokeWidth="1.5" rx="3" />
-                    <text x="506" y="270" fill={selectedStyleId === "dark-luxury" ? "#ffffff" : "#1e293b"} fontSize="18" fontWeight="bold" textAnchor="middle">开放厨房 KITCHEN (5.2㎡)</text>
-                  </g>
-
-                  {/* (7) 核心餐厅与中岛 DINING */}
-                  <g onClick={() => {
-                    setIsOverviewMode(false);
-                    setActiveZone(ZONES_DATA[2]);
-                    setSvgViewBox(ZONE_VIEWBOXES["dining"]);
-                  }} className="cursor-pointer group">
-                    <rect
-                      x="335" y="315" width="343" height="175"
-                      fill={activeZone.id === "dining" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "dining" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
-                      strokeWidth="2.5" rx="8"
-                      className="transition-all"
-                    />
-                    <rect x="406" y="350" width="180" height="90" fill="#ffffff" stroke={currentTheme.wallEdgeSvg} strokeWidth="2.5" rx="6" />
-                    <rect x="417" y="390" width="20" height="10" fill={currentTheme.accentSvg} rx="2" />
-                    <circle cx="450" cy="460" r="14" fill={currentTheme.sofaSvg} stroke="#475569" strokeWidth="1.5" />
-                    <circle cx="496" cy="460" r="14" fill={currentTheme.sofaSvg} stroke="#475569" strokeWidth="1.5" />
-                    <circle cx="542" cy="460" r="14" fill={currentTheme.sofaSvg} stroke="#475569" strokeWidth="1.5" />
-                    <text x="506" y="405" fill={selectedStyleId === "dark-luxury" ? "#ffffff" : "#1e293b"} fontSize="18" fontWeight="bold" textAnchor="middle">核心餐厅 DINING (4.2㎡)</text>
-                  </g>
-
-                  {/* (8) 景观客厅 LIVING */}
-                  <g onClick={() => {
-                    setIsOverviewMode(false);
-                    setActiveZone(ZONES_DATA[3]);
-                    setSvgViewBox(ZONE_VIEWBOXES["living"]);
-                  }} className="cursor-pointer group">
-                    <rect
-                      x="335" y="495" width="343" height="325"
-                      fill={activeZone.id === "living" && !isOverviewMode ? "#dbeafe" : currentTheme.wallSvg}
-                      stroke={activeZone.id === "living" && !isOverviewMode ? currentTheme.accentSvg : currentTheme.wallEdgeSvg}
-                      strokeWidth="2.5" rx="8"
-                      className="transition-all"
-                    />
-                    <rect x="355" y="600" width="85" height="180" fill={currentTheme.sofaSvg} stroke={currentTheme.wallEdgeSvg} strokeWidth="2.5" rx="8" />
-                    <rect x="660" y="540" width="10" height="200" fill="#64748b" stroke="#94a3b8" strokeWidth="2" rx="2" />
-                    <rect x="640" y="520" width="22" height="240" fill={currentTheme.woodSvg} stroke="#475569" strokeWidth="1.5" rx="3" />
-                    <text x="506" y="570" fill={selectedStyleId === "dark-luxury" ? "#ffffff" : "#1e293b"} fontSize="20" fontWeight="bold" textAnchor="middle">景观客厅 LIVING (13.5㎡)</text>
-                  </g>
-
-                  <line x1="335" y1="825" x2="678" y2="825" stroke={currentTheme.accentSvg} strokeWidth="6" />
-
-                  {/* (9) 南向休闲阳台 BALCONY */}
-                  <g onClick={() => {
-                    setIsOverviewMode(false);
-                    setActiveZone(ZONES_DATA[4]);
-                    setSvgViewBox(ZONE_VIEWBOXES["balcony"]);
-                  }} className="cursor-pointer group">
-                    <rect
-                      x="335" y="830" width="343" height="130"
-                      fill={activeZone.id === "balcony" && !isOverviewMode ? "#e0f2fe" : "#f0f9ff"}
-                      stroke={activeZone.id === "balcony" && !isOverviewMode ? "#0284c7" : "#38bdf8"}
-                      strokeWidth="2.5" rx="8"
-                      className="transition-all"
-                    />
-                    <rect x="370" y="855" width="180" height="35" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" rx="4" />
-                    <circle cx="420" cy="910" r="14" fill="#bae6fd" stroke="#0284c7" strokeWidth="1.5" />
-                    <circle cx="500" cy="910" r="14" fill="#bae6fd" stroke="#0284c7" strokeWidth="1.5" />
-                    <text x="506" y="935" fill="#0369a1" fontSize="18" fontWeight="bold" textAnchor="middle">南向阳台 BALCONY (4.2㎡)</text>
-                  </g>
-
-                  {/* Interactive SVG Layers */}
-                  {showDimensions && (
-                    <g className="animate-fadeIn">
-                      <line x1="12" y1="2" x2="678" y2="2" stroke="#059669" strokeWidth="2.5" />
-                      <rect x="290" y="0" width="110" height="20" fill="#ecfdf5" stroke="#059669" rx="4" />
-                      <text x="345" y="14" fill="#065f46" fontSize="12" fontWeight="bold" textAnchor="middle">总宽 6,900 mm</text>
-                      <line x1="684" y1="12" x2="684" y2="960" stroke="#2563eb" strokeWidth="2.5" />
-                      <rect x="630" y="470" width="55" height="22" fill="#eff6ff" stroke="#2563eb" rx="4" transform="rotate(-90 657 481)" />
-                      <text x="657" y="485" fill="#1e40af" fontSize="12" fontWeight="bold" textAnchor="middle" transform="rotate(-90 657 485)">总深 9,725 mm</text>
-                    </g>
-                  )}
-
-                  {showMEP && (
-                    <g className="animate-fadeIn">
-                      <rect x="580" y="25" width="80" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
-                      <text x="620" y="40" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ DB配电总箱</text>
-                      <rect x="575" y="525" width="80" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
-                      <text x="615" y="540" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ 15A 空调点</text>
-                      <rect x="575" y="660" width="80" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
-                      <text x="615" y="675" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ SMATV 电视点</text>
-                      <rect x="110" y="420" width="85" height="22" fill="#fef3c7" stroke="#d97706" rx="6" />
-                      <text x="152" y="435" fill="#92400e" fontSize="11" fontWeight="bold" textAnchor="middle">⚡ 8组桌面插座</text>
-                    </g>
-                  )}
-
-                  {showSmartHome && (
-                    <g className="animate-fadeIn">
-                      <rect x="560" y="120" width="95" height="22" fill="#f3e8ff" stroke="#9333ea" rx="6" />
-                      <text x="607" y="135" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">🤖 D200人脸锁</text>
-                      <rect x="420" y="550" width="90" height="22" fill="#f3e8ff" stroke="#9333ea" rx="6" />
-                      <text x="465" y="565" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">🤖 FP2 客厅雷达</text>
-                      <rect x="180" y="420" width="90" height="22" fill="#f3e8ff" stroke="#9333ea" rx="6" />
-                      <text x="225" y="435" fill="#6b21a8" fontSize="11" fontWeight="bold" textAnchor="middle">🤖 FP2 坐姿雷达</text>
-                    </g>
-                  )}
-
-                  {showMicroclimate && (
-                    <g className="animate-fadeIn">
-                      <path d="M 506 960 L 460 750" stroke="#f59e0b" strokeWidth="4" strokeDasharray="8 4" opacity="0.8" />
-                      <path d="M 420 960 L 380 780" stroke="#f59e0b" strokeWidth="4" strokeDasharray="8 4" opacity="0.8" />
-                      <rect x="410" y="770" width="180" height="24" fill="#fef3c7" stroke="#d97706" rx="6" />
-                      <text x="500" y="786" fill="#92400e" fontSize="12" fontWeight="bold" textAnchor="middle">☀️ SSE 165° 晨曦漫射</text>
-                      <path d="M 506 820 C 506 500, 480 300, 168 160" fill="none" stroke="#10b981" strokeWidth="4" strokeDasharray="6 6" />
-                      <polygon points="160,160 175,152 172,168" fill="#10b981" />
-                    </g>
-                  )}
-                </svg>
-              </div>
             </div>
-          </div>
 
           {/* Bottom 9 Zones Selector */}
           <div className="relative p-2.5 bg-white border-t border-slate-200 flex items-center">

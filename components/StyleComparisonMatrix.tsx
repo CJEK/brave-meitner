@@ -62,100 +62,33 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
   // Sorted Styles based on user customized weights
   const rankedStyles = [...STYLES_DATA].sort((a, b) => calculateScore(b) - calculateScore(a));
 
-  // High-Fidelity SVG Vector Rendering for A/B Visual Comparison
+  // High-Fidelity Photorealistic Renderings for A/B Visual Comparison
   const renderRoomIllustration = (style: StyleData, roomIdx: number, isRightLayer: boolean) => {
-    const isDark = style.id === "dark-luxury" || style.id === "italian-luxury";
-    const isJapandi = style.id === "japandi-wood";
-    const isCyber = style.id === "industrial-cyber";
-
-    const wallColor = isDark ? "#1c1917" : isJapandi ? "#fafaf9" : isCyber ? "#334155" : "#f8fafc";
-    const floorBg = isDark ? "#09090b" : isJapandi ? "#fef3c7" : isCyber ? "#1e293b" : "#ede8df";
-    const sofaColor = isDark ? "#451a03" : isJapandi ? "#e7d8c9" : isCyber ? "#0284c7" : "#e2e8f0";
-    const accentLight = isDark ? "#f59e0b" : isJapandi ? "#d4a373" : isCyber ? "#06b6d4" : "#38bdf8";
-    const tvBorder = isDark ? "#78350f" : isJapandi ? "#b45309" : isCyber ? "#0284c7" : "#64748b";
-
+    const IMAGE_DB: Record<string, string[]> = {
+      "tech-minimal": [
+        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1593640408182-31c70c8268f5?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "dark-luxury": [
+        "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1611262588024-d12430b98920?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "japandi-wood": [
+        "https://images.unsplash.com/photo-1583847268964-b28ce8f52859?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1585412727339-54e4bae3bbf9?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "industrial-cyber": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=1200&q=80"
+      ]
+    };
+    const imageUrl = IMAGE_DB[style.id] ? IMAGE_DB[style.id][roomIdx] : IMAGE_DB["tech-minimal"][roomIdx];
     return (
-      <svg viewBox="0 0 800 500" className="w-full h-full object-cover">
-        {/* Background Wall Texture & Mood Ambient */}
-        <rect x="0" y="0" width="800" height="500" fill={wallColor} />
-        {/* Architectural Linear Wall Fluting / Sintered Stone Veins */}
-        {isDark && (
-          <g opacity="0.25">
-            <line x1="80" y1="0" x2="200" y2="400" stroke="#f59e0b" strokeWidth="1.5" />
-            <line x1="300" y1="0" x2="450" y2="400" stroke="#f59e0b" strokeWidth="1" />
-            <line x1="600" y1="0" x2="720" y2="400" stroke="#f59e0b" strokeWidth="2" />
-          </g>
-        )}
-        {isJapandi && (
-          <g opacity="0.3">
-            {[...Array(20)].map((_, i) => (
-              <line key={i} x1={i * 40} y1="0" x2={i * 40} y2="360" stroke="#d4a373" strokeWidth="2" strokeDasharray="6 3" />
-            ))}
-          </g>
-        )}
-        {isCyber && (
-          <g opacity="0.2">
-            {[...Array(12)].map((_, i) => (
-              <line key={i} x1="0" y1={i * 35} x2="800" y2={i * 35} stroke="#06b6d4" strokeWidth="1" />
-            ))}
-          </g>
-        )}
-
-        {/* Floor Horizon & Large Format Tiles */}
-        <rect x="0" y="360" width="800" height="140" fill={floorBg} />
-        {/* Floor Herringbone / Tile Grout Lines */}
-        <g opacity="0.35">
-          <line x1="0" y1="400" x2="800" y2="400" stroke="#94a3b8" strokeWidth="1.5" />
-          <line x1="0" y1="450" x2="800" y2="450" stroke="#94a3b8" strokeWidth="1.5" />
-          {[...Array(16)].map((_, i) => (
-            <line key={i} x1={i * 50} y1="360" x2={i * 50 + 30} y2="500" stroke="#94a3b8" strokeWidth="1" />
-          ))}
-        </g>
-
-        {/* 85" Ultra-Slim Floating TV Screen with LED Ambient Halo */}
-        <rect x="180" y="70" width="440" height="210" rx="8" fill="#0f172a" stroke={tvBorder} strokeWidth="3" />
-        {/* TV Screen Display Mockup */}
-        <rect x="188" y="78" width="424" height="194" rx="4" fill={isDark ? "#1e1b4b" : isJapandi ? "#451a03" : isCyber ? "#082f49" : "#0f172a"} />
-        <text x="400" y="175" textAnchor="middle" fill="#ffffff" fontSize="18" fontWeight="bold" opacity="0.95">
-          {style.roomRenderings[roomIdx].title}
-        </text>
-        <text x="400" y="205" textAnchor="middle" fill={accentLight} fontSize="12" fontWeight="bold" fontFamily="monospace">
-          {style.roomRenderings[roomIdx].visualStyle}
-        </text>
-
-        {/* Floating TV Console & Dolby Atmos Soundbar */}
-        <rect x="140" y="300" width="520" height="35" rx="6" fill={isDark ? "#292524" : isJapandi ? "#d4a373" : isCyber ? "#0284c7" : "#ffffff"} stroke="#64748b" strokeWidth="1.5" />
-        <rect x="280" y="288" width="240" height="10" rx="3" fill="#0f172a" />
-
-        {/* Main Furniture: Ergonomic Linen/Leather Sofa */}
-        <g transform="translate(100, 320)">
-          <rect x="0" y="20" width="320" height="60" rx="8" fill={sofaColor} stroke="#475569" strokeWidth="2" />
-          <rect x="10" y="0" width="300" height="30" rx="6" fill={sofaColor} stroke="#475569" strokeWidth="1.5" />
-          <rect x="25" y="15" width="80" height="25" rx="4" fill={accentLight} opacity="0.9" />
-          <rect x="120" y="15" width="80" height="25" rx="4" fill="#ffffff" opacity="0.8" />
-        </g>
-
-        {/* Monolithic Sintered Stone Island Dining Bar */}
-        <g transform="translate(520, 270)">
-          <rect x="0" y="0" width="220" height="110" rx="8" fill={isDark ? "#09090b" : isJapandi ? "#e8d5b5" : isCyber ? "#cbd5e1" : "#ffffff"} stroke="#64748b" strokeWidth="2" />
-          <line x1="0" y1="18" x2="220" y2="18" stroke={accentLight} strokeWidth="3" />
-          <text x="110" y="65" textAnchor="middle" fill={isDark ? "#ffffff" : "#0f172a"} fontSize="11" fontWeight="bold">
-            {isDark ? "劳伦黑金岩板中岛" : isJapandi ? "原木一体挑台" : "可丽耐无缝中岛"}
-          </text>
-        </g>
-
-        {/* Spotlight Beams from Ceiling */}
-        <polygon points="220,42 160,300 280,300" fill="url(#spotlight-grad)" opacity="0.15" />
-        <polygon points="580,42 500,270 660,270" fill="url(#spotlight-grad)" opacity="0.15" />
-
-        {/* Gradients */}
-        <defs>
-          <linearGradient id="spotlight-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.8" />
-            <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-      </svg>
+      <img src={imageUrl} alt={style.name} className="w-full h-full object-cover select-none pointer-events-none" />
     );
   };
 
@@ -357,10 +290,10 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
               </span>
               <div className="max-w-xs bg-white/95 p-3 rounded-xl border border-slate-200 shadow-lg backdrop-blur-md space-y-1 text-right">
                 <div className="text-xs font-black text-slate-900">
-                  {styleB.roomRenderings[compareRoomIndex].title}
+                  {styleB.roomRenderings[compareRoomIndex]?.title || `${styleB.name} - 空间表现`}
                 </div>
                 <div className="text-[11px] text-slate-600 line-clamp-2">
-                  {styleB.roomRenderings[compareRoomIndex].description}
+                  {styleB.roomRenderings[compareRoomIndex]?.description || `全景展示 ${styleB.name} 的材质、光影与生活氛围。`}
                 </div>
               </div>
             </div>
@@ -380,10 +313,10 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
               </span>
               <div className="max-w-xs bg-white/95 p-3 rounded-xl border border-slate-200 shadow-lg backdrop-blur-md space-y-1 text-left">
                 <div className="text-xs font-black text-slate-900">
-                  {styleA.roomRenderings[compareRoomIndex].title}
+                  {styleA.roomRenderings[compareRoomIndex]?.title || `${styleA.name} - 空间表现`}
                 </div>
                 <div className="text-[11px] text-slate-600 line-clamp-2">
-                  {styleA.roomRenderings[compareRoomIndex].description}
+                  {styleA.roomRenderings[compareRoomIndex]?.description || `全景展示 ${styleA.name} 的材质、光影与生活氛围。`}
                 </div>
               </div>
             </div>
@@ -423,10 +356,10 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-700 font-medium leading-relaxed">
-              {styleA.roomRenderings[compareRoomIndex].description}
+              {styleA.roomRenderings[compareRoomIndex]?.description || `全景展示 ${styleA.name} 的材质、光影与生活氛围。`}
             </p>
             <div className="flex flex-wrap gap-1 pt-1">
-              {styleA.roomRenderings[compareRoomIndex].focalPoints.map((fp, i) => (
+              {(styleA.roomRenderings[compareRoomIndex]?.focalPoints || ["材质质感", "光影氛围", "定制收纳"]).map((fp, i) => (
                 <span key={i} className="text-[9px] bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
                   {fp}
                 </span>
@@ -445,10 +378,10 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
               </span>
             </div>
             <p className="text-xs text-slate-700 font-medium leading-relaxed">
-              {styleB.roomRenderings[compareRoomIndex].description}
+              {styleB.roomRenderings[compareRoomIndex]?.description || `全景展示 ${styleB.name} 的材质、光影与生活氛围。`}
             </p>
             <div className="flex flex-wrap gap-1 pt-1">
-              {styleB.roomRenderings[compareRoomIndex].focalPoints.map((fp, i) => (
+              {(styleB.roomRenderings[compareRoomIndex]?.focalPoints || ["材质质感", "光影氛围", "定制收纳"]).map((fp, i) => (
                 <span key={i} className="text-[9px] bg-white text-slate-700 px-2 py-0.5 rounded border border-slate-200 font-medium">
                   {fp}
                 </span>
@@ -655,7 +588,18 @@ export const StyleComparisonMatrix: React.FC<StyleComparisonMatrixProps> = ({
               {/* Render Active Selected Style Radar Polygon */}
               {(() => {
                 const s = STYLES_DATA.find((x) => x.id === selectedStyleId) || STYLES_DATA[0];
-                const r = s.radarScores;
+                
+                const baseR = s.radarScores;
+                // Dynamically warp radar chart based on user's selected preference weights
+                const r = {
+                  openness: Math.min(100, Math.max(20, baseR.openness * (weightOpenness / 5))),
+                  maintenance: Math.min(100, Math.max(20, baseR.maintenance * (weightMaintenance / 5))),
+                  costEfficiency: Math.min(100, Math.max(20, baseR.costEfficiency * (weightBudget / 5))),
+                  geekSynergy: Math.min(100, Math.max(20, baseR.geekSynergy * (weightGeek / 5))),
+                  sleepComfort: Math.min(100, Math.max(20, baseR.sleepComfort * (weightSleep / 5))),
+                  resaleValue: baseR.resaleValue // Resale value is market-driven, less affected by personal preference
+                };
+
                 const maxR = 90; // 52% radius
                 const cx = 270;
                 const cy = 170;

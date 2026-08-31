@@ -65,11 +65,11 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       enName: "Compact Luxury Bathroom",
       sqm: 4.2,
       physicalConstraint: "4.2 ㎡ 紧凑干湿分离 · 1.8m 贯穿大台面 · 跨越壁挂马桶上方",
-      title: "1.8m 贯穿式岩板大台面直接跨越马桶上方",
+      title: "1.5m 贯穿式岩板大台面直接跨越马桶上方 (含检修口)",
       subtitle: "4.2 ㎡ 空间极致利用 · 满墙除雾大镜柜 · 暗装枪灰瀑布龙头",
-      description: "针对 4.2 ㎡ 紧凑卫浴，定制 1.8m 劳伦白金耐污岩板台面横向贯穿，直接延伸至壁挂马桶上方形成整体置物平台；搭配满墙触控智能除雾镜柜与 10mm 极窄黑框长虹玻璃淋浴隔断。",
+      description: "针对 4.2 ㎡ 紧凑卫浴，定制 1.8m 劳伦白金耐污岩板台面横向贯穿，延伸至壁挂马桶上方形成连体平台（含活动检修盖板，杜绝后期维修砸砖）；搭配满墙触控智能除雾镜柜与 10mm 极窄黑框长虹玻璃淋浴隔断。",
       materials: [
-        { name: "贯穿大台面", spec: "1800mm 劳伦白金岩板 (横向无缝延伸跨越直接位于壁挂马桶上方)" },
+        { name: "贯穿大台面", spec: "1500mm 劳伦白金岩板 (含水箱隐形可拆卸检修盖板)" },
         { name: "满墙大镜柜", spec: "通宽 LED 智能恒温除雾镜门 (双向 45° 侧发光，上下 3000K 洗墙)" },
         { name: "暗装五金", spec: "暗装枪灰拉丝瀑布入墙式冷热龙头 (防溅静音出水，精铜主体)" },
         { name: "淋浴隔断", spec: "10mm 超窄黑框超白长虹防爆钢化玻璃推拉门 (干湿严格分离)" }
@@ -111,15 +111,15 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       physicalConstraint: "15.2 ㎡ 公区 · 净开间 3.6m · 2.5m~2.7m 黄金视距",
       title: "85 吋超薄贴墙巨幕与 2.5m 黄金观影视距",
       subtitle: "15.2 ㎡ 紧凑公区 · 2.6m 直排沙发 · 南向阳台晨光漫射",
-      description: "85寸壁画电视超薄贴平东墙，搭配 2.6m 直排科技布浅灰沙发，精准形成 2.5m 黄金观影视距（不仰头、视界角 40°）。公区通铺太空灰微水泥，南向景观阳台引入晨曦漫射光。",
+      description: "85寸壁画电视超薄贴平东墙，搭配 2.6m 直排科技布浅灰沙发，精准形成 2.5m 黄金观影视距（不仰头、视界角 40°）。公区通铺太空灰零吸水岩板，南向景观阳台引入晨曦漫射光。",
       materials: [
         { name: "电视安装", spec: "85吋超薄壁画电视贴平东墙 (厚度≤100mm，中心高 1050mm)" },
-        { name: "公区地面", spec: "太空灰纳米耐污微水泥 (全屋整体无缝通铺，厚度 3mm)" },
+        { name: "公区地面", spec: "太空灰纳米耐污零吸水岩板 (全屋整体无缝通铺，厚度 3mm)" },
         { name: "极简沙发", spec: "2600mm 浅灰直排科技布沙发 (深度 900mm，离地悬空 180mm)" },
         { name: "通畅动线", spec: "沙发与中岛间保留 1100mm 宽敞走道，直通南向景观阳台" }
       ],
       lighting: "3500K 隐藏反光槽间接洗天花 + 沙发上方 3000K 深防眩聚焦射灯 (UGR<10)",
-      focalPoints: ["85寸贴平东墙巨幕", "2.5m 黄金观影视距", "1.1m 通畅无障碍过道", "微水泥无缝通铺"],
+      focalPoints: ["85寸贴平东墙巨幕", "2.5m 黄金观影视距", "1.1m 通畅无障碍过道", "零吸水岩板无缝通铺"],
       views: [
         {
           key: "A",
@@ -337,7 +337,7 @@ const ROOM_RENDERINGS_DATABASE: { [styleId: string]: StyleRoomData[] } = {
       subtitle: "15.2 ㎡ 奢雅公区 · 2700K 琥珀洗墙光 · 焦糖真皮沙发",
       description: "整面天然黑胡桃木木饰面电视墙内嵌 85 吋大屏，劳伦黑金岩板地台下透出暖金色 2700K 琥珀微光，搭配焦糖色真皮沙发，营造顶级私享雪茄吧与高定会客沉浸氛围。",
       materials: [
-        { name: "背景饰面", spec: "天然黑胡桃实木木皮饰面 (哑光开放漆，木纹深邃温润)" },
+        { name: "背景饰面", spec: "深邃黑胡桃纹理 PET 肤感板 (PUR无缝封边，热带防潮不发霉)" },
         { name: "悬浮地台", spec: "进口劳伦黑金哑光岩板 (细金纹理，莫氏硬度6级)" },
         { name: "奢雅沙发", spec: "焦糖色头层半苯胺真皮沙发 (宽厚扶手，极高包覆感)" },
         { name: "氛围灯光", spec: "黑光深防眩超窄光束角射灯 (UGR<6，见光不见灯)" }
@@ -541,6 +541,67 @@ export const VisualGallery: React.FC<VisualGalleryProps> = ({
   return (
     <div className="space-y-6">
       {/* 1. Header with Style Synchronizer & 5 Room Tabs */}
+      
+      {/* Before / After Handover Slider */}
+      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 relative overflow-hidden">
+        <h3 className="text-xl font-black text-slate-900 flex items-center">
+          <Eye className="w-5 h-5 mr-2 text-blue-600" />
+          交付毛坯 (Before) vs 精装落地 (After) 沉浸对比
+        </h3>
+        <p className="text-xs text-slate-500">拖动滑块，直观感受开发商原装白墙瓷砖与最终定制落地的生活品质差异。</p>
+        
+        <div className="relative w-full aspect-[16/9] md:aspect-[21/9] rounded-2xl overflow-hidden group border border-slate-200">
+          <input
+            type="range"
+            min="0"
+            max="100"
+            defaultValue="50"
+            onChange={(e) => {
+              const slider = document.getElementById('before-after-slider');
+              if (slider) slider.style.width = `${e.target.value}%`;
+              const handle = document.getElementById('before-after-handle');
+              if (handle) handle.style.left = `${e.target.value}%`;
+            }}
+            className="absolute inset-0 z-30 opacity-0 cursor-ew-resize w-full h-full"
+          />
+          
+          {/* After Image (Background) */}
+          <div className="absolute inset-0 bg-slate-900">
+            <img 
+              src={ROOM_RENDERINGS_DATABASE[selectedStyleId][0].views[0].imageUrl} 
+              alt="After" 
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute top-4 right-4 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md">
+              AFTER (落地精装)
+            </div>
+          </div>
+          
+          {/* Before Image (Clipped Foreground) */}
+          <div id="before-after-slider" className="absolute inset-0 bg-slate-200 border-r-2 border-white pointer-events-none" style={{ width: '50%' }}>
+            <div className="w-full h-full relative overflow-hidden bg-slate-100 flex items-center justify-center">
+              {/* Simulate empty room with CSS/SVG */}
+              <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80" alt="空毛坯房" className="w-[200%] h-full object-cover opacity-80" />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
+                <Building2 className="w-8 h-8 mb-2 opacity-50" />
+                <span className="text-xs font-bold tracking-widest uppercase">Developer Handover</span>
+                <span className="text-[10px] mt-1">空荡白墙 · 裸露电箱 · 无氛围光</span>
+              </div>
+            </div>
+            <div className="absolute top-4 left-4 bg-slate-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-md shadow-md">
+              BEFORE (开发商毛坯)
+            </div>
+          </div>
+          
+          {/* Slider Handle */}
+          <div id="before-after-handle" className="absolute top-0 bottom-0 w-1 bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)] pointer-events-none z-20" style={{ left: '50%' }}>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full shadow-lg border-2 border-slate-200 flex items-center justify-center text-slate-400">
+              <code className="text-xs font-black">↔</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
           <div>

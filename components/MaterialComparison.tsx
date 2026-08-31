@@ -62,7 +62,7 @@ export const MaterialComparison: React.FC = () => {
             最新装修材料综合对比与清洁耐污测评
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            横向评估抗指纹纳米肤感板、天然木皮、岩板、可丽耐与微水泥的清洁难易度、触感温度与耐用性
+            横向评估抗指纹纳米肤感板、PET防潮肤感板、岩板、可丽耐与零吸水岩板的清洁难易度、触感温度与耐用性
           </p>
         </div>
       </div>

@@ -111,55 +111,36 @@ export const ErgonomicsAndLighting: React.FC = () => {
                   <span className="text-blue-700 font-semibold">总面宽: 1,500 mm / 净高: 2,550 mm</span>
                 </div>
 
-                <svg viewBox="0 0 500 340" className="w-full h-auto max-w-[480px]">
-                  {/* Background Wall */}
-                  <rect x="20" y="20" width="460" height="300" fill="#ffffff" stroke="#e2e8f0" strokeWidth="1" rx="8" />
+                
+                <div className="relative w-full max-w-[480px] aspect-[5/3] rounded-xl overflow-hidden shadow-sm border border-slate-200">
+                  <img 
+                    src="https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1000&q=80" 
+                    alt="卫浴大平台实景" 
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Overlay Ergonomic Annotations */}
+                  <div className="absolute inset-0 bg-slate-900/10 pointer-events-none"></div>
+                  
+                  {/* Eye Level */}
+                  <div className="absolute top-[28%] left-0 w-full border-t border-dashed border-amber-500"></div>
+                  <div className="absolute top-[28%] left-2 -mt-4 bg-amber-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">视线 1550mm</div>
 
-                  {/* Ceiling Drop & Upper Wash Light */}
-                  <rect x="20" y="20" width="460" height="25" fill="#f1f5f9" />
-                  <line x1="40" y1="48" x2="460" y2="48" stroke="#3b82f6" strokeWidth="2.5" strokeDasharray="4 2" />
-                  <text x="250" y="42" textAnchor="middle" fill="#1e40af" fontSize="10" fontWeight="bold">天花隐藏式 3500K 洗墙漫射柔光槽</text>
+                  {/* Mirror */}
+                  <div className="absolute top-[10%] left-[10%] right-[10%] h-[40%] border-2 border-blue-500/50 rounded-lg flex items-center justify-center bg-blue-900/10 backdrop-blur-[2px]">
+                    <div className="bg-white/90 text-slate-900 text-[10px] sm:text-xs font-bold px-2 py-1 rounded shadow-sm">通宽除雾大镜柜 (1500×850)</div>
+                  </div>
 
-                  {/* Full-width Mirror Cabinet (1500mm × 850mm) */}
-                  <rect x="40" y="55" width="420" height="110" fill="#f8fafc" stroke="#3b82f6" strokeWidth="1.5" rx="4" />
-                  <rect x="44" y="59" width="412" height="102" fill="#eff6ff" rx="2" />
-                  <text x="250" y="112" textAnchor="middle" fill="#0f172a" fontSize="12" fontWeight="bold">满墙通宽智能恒温除雾大镜柜 (1500 × 850 mm)</text>
-                  <text x="250" y="130" textAnchor="middle" fill="#475569" fontSize="9">双面无影美妆补光 · 内置 150mm 超薄多层储物与吹风机插座</text>
+                  {/* Basin Countertop */}
+                  <div className="absolute top-[60%] left-0 w-full border-t border-dashed border-emerald-500"></div>
+                  <div className="absolute top-[60%] left-2 -mt-4 bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">洗手台 870mm (不弯腰)</div>
 
-                  {/* Lower Wash Light under Mirror */}
-                  <line x1="40" y1="170" x2="460" y2="170" stroke="#3b82f6" strokeWidth="2.5" strokeDasharray="4 2" />
+                  {/* Socket */}
+                  <div className="absolute top-[50%] right-[15%] flex flex-col items-center">
+                    <div className="w-3 h-3 bg-red-500 rounded-sm border border-white"></div>
+                    <div className="bg-slate-900 text-white text-[8px] px-1 mt-1 rounded">吹风机插座</div>
+                  </div>
+                </div>
 
-                  {/* Human Ergonomic Sight Line */}
-                  <line x1="20" y1="95" x2="480" y2="95" stroke="#d97706" strokeWidth="1" strokeDasharray="2 2" />
-                  <text x="30" y="90" fill="#b45309" fontSize="8" fontWeight="bold">人眼视线 1550mm</text>
-
-                  {/* Monolithic Floating Countertop (Extending over Toilet) */}
-                  {/* Main Sink Zone (Left 900mm) */}
-                  <rect x="40" y="195" width="260" height="28" fill="#e2e8f0" stroke="#64748b" strokeWidth="1.5" rx="2" />
-                  {/* Seamless Integrated Basin */}
-                  <path d="M 90 200 Q 170 232 250 200 Z" fill="#ffffff" stroke="#3b82f6" strokeWidth="1.5" />
-                  <text x="170" y="215" textAnchor="middle" fill="#1e40af" fontSize="9" fontWeight="bold">无缝一体防溅大单盆</text>
-
-                  {/* Extended Ledge over Toilet Tank (Right 600mm) */}
-                  <rect x="300" y="195" width="160" height="28" fill="#cbd5e1" stroke="#64748b" strokeWidth="1.5" rx="2" />
-                  <text x="380" y="212" textAnchor="middle" fill="#854d0e" fontSize="8" fontWeight="bold">马桶上方延伸大置物台</text>
-
-                  {/* Smart Toilet Illustration (Right) */}
-                  <rect x="340" y="230" width="80" height="70" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.5" rx="6" />
-                  <text x="380" y="270" textAnchor="middle" fill="#334155" fontSize="9" fontWeight="bold">智能马桶</text>
-
-                  {/* Vanity Floating Base Cabinet (Left) */}
-                  <rect x="40" y="223" width="260" height="45" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1" rx="2" />
-                  <text x="170" y="250" textAnchor="middle" fill="#475569" fontSize="9">双层防水储物大抽屉</text>
-
-                  {/* Floating Toe Kick Glow */}
-                  <line x1="40" y1="272" x2="300" y2="272" stroke="#d97706" strokeWidth="2.5" />
-                  <text x="170" y="295" textAnchor="middle" fill="#b45309" fontSize="8" fontWeight="bold">悬空 350mm · 感应地脚悬浮夜灯</text>
-
-                  {/* Dimension Annotations */}
-                  <text x="15" y="210" fill="#2563eb" fontSize="9" fontWeight="bold">870mm</text>
-                  <text x="485" y="110" fill="#2563eb" fontSize="9" fontWeight="bold">850mm</text>
-                </svg>
               </div>
 
               {/* Right Detailed Engineering Spec Points (5 Columns) */}

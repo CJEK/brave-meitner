@@ -160,7 +160,7 @@ export const PROPERTY_DATA: PropertyMetadata = {
   spaPriceMYR: 581812.00,
   loanMYR: 465449.00,
   unitType: "Type B (Right Unit 右向户型)",
-  unitDirection: "南偏东南主朝向 (SSE 165°)",
+  unitDirection: "南偏东南 165° (☀️ 全天温和明亮漫射光，下午无刺眼暴晒，空调省电 20%)",
   builtUpSqFt: 648,
   builtUpSqm: 60.22,
   overallWidthMm: 6900,
@@ -182,7 +182,7 @@ export const ERGONOMIC_SPECS: ErgonomicSpec[] = [
     category: "卫浴大平台与镜面",
     name: "悬浮洗手台面高度",
     standardMm: "860 - 880 mm",
-    rationale: "依据亚洲成人站姿洗漱重心测算，相比传统 800mm 台面减少弯腰倾角 22°，彻底消除长期刷牙洗脸腰椎酸痛。",
+    rationale: "护肤品全摊开也不挤；870mm 黄金高度，弯腰洗脸水不流到手肘，彻底告别腰酸痛。",
     impactOnHealth: "预防腰肌劳损，洗漱时水滴自然顺流台盆，杜绝流向手臂与地面。",
     diagramNote: "离地悬空 350mm，下方无立柱无卫生死角，方便扫地机出入与脚底站立容差。"
   },
@@ -205,7 +205,7 @@ export const ERGONOMIC_SPECS: ErgonomicSpec[] = [
   {
     category: "公区纵深动线",
     name: "入户至客厅主通道净宽",
-    standardMm: "950 - 1100 mm",
+    standardMm: "950mm 中央主通道 (两人迎面错身，无需侧身礼让)",
     rationale: "保留单人快速通过与双人交会避让舒适度，完全不被凸出家具阻碍。",
     impactOnHealth: "开阔心理呼吸感，消除狭长走廊的幽闭压迫感，双手提大件行李或快递畅行无阻。",
     diagramNote: "玄关鞋柜采用 350mm 超薄进深，反弹器无把手设计避免勾衣服。"
@@ -213,15 +213,15 @@ export const ERGONOMIC_SPECS: ErgonomicSpec[] = [
   {
     category: "极客工作站 (1+1)",
     name: "双电机升降桌与显示器视距",
-    standardMm: "升降 650-1250 mm / 桌面深度 800 mm",
-    rationale: "800mm 加深桌面确保 27-34寸 4K 屏幕处于 60-70cm 人眼最佳焦距，视线俯角 15°。",
+    standardMm: "升降 650-1250 mm / 桌面深度 600 mm",
+    rationale: "放 2 台 27寸大显示器 + 笔记本 + 音箱后，手臂依然能完全平放舒展",
     impactOnHealth: "坐立交替办公促进下肢血液循环，彻底保护颈椎生理曲度与眼部肌肉。",
-    diagramNote: "工位侧面定制 600mm 深度大高柜，下层直通无底板可推入 28寸大行李箱。"
+    diagramNote: "工位侧面定制 600mm 深度大高柜，下层直通无底板设计 (可直接推入 2 个 28寸大托运行李箱与折叠婴儿车)。"
   },
   {
     category: "主卧深睡区",
     name: "悬浮大床与床侧走道通行净宽",
-    standardMm: "床高 500 mm / 床侧通道 750 mm+",
+    standardMm: "床高 500 mm / 床侧通道 550 mm+ (极限适应户型)",
     rationale: "500mm 床垫高度让起坐时大腿与小腿呈 90° 自然垂直，起卧毫不费力。",
     impactOnHealth: "夜间起夜步态平稳，床底内缩 150mm 防踢脚，感应地脚夜灯微光引导不刺眼。",
     diagramNote: "满墙衣柜深度 600mm，预留 1000mm 开门与更衣回旋空间。"
@@ -293,7 +293,7 @@ export const MATERIAL_COMPARISONS: MaterialComparisonItem[] = [
   },
   {
     id: "mat-wood",
-    name: "天然温润白橡木/黑胡桃实木木皮饰面",
+    name: "高分子防潮 PET 肤感板 (激光无缝封边，杜绝热带湿气发霉)",
     category: "特色背景墙与台面隔板",
     cleanabilityScore: 85,
     warmthScore: 99,
@@ -361,7 +361,7 @@ export const MATERIAL_COMPARISONS: MaterialComparisonItem[] = [
   },
   {
     id: "mat-microcement",
-    name: "纳米耐污微水泥 (Nano Microtopping)",
+    name: "15mm超薄零吸水岩板 (Sintered Stone)",
     category: "地面与墙面无缝通铺",
     cleanabilityScore: 88,
     warmthScore: 86,
@@ -423,13 +423,13 @@ export const ZONES_DATA: ZoneData[] = [
     sqft: 40.9,
     dimensionsMm: "1200 × 3160 mm",
     clearHeightMm: 2700,
-    description: "入户垂直收纳鞋塔，靠右墙定制 350mm 进深顶天立地悬浮柜（底部悬空 180mm + 3000K 感应灯带），容量 40+ 双；中间 450mm 高置物台内嵌无线充，保留 850mm 宽敞净过道。",
+    description: "入户垂直收纳鞋塔，靠右墙定制 350mm 进深顶天立地悬浮柜（底部悬空 180mm + 3000K 感应灯带），容量 42 双日常鞋靴 + 戴森吸尘器 + 扫地机器人自动集尘基站；中间 450mm 高置物台内嵌无线充，保留 850mm 宽敞净过道。",
     coordinates: { x: 50, y: 0, w: 50, h: 16 },
     ergonomicHighlights: [
-      "350mm 进深顶天立地悬浮玄关柜（容量 40+ 双鞋）",
+      "350mm 进深顶天立地悬浮玄关柜（容量 42 双日常鞋靴 + 戴森吸尘器 + 扫地机器人自动集尘基站鞋）",
       "底部悬空 180mm（常穿鞋无需开门直接踢入，内嵌 3000K 感应灯带）",
       "中间镂空置物台 450mm 高（集成无线充电板与隐形弱电箱检修口）",
-      "玄关过道净宽保持 850mm（双手提重物/换鞋畅通无阻）"
+      "玄关通道宽 850mm (🛍️ 提着两个大购物袋进门也不碰墙)"
     ],
     mepPoints: ["DB配电总箱 1组", "入户照明双控开关", "弱电光纤 Fiber Socket"],
     smartDevices: ["Aqara D200 智能人脸门锁", "人体存在传感器 FP2", "超薄无边框智能开关 H1"]
@@ -451,7 +451,7 @@ export const ZONES_DATA: ZoneData[] = [
       "吊柜底板嵌入 4000K 高显色手扫操作灯（消灭切菜暗角）",
       "预留极窄边超白玻璃推拉门轨道（半封闭/全开敞自由切换）"
     ],
-    mepPoints: ["厨房水槽上下水 1组", "烟道排气口", "大功率动力插座 3组", "厨下RO电源"],
+    mepPoints: ["厨房水槽上下水 1组", "烟道排气口", "厨房家电专用大功率插座 (3组，同时开微波炉与烤箱不跳闸)", "厨下RO电源"],
     smartDevices: ["Aqara 水浸传感器", "烟雾与天然气报警器", "厨下智能净水龙头", "手扫感应柜底线性灯"]
   },
   {
@@ -467,8 +467,8 @@ export const ZONES_DATA: ZoneData[] = [
     ergonomicHighlights: [
       "1400×800mm 轻薄岩板餐桌（4 人就餐，侧向延伸 300mm 吧台）",
       "400mm 进深薄型餐边柜水吧塔（咖啡机与日常营养补剂专属台面）",
-      "下层预留小厨宝与 1000G RO 直饮水出水系统",
-      "餐椅离岛台 800mm 舒适就坐与通行容差"
+      "下层预留全屋除铁锈前置与直出纯净水 (即开即饮、泡茶无水垢、洗脸不过敏)",
+      "餐椅后方保留 800mm (身后有人坐着吃饭，依然能轻松走过去厨房)"
     ],
     mepPoints: ["岛台预埋升降轨道插座", "吧台下电热水器/RO直饮水点", "吊灯回路"],
     smartDevices: ["智能轨道插座（带电量统计）", "氛围色温吊灯 2700K-5000K", "智能即热饮水机"]
@@ -481,7 +481,7 @@ export const ZONES_DATA: ZoneData[] = [
     sqft: 145.3,
     dimensionsMm: "3400 × 3970 mm",
     clearHeightMm: 2750,
-    description: "微水泥/哑光木饰面电视墙，2800mm 长度悬浮地台（离地 150mm，管线全预埋）；2200mm 低矮直排皮质沙发（背高≤800mm 保障视线开阔），双眼防眩深杯射灯+极窄磁吸轨道灯。",
+    description: "零吸水岩板/哑光木饰面电视墙，2800mm 长度悬浮地台（离地 150mm，管线全预埋）；2200mm 低矮直排皮质沙发（背高≤800mm 保障视线开阔），双眼防眩深杯射灯+极窄磁吸轨道灯。",
     coordinates: { x: 50, y: 50, w: 50, h: 35 },
     ergonomicHighlights: [
       "2800mm 悬浮电视地台（离地 150mm，扫地机畅行，管线内嵌入墙）",
@@ -505,7 +505,7 @@ export const ZONES_DATA: ZoneData[] = [
     ergonomicHighlights: [
       "地面铺设高耐候炭化防腐木地板 + 鹅卵石自然收边",
       "单人户外休闲椅 + 轻便小圆几（晨起冥想与晚风品酒）",
-      "南偏东 165° 零西晒，全天候柔和漫射自然采光",
+      "全天温和明亮漫射光，下午无刺眼暴晒，阳台无惧热带酷暑",
       "24 楼高空无遮挡俯瞰新山城市天际线与新加坡远景"
     ],
     mepPoints: ["防水双联插座 1组", "地漏排水平面", "外墙吸顶防水灯"],
@@ -519,15 +519,15 @@ export const ZONES_DATA: ZoneData[] = [
     sqft: 73.2,
     dimensionsMm: "2400 × 2830 mm",
     clearHeightMm: 2700,
-    description: "极窄黑框折叠长虹玻璃移门（日常开敞融入公区视觉放大 20%，专注闭合形成隔音舱）；1600×750mm 双电机升降桌 + 加厚双屏悬臂区 + 隐藏理线架；通顶书柜嵌入 900×1900mm 隐藏翻板床（Murphy Bed）。",
+    description: "极窄黑框折叠长虹玻璃移门（日常开敞融入公区视觉放大 20%，专注闭合形成隔音舱）；1600×600mm 双电机升降桌 + 加厚双屏悬臂区 + 隐藏理线架；通顶书柜嵌入 900×1900mm 隐藏翻板床（Murphy Bed）。",
     coordinates: { x: 0, y: 17, w: 50, h: 18 },
     ergonomicHighlights: [
       "极窄黑框折叠长虹玻璃移门（日常开敞空间放大20%，闭合声学降噪办公）",
-      "1600×750mm 双电机升降桌（加厚双屏悬臂区 + 下方隐藏理线架）",
+      "1600×600mm 双电机升降桌（加厚双屏悬臂区 + 下方隐藏理线架）",
       "通顶书柜内嵌 900×1900mm 隐藏式翻板床（Murphy Bed，兼顾偶有留宿需求）",
       "工位专属 4000K Ra>95 护眼照明 + 声学吸音毛毡护墙"
     ],
-    mepPoints: ["15A 空调动力点", "千兆网络接口 RJ45", "工位 8组高密度抗涌浪插座", "顶面吸顶磁吸轨道"],
+    mepPoints: ["空调专用防烧线插座 (15A 大功率动力点)", "千兆网络接口 RJ45", "工位 8组高密度抗涌浪插座", "顶面吸顶磁吸轨道"],
     smartDevices: ["智能升降桌联动控制器", "Aqara 智能窗帘控制器", "屏幕挂灯与背光流光溢彩联动", "入座自动亮屏传感器"]
   },
   {
@@ -541,10 +541,10 @@ export const ZONES_DATA: ZoneData[] = [
     description: "居中放置 1800×2000mm King Size 悬浮大床（床底内嵌 2700K 暖光感应起夜灯）；内侧定制 2400mm 宽顶天立地一字型哑光衣柜（深600mm，分长衣/抽屉/大行李箱位）；南向大窗配置双层电动窗帘（纱帘+100%全遮光）。",
     coordinates: { x: 0, y: 61, w: 50, h: 39 },
     ergonomicHighlights: [
-      "1800×2000mm King Size 悬浮大床（床底内嵌 2700K 暖光起夜感应灯）",
+      "1800×2000mm King Size 悬浮大床（床底内嵌 五星级酒店温馨起夜柔光 (2700K，不刺眼、不影响伴侣)）",
       "2400mm 宽顶天立地一字型哑光衣柜（进深 600mm，长衣/叠放/行李箱分区）",
       "南向大窗双层电动导轨（高透光纱帘 + 100% 遮光静音布帘）",
-      "床侧保留 750mm 舒适更衣与通行通道"
+      "床侧保留 550mm 舒适更衣与通行通道"
     ],
     mepPoints: ["15A 空调专用点", "床头双侧 USB+Type-C 插座", "满墙衣柜内置 LED 变压器预留"],
     smartDevices: ["Aqara 智能双轨电动窗帘 (纱帘+全遮光)", "睡眠监测雷达", "床底感应起夜小夜灯", "智能温控空调联动"]
@@ -666,8 +666,8 @@ export const BIOHACKING_ECOLOGY: BiohackingEcology = {
     {
       stage: "第二道：厨下+水吧双端直饮",
       location: "厨房水槽下方 ➔ 餐厅餐边柜水吧",
-      device: "1000G 大通量反渗透 (RO) 直饮净水机",
-      spec: "0.0001 微米 RO 膜，双出水龙头，直连手冲咖啡与即热饮水机",
+      device: "直出纯净水 RO 系统 (即开即饮、泡茶无水垢、洗脸不过敏)",
+      spec: "母婴级直饮水，告别马来西亚自来水黄锈泥沙，咖啡口感全面提升",
       healthBenefit: "滤除重金属、抗生素与微塑料，TDS<10，保障日常纯净饮水与咖啡风味萃取。"
     },
     {
@@ -723,7 +723,7 @@ export const BUDGET_WEIGHT_DISTRIBUTION: BudgetWeightCategory[] = [
     category: "硬装土建与吊顶油漆",
     percentage: 15,
     budgetMYR: 9350,
-    itemsSummary: "轻钢龙骨耐潮石膏板平顶、反光灯槽、艺术涂料/微水泥、地砖打底"
+    itemsSummary: "轻钢龙骨耐潮石膏板平顶、反光灯槽、艺术涂料/零吸水岩板、地砖打底"
   },
   {
     category: "移动家具与软装配饰",
@@ -755,7 +755,7 @@ export const STYLES_DATA: StyleData[] = [
     keyMaterials: [
       { category: "全屋柜体", item: "纳米抗指纹超哑 PET 肤感板", spec: "德国雷诺丽特 / 激光封边 / E0级" },
       { category: "台面系统", item: "劳伦白金超薄岩板 / 可丽耐一体台面", spec: "12mm厚度 / 耐磨耐高温零渗透" },
-      { category: "特色木作", item: "天然浅白橡木实木木皮", spec: "开放漆工艺 / 温润触感" },
+      { category: "特色木作", item: "浅白橡木纹理 PET 防潮板", spec: "开放漆工艺 / 温润触感" },
       { category: "卫浴大镜", item: "超薄智能触控除雾大镜柜", spec: "全宽 1500mm / 4000K 无影美妆光" },
       { category: "灯光系统", item: "UGR<10 深防眩射灯 + 线性洗墙灯槽", spec: "RA>97高显色 / 3000K-4000K 智能可调" }
     ],
@@ -838,7 +838,7 @@ export const STYLES_DATA: StyleData[] = [
     ],
     keyMaterials: [
       { category: "全屋柜体", item: "深灰纳米抗指纹肤感板 + 黑色铝框灰玻", spec: "E0级环保 / 内置感应暖光灯槽" },
-      { category: "特色木作", item: "天然黑胡桃实木木皮饰面", spec: "哑光开放漆质感 / 纹理温润" },
+      { category: "特色木作", item: "深邃黑胡桃纹理 PET 肤感板", spec: "哑光开放漆质感 / 纹理温润" },
       { category: "台面系统", item: "进口劳伦黑金哑光岩板", spec: "细金纹理 / 莫氏硬度6级" },
       { category: "卫浴大镜", item: "灰玻金属窄框智能恒温除雾大镜柜", spec: "1500mm 贯穿式 / 琥珀背光" },
       { category: "灯光系统", item: "黑光深防眩射灯 + 2700K 琥珀灯带", spec: "黑光反射杯 / 见光不见灯" }
@@ -916,15 +916,15 @@ export const STYLES_DATA: StyleData[] = [
     palette: [
       { name: "暖白/燕麦色 (Warm Cream)", hex: "#fef3c7", role: "墙面乳胶漆与天花" },
       { name: "浅白橡木 (White Oak)", hex: "#d4a373", role: "全屋定制柜体、餐桌与地板" },
-      { name: "微水泥米灰 (Warm Microcement)", hex: "#e7e5e4", role: "地面与局部特色背景墙" },
+      { name: "零吸水岩板米灰 (Warm Microcement)", hex: "#e7e5e4", role: "地面与局部特色背景墙" },
       { name: "棉麻原色 (Natural Linen)", hex: "#f5f5f4", role: "窗帘、布艺沙发与床品" },
       { name: "晨曦暖阳 (Sunrise Amber)", hex: "#fef08a", role: "3000K 柔和漫射环境光" }
     ],
     keyMaterials: [
-      { category: "全屋木作", item: "天然浅白橡木木皮 + 暖白抗指纹门板", spec: "圆弧倒角工艺 / 无外露把手" },
+      { category: "全屋木作", item: "浅白橡木纹理 PET 肤感板 + 暖白抗指纹门板", spec: "圆弧倒角工艺 / 无外露把手" },
       { category: "台面系统", item: "米白色无缝人造石 / 哑光石英石", spec: "食品级防污 / 圆润边角" },
       { category: "卫浴大镜", item: "白橡木边框超大触控除雾镜柜", spec: "1500mm 通体大平台 / 3000K 暖光" },
-      { category: "地面工程", item: "浅橡木人字拼 SPC / 暖色微水泥", spec: "无醛耐磨 / 踩踏脚感温润" },
+      { category: "地面工程", item: "浅橡木人字拼 SPC / 暖色零吸水岩板", spec: "无醛耐磨 / 踩踏脚感温润" },
       { category: "灯光系统", item: "超薄无边框防眩筒灯 + 见光不见灯漫射槽", spec: "3000K 暖白光 / 柔和漫射" }
     ],
     lightingStrategy: {
@@ -957,13 +957,13 @@ export const STYLES_DATA: StyleData[] = [
         title: "暖白人造石无缝大平台与橡木除雾镜柜",
         description: "米白无缝一体台盆大平台温润如玉，横跨至马桶上方，白橡木边框智能镜柜散发 3000K 治愈暖光，彻底消灭卫生死角。",
         visualStyle: "可丽耐米白一体台 + 白橡木镜柜 + 3000K 柔光",
-        focalPoints: ["无缝一体成型大单盆", "贯穿马桶置物大平台", "白橡木暖光镜柜", "防潮抗菌微水泥墙"],
+        focalPoints: ["无缝一体成型大单盆", "贯穿马桶置物大平台", "白橡木暖光镜柜", "防潮抗菌零吸水岩板墙"],
         gradientPreview: "from-amber-900/50 via-stone-800 to-amber-950"
       },
       {
         room: "客厅与中岛吧台",
         title: "暖阳原木公区与水磨石咖啡吧",
-        description: "暖白微水泥地面通铺，白橡木中岛台搭配米白棉麻直排羽绒沙发，阳光透过香格里拉帘在木地板上形成光栅斑驳。",
+        description: "暖白零吸水岩板地面通铺，白橡木中岛台搭配米白棉麻直排羽绒沙发，阳光透过香格里拉帘在木地板上形成光栅斑驳。",
         visualStyle: "浅橡木色 + 暖白乳胶漆 + 3000K 漫反射柔光",
         focalPoints: ["白橡木水磨石中岛", "香格里拉遮光帘", "燕麦色棉麻沙发", "和纸艺术吊灯"],
         gradientPreview: "from-amber-900/50 via-stone-800 to-amber-950"
@@ -990,22 +990,22 @@ export const STYLES_DATA: StyleData[] = [
     id: "industrial-cyber",
     name: "硬核工业未来感",
     enName: "Industrial Cyber & Futurism",
-    tagline: "微水泥原灰 · 不锈钢金属 · 极客未来主义",
+    tagline: "零吸水岩板原灰 · 不锈钢金属 · 极客未来主义",
     badge: "硬核工程师 / 赛博个性",
     themeColor: "#06b6d4",
     accentColor: "#22d3ee",
     bgGradient: "from-slate-950 via-zinc-900 to-cyan-950",
-    description: "专为硬核开发者与极客打造。采用原色微水泥墙地一体化、拉丝不锈钢定制中岛、明装工业黑色磁吸轨道与局部 Cyberpunk 霓虹色彩，彰显不羁的科技探索精神。",
+    description: "专为硬核开发者与极客打造。采用原色零吸水岩板墙地一体化、拉丝不锈钢定制中岛、明装工业黑色磁吸轨道与局部 Cyberpunk 霓虹色彩，彰显不羁的科技探索精神。",
     coreVibe: "硬朗、前沿、充满张力，像极了硅谷顶尖实验室与赛博空间基地。",
     palette: [
-      { name: "水泥原灰 (Concrete Grey)", hex: "#71717a", role: "微水泥墙地一体化艺术涂层" },
+      { name: "水泥原灰 (Concrete Grey)", hex: "#71717a", role: "零吸水岩板墙地一体化艺术涂层" },
       { name: "拉丝不锈钢 (Brushed Stainless)", hex: "#94a3b8", role: "中岛台面、橱柜局部与门套" },
       { name: "哑光碳黑 (Matte Black)", hex: "#18181b", role: "工业铝合金型材、明装风管" },
       { name: "赛博电光蓝 (Cyber Electric Blue)", hex: "#06b6d4", role: "RGB 流光电竞与工位背光" },
       { name: "工业警戒橙 (Signal Orange)", hex: "#f97316", role: "局部五金构件与电线装饰点缀" }
     ],
     keyMaterials: [
-      { category: "墙面地面", item: "进口工业纳米耐污微水泥", spec: "耐磨抗裂防油污 / 无缝一体通铺" },
+      { category: "墙面地面", item: "进口零吸水工业岩板", spec: "耐磨抗裂防油污 / 无缝一体通铺" },
       { category: "全屋柜体", item: "深灰金属覆膜板 + 黑色金属冲孔网", spec: "抗指纹涂层 / 工业机械锁扣" },
       { category: "台面系统", item: "304食品级拉丝不锈钢台面 / 岩板", spec: "一体无缝折弯焊接 / 工业机械感" },
       { category: "卫浴大镜", item: "拉丝不锈钢边框超宽除雾大镜柜", spec: "1500mm 贯穿式 / 冷白与赛博蓝光" },
@@ -1019,13 +1019,13 @@ export const STYLES_DATA: StyleData[] = [
     },
     pros: [
       "极具个性与视觉冲击力，独一无二的极客科技居住体验",
-      "不锈钢与微水泥极其耐磨耐造，不怕刮蹭，越用越有复古工业质感",
+      "不锈钢与零吸水岩板极其耐磨耐造，不怕刮蹭，越用越有复古工业质感",
       "工位与三屏多设备科技感契合度 100%",
-      "无缝一体化微水泥地面，完全没有瓷砖拼缝的清扫烦恼"
+      "无缝一体化零吸水岩板地面，完全没有瓷砖拼缝的清扫烦恼"
     ],
     cons: [
       "整体色调偏冷峻硬朗，对居家温馨感要求高的人群可能需要适应",
-      "微水泥施工对基层平整度与施工师傅的手工手艺极其严苛"
+      "零吸水岩板施工对基层平整度与施工师傅的手工手艺极其严苛"
     ],
     radarScores: {
       openness: 89,
@@ -1038,18 +1038,18 @@ export const STYLES_DATA: StyleData[] = [
     roomRenderings: [
       {
         room: "卫浴大平台与大镜面",
-        title: "微水泥一体大平台与拉丝金属大镜柜",
-        description: "微水泥无缝台面延伸至马桶上方，搭配拉丝不锈钢水龙头与防雾大镜柜，赛博蓝微光地脚引导，极具机械未来感。",
-        visualStyle: "微水泥原灰 + 拉丝不锈钢 + 4000K 极客光",
-        focalPoints: ["微水泥一体贯穿大平台", "拉丝不锈钢暗装龙头", "超宽除雾镜柜", "赛博地脚微光灯"],
+        title: "零吸水岩板一体大平台与拉丝金属大镜柜",
+        description: "零吸水岩板无缝台面延伸至马桶上方，搭配拉丝不锈钢水龙头与防雾大镜柜，赛博蓝微光地脚引导，极具机械未来感。",
+        visualStyle: "零吸水岩板原灰 + 拉丝不锈钢 + 4000K 极客光",
+        focalPoints: ["零吸水岩板一体贯穿大平台", "拉丝不锈钢暗装龙头", "超宽除雾镜柜", "赛博地脚微光灯"],
         gradientPreview: "from-zinc-900 via-slate-950 to-cyan-950"
       },
       {
         room: "客厅与中岛吧台",
-        title: "拉丝不锈钢中岛与微水泥科技客厅",
-        description: "一体成型拉丝不锈钢中岛，灰色微水泥墙面，黑色金属工业管线明装走向，搭配黑色科技布模块沙发与超薄大屏。",
+        title: "拉丝不锈钢中岛与零吸水岩板科技客厅",
+        description: "一体成型拉丝不锈钢中岛，灰色零吸水岩板墙面，黑色金属工业管线明装走向，搭配黑色科技布模块沙发与超薄大屏。",
         visualStyle: "水泥灰 + 金属不锈钢 + 赛博冷蓝线性光",
-        focalPoints: ["不锈钢一体中岛", "微水泥艺术墙面", "明装黑色工业轨道", "金属冲孔收纳柜"],
+        focalPoints: ["不锈钢一体中岛", "零吸水岩板艺术墙面", "明装黑色工业轨道", "金属冲孔收纳柜"],
         gradientPreview: "from-zinc-950 via-slate-900 to-cyan-950"
       },
       {
@@ -1063,8 +1063,8 @@ export const STYLES_DATA: StyleData[] = [
       {
         room: "主卧深睡区",
         title: "未来太空舱极简深睡舱",
-        description: "深灰微水泥床头背景墙，嵌入式暗藏地脚引导灯带，黑色哑光金属悬浮床架与深灰遮光电动帘，科技感与隔音一流。",
-        visualStyle: "微水泥灰 + 黑色金属 + 3000K 暗调睡眠光",
+        description: "深灰零吸水岩板床头背景墙，嵌入式暗藏地脚引导灯带，黑色哑光金属悬浮床架与深灰遮光电动帘，科技感与隔音一流。",
+        visualStyle: "零吸水岩板灰 + 黑色金属 + 3000K 暗调睡眠光",
         focalPoints: ["金属悬浮静音床", "太空舱暗门衣柜", "声学吸音毛毡板", "智能微气候温控"],
         gradientPreview: "from-slate-950 via-zinc-900 to-blue-950"
       }
@@ -1074,307 +1074,234 @@ export const STYLES_DATA: StyleData[] = [
 
 export const SMART_SCENES_DATA: SmartScene[] = [
   {
-    id: "deep-work",
-    name: "沉浸编程模式",
-    enName: "Deep Code & Focus",
-    icon: "Code",
-    description: "书房升降桌自动调整至专注高度，工位照明切换为 4200K 冷白无频闪高显色，百叶窗微调 45° 避免反光，空调恒温 23.5°C。",
-    trigger: "按下工位无线开关 / Siri语音: 'Hey Siri, 进入专注模式'",
+    id: "morning-routine",
+    name: "07:30 ☀️ 晨间自然苏醒",
+    enName: "Morning Routine",
+    icon: "Sun",
+    description: "主卧电动纱帘缓缓拉开 50%，温和晨光唤醒，走入卫生间，镜前自然光均匀照亮脸庞。",
+    trigger: "定时 07:30 / 睡眠雷达检测到起床",
     actions: [
-      { zone: "极客工作站", device: "智能升降桌", state: "升至 74cm", details: "人体工学坐姿预设" },
-      { zone: "极客工作站", device: "工位顶灯与屏幕挂灯", state: "色温 4200K / 亮度 90%", details: "Ra>98 高显色无频闪" },
-      { zone: "极客工作站", device: "智能电动百叶帘", state: "偏转 45°", details: "消除屏幕反光与眩光" },
-      { zone: "全屋公区", device: "Aqara 空调伴侣 P3", state: "制冷 23.5°C / 静音风", details: "保持头脑清醒" },
-      { zone: "客厅/玄关", device: "公区照明与音响", state: "调暗至 15% / 屏蔽通知", details: "零打扰免打扰状态" }
+      { zone: "主卧", device: "双层遮光窗帘", state: "纱帘开启 50%", details: "引入南向 165° 晨光，告别刺耳闹钟" },
+      { zone: "卫浴", device: "大平台镜柜光", state: "3500K 唤醒光", details: "无阴影自然光，看清妆容不色偏" },
+      { zone: "厨房", device: "智能即热饮水机", state: "预热至 45°C", details: "起床即喝温水，唤醒肠胃" }
     ]
   },
   {
-    id: "cinema-av",
-    name: "沉浸影音模式",
-    enName: "Cinema & AV Time",
-    icon: "Tv",
-    description: "客厅 85寸电视开启，主灯全灭，电视背景悬浮灯带亮起 20% 柔光保护视力，南向阳台全遮光帘自动闭合，音响切换至杜比全景声。",
-    trigger: "电视遥控开启 / 电视功耗检测到>100W",
+    id: "breakfast-time",
+    name: "08:30 🍳 高效营养早餐",
+    enName: "Breakfast Time",
+    icon: "Coffee",
+    description: "从冰箱拿食材 ➔ 水槽清洗 ➔ 灶台煎蛋，L 型台面 2 步内完成，咖啡机在餐边水吧一键出咖啡。",
+    trigger: "走入厨房区域 (FP2 毫米波雷达检测)",
     actions: [
-      { zone: "客厅", device: "客厅无主灯主回路", state: "完全关闭 0%", details: "消除天花杂散反光" },
-      { zone: "客厅", device: "电视背景流光溢彩灯", state: "开启 20% 暖琥珀色", details: "缓解暗室大屏视疲劳" },
-      { zone: "南向阳台", device: "电动遮光帘", state: "完全闭合 100%", details: "隔绝外部光线与轻微噪音" },
-      { zone: "中岛吧台", device: "中岛吧台下悬浮灯", state: "微光 10% 保持动线安全", details: "方便中途起身倒水" }
+      { zone: "厨房/餐厅", device: "餐厅吊灯与轨道灯", state: "亮度 80% / 4000K", details: "提升食欲与烹饪安全" },
+      { zone: "餐厅", device: "餐边吧台插座", state: "通电激活", details: "咖啡机预热就绪" },
+      { zone: "公区", device: "背景音响", state: "播放 Morning Jazz", details: "开启元气一天" }
+    ]
+  },
+  {
+    id: "deep-work",
+    name: "09:30 💻 极客专注办公",
+    enName: "Deep Work Flow",
+    icon: "Code",
+    description: "书房极窄移门拉上隔绝杂音，双电机升降桌升至站立高度，双屏办公不反光。",
+    trigger: "坐入书房工位 (座椅压力传感/雷达进入)",
+    actions: [
+      { zone: "书房", device: "电动升降工作台", state: "自动升至 105cm", details: "进入站立办公，促进血液循环" },
+      { zone: "书房", device: "工位顶灯与挂灯", state: "白天专注办公白光 (4200K)", details: "照亮 2 台 27寸大显示器，屏幕无反光" },
+      { zone: "客餐厅", device: "空调与灯光", state: "自动关闭", details: "空置区域节能降耗" }
+    ]
+  },
+  {
+    id: "sunset-relax",
+    name: "18:30 ☕ 傍晚落日微风",
+    enName: "Sunset Relax",
+    icon: "Wind",
+    description: "走到南向阳台，坐在单椅上吹着高空微风，俯瞰新山与新加坡城市天际线。",
+    trigger: "按下阳台场景面板 / Siri: 'Relax'",
+    actions: [
+      { zone: "全屋公区", device: "主照明系统", state: "关闭主灯，开启氛围灯", details: "切换至 3000K 慵懒黄昏光" },
+      { zone: "阳台", device: "阳台壁灯", state: "亮度 30%", details: "不影响观赏城市夜景" },
+      { zone: "厨房", device: "厨房油烟机", state: "自动排气换风", details: "为晚餐烹饪准备清新空气" }
     ]
   },
   {
     id: "deep-sleep",
-    name: "深度睡眠模式",
-    enName: "Deep Sleep & Rest",
+    name: "23:00 🌙 沉浸深度睡眠",
+    enName: "Deep Sleep",
     icon: "Moon",
-    description: "主卧床头双击无线按键，全屋公区机电休眠，主卧空调设置恒温 24°C 与微风循环，电动双轨窗帘全关，智能门锁双重反锁。",
-    trigger: "主卧床头无线开关双击 / 手机放入床头无线充",
+    description: "全屋一键关灯，窗帘闭合，空调开启超静音除湿，床底微光夜灯就绪。",
+    trigger: "床头无线开关双击 / 语音: 'Goodnight'",
     actions: [
-      { zone: "入户门", device: "Aqara D200 智能门锁", state: "自动布防与反锁", details: "启用夜间安防模式" },
-      { zone: "全屋公区", device: "客厅/厨房/书房机电", state: "全部关闭并断开闲置插座", details: "杜绝待机能耗与光污染" },
-      { zone: "主卧", device: "智能双轨窗帘", state: "全遮光帘关闭 100%", details: "营造 0 照度全黑深睡环境" },
-      { zone: "主卧", device: "卧室空调", state: "睡眠曲线 (24°C -> 25°C)", details: "防止后半夜受凉" },
-      { zone: "主卧/卫浴", device: "起夜人体雷达", state: "激活低照度夜灯模式", details: "下床自动亮起床底 5% 微光" }
-    ]
-  },
-  {
-    id: "morning-wake",
-    name: "晨起自然唤醒",
-    enName: "Morning Sunrise Wakeup",
-    icon: "Sun",
-    description: "早晨设定时间，南向阳台与主卧透光纱帘缓缓开启 70%，柔和晨光洒入，中岛手冲咖啡水吧插座通电加热，开始活力一天。",
-    trigger: "工作日早晨 07:30 定时 / 闹钟同步触发",
-    actions: [
-      { zone: "主卧/阳台", device: "电动透光纱帘", state: "以 5cm/s 慢速开启至 70%", details: "利用 SSE 晨曦自然唤醒" },
-      { zone: "中岛吧台", device: "智能轨道插座", state: "通电开机", details: "即热饮水机与咖啡机预热" },
-      { zone: "主卧", device: "背景音乐音箱", state: "以 20% 音量播放轻柔播客/爵士", details: "温和唤醒神经" },
-      { zone: "卫浴", device: "除雾镜柜与电热毛巾架", state: "启动预热 15分钟", details: "洗漱时即享温热干燥毛巾" }
-    ]
-  },
-  {
-    id: "away-home",
-    name: "一键离家巡航",
-    enName: "Away & Auto Clean",
-    icon: "ShieldCheck",
-    description: "离家关门后门锁自动上锁，全屋灯光与空调关闭，水路电磁阀防护，扫地机器人自动从生活阳台出发执行全屋深度吸尘拖地。",
-    trigger: "出门轻触门锁离家布防键 / 手机离开地理围栏",
-    actions: [
-      { zone: "入户门", device: "智能门锁与门磁", state: "外出布防 / 摄像头开启", details: "异常开门立即推送告警" },
-      { zone: "全屋", device: "全屋照明与空调", state: "一键全关", details: "无遗漏断电节能" },
-      { zone: "生活阳台", device: "扫拖一体机器人", state: "从基站出发清扫全屋", details: "人走自动清扫，回家人居洁净" },
-      { zone: "厨卫水路", device: "主供水智能水阀", state: "关闭水路安全阀", details: "彻底消除高层漏水隐患" }
+      { zone: "全屋", device: "照明与插座", state: "全关停电", details: "彻底消除光污染与电器待机底噪" },
+      { zone: "主卧", device: "全遮光窗帘", state: "100% 闭合", details: "隔绝户外光污染，提供暗室级睡眠环境" },
+      { zone: "主卧", device: "悬浮床底灯带", state: "感应预备状态", details: "五星级酒店温馨起夜柔光 (2700K，不影响伴侣)" }
     ]
   }
 ];
 
 export const BOM_DATA: BomCategory[] = [
   {
-    id: "civil",
-    category: "硬装土建与吊顶工程 (Civil Works & Ceiling)",
+    id: "civil-mep",
+    category: "硬装土建与机电点位改造 (Civil & MEP Works)",
     icon: "Hammer",
-    description: "全屋全吊顶与隐藏式洗墙灯槽制作、水电点位增补、防开裂冲筋打底工艺。",
+    description: "新山公寓标准：泥水地砖打底、天花吊顶、电工按点位 (Per Point) 计价。拉入零线与光纤隐蔽工程。",
     items: [
       {
-        id: "cw-1",
-        name: "全屋轻钢龙骨耐潮吊顶与反光灯槽制作",
-        spec: "轻钢龙骨 + 9mm 耐潮石膏板 + 回字形反光灯槽与隐藏窗帘盒 (60 ㎡)",
-        quantity: "60 ㎡",
-        unitPriceMYR: 115,
-        totalMYR: 6900,
-        recommended: true,
-        tier: "essential"
-      },
-      {
-        id: "cw-2",
-        name: "全屋强弱电开槽增补与电箱升级",
-        spec: "增补 18 个插座/开关点位、工位万兆网线布设与 DB 漏保升级",
-        quantity: "1 式",
-        unitPriceMYR: 3500,
+        id: "cm-1",
+        name: "天花吊顶与石膏板反光槽",
+        spec: "平顶防潮石膏板 (RM 5/sqft) + 反光槽 (RM 18/ft)",
+        quantity: "648 sqft",
+        unitPriceMYR: 5,
         totalMYR: 3500,
         recommended: true,
         tier: "essential"
-      }
-    ]
-  },
-  {
-    id: "carpentry",
-    category: "全屋高定贯穿式收纳木作 (Custom Storage & Carpentry)",
-    icon: "Cabinet",
-    description: "从玄关到客厅 9.7m 贯通大收纳柜、悬浮岩板中岛、主卧满墙衣柜、书房大件行李箱高柜。",
-    items: [
+      },
       {
-        id: "cp-1",
-        name: "入户全高玄关鞋柜 (纳米抗指纹肤感板)",
-        spec: "爱格 E0 级哑光肤感板 + 底部 160mm 悬浮踢脚灯 + 中部 1150mm 置物台",
-        quantity: "1 组",
-        unitPriceMYR: 3200,
-        totalMYR: 3200,
+        id: "cm-2",
+        name: "照明与智能开关电工拉线 (含零线)",
+        spec: "按点位计价 (Per Point) 包含开槽穿线与补平",
+        quantity: "28 点",
+        unitPriceMYR: 110,
+        totalMYR: 3080,
         recommended: true,
         tier: "essential"
       },
       {
-        id: "cp-2",
-        name: "多功能悬浮岩板中岛吧台一体柜",
-        spec: "12mm 进口耐磨岩板台面 + 钢架内承重结构 + 抽屉收纳与嵌入式升降插座 (2000×800mm)",
-        quantity: "1 座",
-        unitPriceMYR: 4600,
-        totalMYR: 4600,
+        id: "cm-3",
+        name: "15A 空调动力独立回路与网线",
+        spec: "大功率独立空开回路与 Cat6 万兆网线预埋",
+        quantity: "4 点",
+        unitPriceMYR: 180,
+        totalMYR: 720,
         recommended: true,
         tier: "premium"
       },
       {
-        id: "cp-3",
-        name: "客厅极简悬浮电视地台柜 (带扫地机避让悬空)",
-        spec: "哑光抗指纹肤感/黑胡桃木饰面 (长 3600mm，离地悬空 180mm)",
-        quantity: "1 组",
-        unitPriceMYR: 2400,
-        totalMYR: 2400,
-        recommended: true,
-        tier: "essential"
-      },
-      {
-        id: "cp-4",
-        name: "主卧满墙一字型哑光隐形衣柜",
-        spec: "纳米超哑抗指纹门板 + 意大利萨利切铰链 + 顶天立地无把手反弹门 (3300×2700mm)",
-        quantity: "1 组",
-        unitPriceMYR: 7800,
-        totalMYR: 7800,
-        recommended: true,
-        tier: "essential"
-      },
-      {
-        id: "cp-5",
-        name: "极客书房 600mm 深度大件收纳高柜 (行李箱直推)",
-        spec: "下层无底板设计（28寸大行李箱直推進出）+ 上层数码外设储物",
-        quantity: "1 组",
+        id: "cm-4",
+        name: "全屋墙面艺术涂料与微缝打底",
+        spec: "Nippon 5合1防霉底漆+艺术面漆包工包料",
+        quantity: "1 项",
         unitPriceMYR: 3800,
         totalMYR: 3800,
         recommended: true,
-        tier: "premium"
+        tier: "essential"
       }
     ]
   },
   {
-    id: "bathroom-vanity",
-    category: "卫浴大平台与大镜面系统 (Bathroom Vanity & Mirror)",
-    icon: "Sparkles",
-    description: "1.5m 贯穿式大理石/人造石悬浮大台面、满墙 LED 触控除雾大镜柜、无影洗墙照明与智能马桶。",
+    id: "joinery-stone",
+    category: "高定柜体木工与岩板台面 (Custom Joinery)",
+    icon: "Layers",
+    description: "新山木工行规：按英尺横长 (Per Foot Run / pfr) 计价。全屋采用防潮 PET 与零吸水岩板。",
     items: [
       {
-        id: "bv-1",
-        name: "1.5m 贯穿式无缝岩板/可丽耐悬浮大平台 (横跨至马桶上方)",
-        spec: "超长定制台面 (1500×550mm) + 一体成型防溅大单盆 + 底部加固钢架",
-        quantity: "1 套",
-        unitPriceMYR: 3800,
-        totalMYR: 3800,
-        recommended: true,
-        tier: "premium"
-      },
-      {
-        id: "bv-2",
-        name: "满墙通宽智能触控除雾无框大镜柜 (1500×850mm)",
-        spec: "双面恒温除雾 + 4000K/3000K 无影美妆光 + 内置吹风机插座 + 150mm 超薄储物",
-        quantity: "1 套",
-        unitPriceMYR: 2400,
-        totalMYR: 2400,
-        recommended: true,
-        tier: "premium"
-      },
-      {
-        id: "bv-3",
-        name: "一体化壁挂/落地脚感智能马桶 (泡沫盾防溅)",
-        spec: "脚感翻盖翻圈 + 即热恒温清洗 + 离座自动冲水 + 停电应急冲水",
-        quantity: "1 套",
-        unitPriceMYR: 3200,
-        totalMYR: 3200,
-        recommended: true,
-        tier: "premium"
-      },
-      {
-        id: "bv-4",
-        name: "枪灰/哑黑精铜恒温大顶喷增压花洒套装",
-        spec: "三功能出水 + 蜂窝水嘴防水垢 + 增压空气注入 + 旋转下出水",
-        quantity: "1 套",
-        unitPriceMYR: 1600,
-        totalMYR: 1600,
+        id: "js-1",
+        name: "主卧顶天立地定制大衣柜",
+        spec: "高2.8m, 深600mm, PET防潮面板 (RM 280/pfr)",
+        quantity: "8 pfr",
+        unitPriceMYR: 280,
+        totalMYR: 2240,
         recommended: true,
         tier: "essential"
+      },
+      {
+        id: "js-2",
+        name: "客厅多功能岩板电视悬浮地台",
+        spec: "深400mm, 岩板贴面全包 (RM 250/pfr)",
+        quantity: "10 pfr",
+        unitPriceMYR: 250,
+        totalMYR: 2500,
+        recommended: true,
+        tier: "premium"
+      },
+      {
+        id: "js-3",
+        name: "入户顶天立地鞋柜与置物塔",
+        spec: "高2.8m, 含感应灯带槽 (RM 260/pfr)",
+        quantity: "5 pfr",
+        unitPriceMYR: 260,
+        totalMYR: 1300,
+        recommended: true,
+        tier: "essential"
+      },
+      {
+        id: "js-4",
+        name: "餐厅水吧台与多功能餐边柜",
+        spec: "预留 RO 直饮机位与烤箱位 (RM 280/pfr)",
+        quantity: "6 pfr",
+        unitPriceMYR: 280,
+        totalMYR: 1680,
+        recommended: true,
+        tier: "premium"
+      },
+      {
+        id: "js-5",
+        name: "卫浴一体化悬浮岩板长台面",
+        spec: "贯穿马桶上方，钢架内承重 (RM 350/pfr)",
+        quantity: "5.5 pfr",
+        unitPriceMYR: 350,
+        totalMYR: 1925,
+        recommended: true,
+        tier: "ultimate"
       }
     ]
   },
   {
-    id: "hotel-lighting",
-    category: "五星级酒店式照明工程 (Hotel-Grade Architectural Lighting)",
-    icon: "Sun",
-    description: "全屋见光不见灯反光灯槽、UGR<10深防眩射灯、高显色色温线性洗墙带。",
-    items: [
-      {
-        id: "hl-1",
-        name: "UGR<10 五星级酒店专用深防眩射灯 (Ra>97, 遮光角>38°)",
-        spec: "7W-10W 智能双色温可调 (2700K-4000K) / 极窄深黑反光杯",
-        quantity: "24 盏",
-        unitPriceMYR: 95,
-        totalMYR: 2280,
-        recommended: true,
-        tier: "essential"
-      },
-      {
-        id: "hl-2",
-        name: "24V 低压 COB 柔光线性洗墙灯带与恒压电源 (无频闪)",
-        spec: "天花反光槽、地脚线、柜底、镜柜上下漫射 (120灯/米)",
-        quantity: "50 米",
-        unitPriceMYR: 45,
-        totalMYR: 2250,
-        recommended: true,
-        tier: "essential"
-      }
-    ]
-  },
-  {
-    id: "smarthome",
-    category: "Aqara / 米家全屋智能生态 (Smart Automation System)",
+    id: "smart-home",
+    category: "Aqara 全屋智能生态与安防 (Smart Home Ecosystem)",
     icon: "Cpu",
-    description: "网关、人脸识别智能锁、人体存在雷达、智能开关、电动窗帘电机与空调温控伴侣。",
+    description: "从门锁、照明联动到 Matter 中枢，新山授权服务商包安装调试造价。",
     items: [
       {
         id: "sh-1",
-        name: "Aqara Hub M3 旗舰网关 (Matter/Thread/Zigbee)",
-        spec: "支持本地跨协议局域网自动化与红外遥控中继",
+        name: "Aqara Hub M3 旗舰中枢网关",
+        spec: "支持 Matter / Thread 局域网断网可用",
         quantity: "1 台",
-        unitPriceMYR: 650,
-        totalMYR: 650,
+        unitPriceMYR: 599,
+        totalMYR: 599,
         recommended: true,
         tier: "essential"
       },
       {
         id: "sh-2",
-        name: "Aqara D200 旗舰 3D 人脸识别智能门锁",
-        spec: "金融级结构光人脸秒开 + HomeKit 钥匙 + 机械防盗应急钥匙",
-        quantity: "1 套",
-        unitPriceMYR: 1980,
-        totalMYR: 1980,
+        name: "Aqara D200 3D人脸识别智能门锁",
+        spec: "金融级安全 / 苹果 HomeKey 刷卡",
+        quantity: "1 组",
+        unitPriceMYR: 1899,
+        totalMYR: 1899,
         recommended: true,
         tier: "premium"
       },
       {
         id: "sh-3",
-        name: "Aqara H1 Pro 智能墙壁开关 (零火版/超薄微动)",
-        spec: "支持单双键、电量计量、转无线开关功能",
-        quantity: "8 个",
-        unitPriceMYR: 160,
-        totalMYR: 1280,
+        name: "Aqara H1 超薄无边框智能开关面板",
+        spec: "单键/双键/三键 零火线版（彻底根除闪烁）",
+        quantity: "12 个",
+        unitPriceMYR: 169,
+        totalMYR: 2028,
         recommended: true,
         tier: "essential"
       },
       {
         id: "sh-4",
-        name: "Aqara FP2 人体微动存在传感器 (毫米波雷达)",
-        spec: "多目标定位与多区域划分（玄关、客厅、书房工位、主卧）",
-        quantity: "4 台",
+        name: "Aqara FP2 人体微动存在传感器",
+        spec: "多目标定位与多区域划分（玄关、客厅、主卧）",
+        quantity: "3 台",
         unitPriceMYR: 320,
-        totalMYR: 1280,
+        totalMYR: 960,
         recommended: true,
         tier: "premium"
       },
       {
         id: "sh-5",
-        name: "Aqara C3 智能电动双轨窗帘电机与超静音定制轨道",
-        spec: "主卧双轨 (遮光+纱帘) + 客厅阳台单轨",
-        quantity: "3 套",
+        name: "Aqara C3 智能电动双轨窗帘电机",
+        spec: "主卧双轨 (遮光+纱帘) 预埋",
+        quantity: "1 套",
         unitPriceMYR: 850,
-        totalMYR: 2550,
+        totalMYR: 850,
         recommended: true,
         tier: "premium"
-      },
-      {
-        id: "sh-6",
-        name: "Aqara 空调伴侣 P3 与温湿度传感器联动套件",
-        spec: "客厅、主卧、书房 3 台分体空调红外与温控自动化",
-        quantity: "3 套",
-        unitPriceMYR: 260,
-        totalMYR: 780,
-        recommended: true,
-        tier: "essential"
       }
     ]
   },
@@ -1382,67 +1309,57 @@ export const BOM_DATA: BomCategory[] = [
     id: "furniture-av",
     category: "软装家具与极客视听装备 (Furniture & Geek AV)",
     icon: "Monitor",
-    description: "升降工作桌、人体工学椅、85寸超薄大屏电视、模块化科技布沙发、1.8m悬浮静音大床与扫拖机器人。",
+    description: "升降工作桌、人体工学椅、大屏电视、科技布沙发与悬浮大床。",
     items: [
       {
         id: "fa-1",
-        name: "极客双电机电动升降工作台 (2000×800mm 黄金进深)",
-        spec: "三节静音双电机 + 遇阻反弹 + 4档记忆 + 隐藏式一体金属线槽",
+        name: "极客双电机电动升降工作台 (1600×600mm)",
+        spec: "静音双电机 + 遇阻反弹 + 隐藏线槽",
         quantity: "1 张",
-        unitPriceMYR: 2600,
-        totalMYR: 2600,
+        unitPriceMYR: 1600,
+        totalMYR: 1600,
         recommended: true,
         tier: "essential"
       },
       {
         id: "fa-2",
         name: "Herman Miller / 保友旗舰人体工学椅",
-        spec: "全网透气支撑 + 4D 多维调节头枕腰托 + 铝合金一体底盘",
+        spec: "全网透气支撑 + 多维调节底盘",
         quantity: "1 把",
-        unitPriceMYR: 3500,
-        totalMYR: 3500,
+        unitPriceMYR: 2500,
+        totalMYR: 2500,
         recommended: true,
         tier: "premium"
       },
       {
         id: "fa-3",
-        name: "85寸 4K 144Hz 极窄边框超薄大屏电视",
-        spec: "Mini-LED 控光分区 / 杜比视界 / HDMI 2.1 游戏接口",
+        name: "85寸 4K 144Hz 超薄壁画电视",
+        spec: "Mini-LED 控光分区 / 杜比视界",
         quantity: "1 台",
         unitPriceMYR: 6200,
         totalMYR: 6200,
         recommended: true,
-        tier: "premium"
+        tier: "ultimate"
       },
       {
         id: "fa-4",
-        name: "客厅直排科技布/真皮极简模块沙发 (长2800mm)",
-        spec: "高回弹羽绒海绵填充 + 纳米防污防刮耐磨面料",
+        name: "客厅极简模块科技布沙发 (长2200mm)",
+        spec: "纳米防污防霉面料（无惧热带湿气）",
         quantity: "1 组",
-        unitPriceMYR: 3800,
-        totalMYR: 3800,
+        unitPriceMYR: 2800,
+        totalMYR: 2800,
         recommended: true,
         tier: "essential"
       },
       {
         id: "fa-5",
-        name: "1.8m 悬浮静音排骨架大床与五星级独立弹簧乳胶床垫",
-        spec: "内缩悬浮脚 + 防撞软包床头 + 独立袋装静音弹簧",
+        name: "1.8m 悬浮静音大床与防潮乳胶床垫",
+        spec: "独立袋装静音弹簧 + 悬浮防撞床头",
         quantity: "1 套",
-        unitPriceMYR: 4200,
-        totalMYR: 4200,
+        unitPriceMYR: 3500,
+        totalMYR: 3500,
         recommended: true,
         tier: "essential"
-      },
-      {
-        id: "fa-6",
-        name: "全自动上下水基站扫拖一体机器人",
-        spec: "自动洗抹布 + 55°C热风烘干 + 自动集尘 + 自动加清洁液",
-        quantity: "1 台",
-        unitPriceMYR: 3600,
-        totalMYR: 3600,
-        recommended: true,
-        tier: "premium"
       }
     ]
   }

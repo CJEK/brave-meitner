@@ -30,6 +30,10 @@ export const SmartHomeSimulator: React.FC = () => {
       case "Tv": return <Tv className="w-5 h-5 text-indigo-600" />;
       case "Moon": return <Moon className="w-5 h-5 text-purple-600" />;
       case "Sun": return <Sun className="w-5 h-5 text-amber-600" />;
+      case "Coffee": return <Thermometer className="w-5 h-5 text-orange-600" />;
+      case "Wind": return <Droplets className="w-5 h-5 text-cyan-600" />;
+      case "Coffee": return <Thermometer className="w-5 h-5 text-orange-600" />;
+      case "Wind": return <Droplets className="w-5 h-5 text-cyan-600" />;
       case "ShieldCheck": return <ShieldCheck className="w-5 h-5 text-emerald-600" />;
       default: return <Cpu className="w-5 h-5 text-blue-600" />;
     }
@@ -48,10 +52,10 @@ export const SmartHomeSimulator: React.FC = () => {
           </div>
           <h2 className="text-2xl font-black text-slate-900 mt-1 flex items-center">
             <Cpu className="w-6 h-6 mr-2 text-purple-600" />
-            全屋智能极客自动化情景模拟器
+            一日 24 小时幸福生活动线漫游 (Day in the Life)
           </h2>
           <p className="text-xs text-slate-500 mt-1">
-            点击切换以下 5 大核心生活模式，实时查看传感器触发逻辑、灯光色温、窗帘与机电设备的自动化执行链
+            跟随时间轴点击，直观感受您在新家中从晨间苏醒到深度睡眠的真实生活流与空间联动。
           </p>
         </div>
 
@@ -60,6 +64,7 @@ export const SmartHomeSimulator: React.FC = () => {
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
           <div className="text-xs">
             <div className="font-bold text-slate-900">Aqara Hub M3 在线</div>
+            <div className="font-bold text-amber-600 mt-1">⚠️ 施工前置：全屋照明底盒已强制拉入零线 (Neutral Wire)，彻底杜绝智能灯闪烁</div>
             <div className="text-[10px] text-slate-500">本地局域网自动化 · 零延迟响应</div>
           </div>
         </div>
