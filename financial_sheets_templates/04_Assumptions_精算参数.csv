@@ -1,0 +1,18 @@
+parameter_key,parameter_name,default_value,unit,description_and_rationale
+owner_age,户主年龄,31,岁,出生日期 1995-06-01 (身份证 950601-01-5101)，2026年实岁31岁 / 保险年龄 32 ANB
+ilp_baseline_return,投资型保单中性预期年化回报,0.045,比率,HLA UL 与 PRULink 投资组合长期中性复合收益率基准 (4.5%)
+medical_inflation_rate,马来西亚私立医疗年通胀率,0.100,比率,过去十年大马私立医疗费平均年涨幅 (10%)，用于压力测试
+genting_default_adr,云顶 RedEarth 默认日均房价,190.00,RM/晚,结合 53 楼云海景观与半山竞品价格测算的保本均价
+genting_default_days,云顶 RedEarth 默认月入住天数,18,天/月,60% 入住率基准线 (18天)
+genting_operator_cut,云顶短租专业托管抽成比率,0.300,比率,全委托专业托管抽成 30%，业主实得 70%
+genting_fixed_expenses,云顶 RedEarth 每月固定杂费,550.00,RM/月,物业管理费、排污、高速宽带与水电均摊
+mortgage_prepayment_redearth,RedEarth 交房后每月计划额外还本,1000.00,RM/月,短租产生净盈余后的专款还本额度
+debt_solvency_target_ratio,身故全残保额/总负债目标安全线,1.000,倍数,总身故保额对冲三核总负债贷款的最低基准线 (100%)
+prudential_ilp_premium_holiday_coi,保诚ILP零月供模式扣除,0.00,RM/月,依靠现有 RM 438123.61 账户价值自动扣除微量纯寿险风险保费(COI)，无追加现金保费
+real_insurance_monthly_cash_premium,真实每月保费现金流支出,480.20,RM/月,仅 AIA 组合 RM 450–487.70/月 + 丰隆老单 IL20010664472 扣除红利后净 RM 10.20/月
+verified_personal_liquid_cash,已核实个人银行活期基准,26629.43,RM,UOB ONE 13562.66 + UOB Stash 66.77 + Maybank 13000.00 (HLA提领入账)
+uob_fd_balance,UOB 定存余额,0.00,RM,原定存 RM 155000 已到期结清归零，不复存在
+pru_ilp_fund_global_leaders,PRULink Global Leaders Fund 现值,229481.43,RM,全球龙头权益与科技资产配置占比 52.38% (提取自 PRUServices 官方总览)
+pru_ilp_fund_dynamic_income,PRULink Asia Pacific Dynamic Income Fund 现值,118000.27,RM,亚太高息股票与稳健债券配置占比 26.93% (提取自 PRUServices 官方总览)
+pru_ilp_fund_dragon_peacock,PRULink Dragon Peacock Fund 现值,90641.92,RM,大中华与新兴市场成长资产配置占比 20.69% (提取自 PRUServices 官方总览)
+pru_ilp_total_cash_value,保诚 5 份 ILP 现金价值合计,438123.61,RM,5份大额及储蓄险现金价值总和 (零追加现金保费，自动扣COI锁复利至70岁)

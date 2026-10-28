@@ -33,3 +33,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch migration scripts
+fix_*.js
+fix_*.py
+add_*.js
+wipe_*.js
+delete_*.js
+test_*.js
+rewrite_*.js
+upgrade_*.js

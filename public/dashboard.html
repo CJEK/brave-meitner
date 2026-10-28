@@ -1,0 +1,3154 @@
+<!DOCTYPE html>
+<html lang="zh-MY">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>戴家杰 (TAI CHIA JEK) 全景财务诊断与保单量化指挥舱 2026+</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js 4.4.1 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .tab-btn.active {
+      background-color: #0f172a;
+      color: #38bdf8;
+      border-bottom: 2px solid #38bdf8;
+      box-shadow: 0 4px 14px -2px rgba(56, 189, 248, 0.25);
+    }
+    .card-hover {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08);
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-blue-500 selection:text-white">
+
+  <!-- Top Sticky Navigation Bar -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20 font-black text-lg text-white">
+          DJ
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-black tracking-tight text-white">戴家杰 全景财务与保单量化指挥舱</h1>
+            <span class="px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full">2026-10 实盘穿透校准版</span>
+            <span class="px-2 py-0.5 text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 rounded-full">双核架构</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">三核不动产 (RM 138.38万) · 双电商现金流 (Shopee+Lazada) · 真实纯保障月供仅 RM 460–498/月 · 6份大额/储蓄单零月供锁复利至70岁</p>
+        </div>
+      </div>
+
+      <!-- Action & View Controls -->
+      <div class="flex items-center gap-2">
+        <button onclick="openSheetsModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-800 hover:bg-emerald-700 text-emerald-100 border border-emerald-600 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16c0 1.1.9 2 2 2h12a2 2 0 002-2V8l-6-6H6a2 2 0 00-2 2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 2v6h6M8 13h8M8 17h8M8 9h2"/></svg>
+          连结 Google Sheets
+        </button>
+        <button onclick="openJsonModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+          数据配置 (JSON)
+        </button>
+        <button onclick="window.print()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          导出报告
+        </button>
+      </div>
+    </div>
+
+    <!-- Sub-Nav Tab Strip -->
+    <div class="bg-slate-950/80 border-t border-slate-800/80 backdrop-blur px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto flex overflow-x-auto gap-1 py-1.5 no-scrollbar">
+        <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition whitespace-nowrap flex items-center gap-2">
+          🏛️ 财务与决策全景
+        </button>
+        <button onclick="switchTab('insurance')" id="tab-insurance" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition whitespace-nowrap flex items-center gap-2">
+          🛡️ 保单五大支柱与台账
+        </button>
+        <button onclick="switchTab('simulator')" id="tab-simulator" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition whitespace-nowrap flex items-center gap-2">
+          📈 保单未来精算推演
+        </button>
+        <button onclick="switchTab('properties')" id="tab-properties" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition whitespace-nowrap flex items-center gap-2">
+          🏢 不动产独立核算 (P&L)
+        </button>
+        <button onclick="switchTab('genting')" id="tab-genting" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition whitespace-nowrap flex items-center gap-2">
+          🧮 云顶独立短租测算
+        </button>
+        <button onclick="switchTab('radar')" id="tab-radar" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-slate-400 hover:text-white transition whitespace-nowrap flex items-center gap-2">
+          ⚡ 保费日历与行动雷达
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 space-y-6 flex-1 w-full">
+
+    <!-- Top KPI Executive Bar (Always Visible) -->
+    <section class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+      <!-- KPI 1 -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm card-hover">
+        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">不动产总值 / 贷款授信</div>
+        <div class="text-xl sm:text-2xl font-black text-slate-900 mt-1 font-mono">RM 1,383,812</div>
+        <div class="text-xs text-slate-500 mt-1">负债 <span class="font-bold text-slate-700">RM 1,129,899</span> (LTV 81.6%)</div>
+        <div class="mt-2 text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold inline-block">建筑期实扣 ~RM 1,130–1,300/月 (交房后 RM 5,334)</div>
+      </div>
+      <!-- KPI 2 -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm card-hover">
+        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">双电商月均总回款</div>
+        <div class="text-xl sm:text-2xl font-black text-blue-600 mt-1 font-mono">RM 77,242</div>
+        <div class="text-xs text-slate-500 mt-1">Shopee <span class="font-bold text-slate-700">RM 57.1k</span> | Lazada <span class="font-bold text-slate-700">RM 20.1k</span></div>
+        <div class="mt-2 text-[11px] text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-semibold inline-block">毛利率 33.97% (ROIC优)</div>
+      </div>
+      <!-- KPI 3 -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm card-hover">
+        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">已核实个人银行活期</div>
+        <div class="text-xl sm:text-2xl font-black text-emerald-600 mt-1 font-mono">RM 26,629</div>
+        <div class="text-xs text-slate-500 mt-1">UOB双户 <span class="font-bold text-slate-700">RM 13,629</span> + Maybank <span class="font-bold text-slate-700">RM 13,000</span></div>
+        <div class="mt-2 text-[11px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded font-semibold inline-block">UOB FD 15.5万已清零 · 证券待同步</div>
+      </div>
+      <!-- KPI 4 -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm card-hover">
+        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">身故/全残负债对冲比</div>
+        <div class="text-xl sm:text-2xl font-black text-indigo-600 mt-1 font-mono">121% – 135%</div>
+        <div class="text-xs text-slate-500 mt-1">总保额 <span class="font-bold text-slate-700">RM 136.8万–152.5万</span> vs 房贷 <span class="font-bold text-slate-700">RM 113万</span></div>
+        <div class="mt-2 text-[11px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold inline-block">🛡️ 负债完全覆盖</div>
+      </div>
+      <!-- KPI 5 -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-sm card-hover col-span-2 lg:col-span-1">
+        <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">实盘保单现金总价值</div>
+        <div class="text-xl sm:text-2xl font-black text-amber-600 mt-1 font-mono">RM 450,830</div>
+        <div class="text-xs text-slate-500 mt-1">PRU 5大ILP <span class="font-bold text-slate-700">RM 43.81万</span> + HLA <span class="font-bold text-slate-700">RM 1.27万</span></div>
+        <div class="mt-2 text-[11px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded font-semibold inline-block">零月供锁至70岁 · 另PRUEnrich 15.18万待2038满期</div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 1: OVERVIEW & PANEL ==================== -->
+    <section id="view-overview" class="space-y-6">
+      <!-- Executive Consensus Banner -->
+      <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-white rounded-2xl p-6 shadow-xl border border-slate-700">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700/80 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs uppercase tracking-widest text-indigo-300 font-bold">🏛️ 2026-10 实盘校准决策决议</span>
+              <span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 rounded-full">加权胜出：首席财务官 (CFO) 路径</span>
+            </div>
+            <h2 class="text-lg sm:text-xl font-black mt-1">核心决策：是否应在建筑期内立即用流动资金提前向云顶 RedEarth 还本？</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">1 赞成</span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-400/30">1 反对</span>
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-400/30">3 附条件赞成</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-5 text-sm">
+          <div class="bg-white/5 p-4 rounded-xl border border-white/10 lg:col-span-2">
+            <div class="text-xs font-bold text-indigo-300 uppercase mb-1">📋 顾问团最终联合裁决 (Panel Consensus)</div>
+            <p class="text-slate-200 leading-relaxed text-xs sm:text-sm">
+              <strong>建筑期内绝对暂缓还本，全力锁定「居銮商业店屋双向节税 + 交房装修储备垫」：</strong>
+              您的电商业务资金周转毛利率高达 <strong class="text-blue-300">33.97%</strong>，店屋关联租赁企业税节省率达 <strong class="text-emerald-300">15.0%</strong>，均远超房贷利率 <strong class="text-amber-300">4.20%</strong>。建筑期内三套房产实际月供仅约 <strong class="text-amber-300">RM 1,130–1,300/月</strong>（Paragon RM 750 + RedEarth ~RM 465 + 居銮店屋 RM 0），加之名下保诚与丰隆 6 份保单全部实现零月供，真实月保费支出大幅压降至仅 <strong class="text-emerald-300">RM 460–498/月</strong>，家庭现金流极其宽裕稳健！若过早把活钱锁死进未交房的 RedEarth 本金户，将面临 2026 底至 2027 年双套期房交房软装（RM 70k–90k）的严重流动性挤兑。
+            </p>
+          </div>
+          <div class="bg-amber-500/10 p-4 rounded-xl border border-amber-400/30 flex flex-col justify-between">
+            <div>
+              <div class="text-xs font-bold text-amber-300 uppercase mb-1">🔑 关键执行红线</div>
+              <p class="text-amber-100 text-xs leading-relaxed">
+                在 <strong>2026-11-15 前</strong>用密码 <code class="bg-slate-900 px-1.5 py-0.5 rounded text-amber-300 font-mono">5101JEK</code> 解锁 10月20日 AmBank 贷款函确认 RM 45,700 进度款无罚息；并于 <strong>11月1日</strong> 落地居銮店屋 RM 2,000/月对公转账与 LHDN 印花税。
+              </p>
+            </div>
+            <div class="mt-3 text-[11px] text-amber-300/80">保单配合：HLA 提领的 RM 13,000 专款专用作为交房应急池。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Pillars vs Defense Bar Chart -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-base font-bold text-slate-900">🏛️ 资产负债与保额对冲穿透矩阵 (RM)</h3>
+            <span class="text-xs text-slate-500">保额 vs 房贷债务</span>
+          </div>
+          <div class="relative h-64">
+            <canvas id="overviewSolvencyChart"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-base font-bold text-slate-900">💸 综合资本收益率 vs 资金成本梯队对比 (%)</h3>
+            <span class="text-xs text-slate-500">机会成本决策准绳</span>
+          </div>
+          <div class="relative h-64">
+            <canvas id="capitalRateChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 Advisors Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Operator -->
+        <div class="bg-white rounded-2xl p-5 border-l-4 border-amber-500 border border-slate-200 shadow-sm card-hover">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-900">🔧 The Operator (执行官)</span>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">附条件赞成</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">跨城管理精力冲突 · 专业托管优先</p>
+          <p class="text-xs text-slate-700 mt-2.5 leading-relaxed">
+            居銮距新山与云顶超 350 公里，切忌低估异地管民宿精力。你还需统领 ALDIMART 6 人电商团队与百款日化上下架。RedEarth 交房后必须 100% 委托 30% 抽成托管，软装走耐造标准化路线。眼下重中之重是 11月11日 峇株巴辖 KPDN 听证会。
+          </p>
+        </div>
+
+        <!-- Skeptic -->
+        <div class="bg-white rounded-2xl p-5 border-l-4 border-rose-500 border border-slate-200 shadow-sm card-hover">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-900">⚠️ The Skeptic (风险怀疑官)</span>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800">反对立即还本</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">交房期流动性挤兑 · 期限严重错配</p>
+          <p class="text-xs text-slate-700 mt-2.5 leading-relaxed">
+            把钱砸进未交房的 RedEarth 本金账户将立刻失去流动性！2026 底至 2027 年 Paragon 与 RedEarth 相继交房，尾款、税费、验房软装需吞掉 RM 70k–90k 现金。好在 Prudential 6 份保单全部停缴月保费归零，释放了每月数千令吉资金占用，现金储备底气大增。
+          </p>
+        </div>
+
+        <!-- Visionary -->
+        <div class="bg-white rounded-2xl p-5 border-l-4 border-emerald-500 border border-slate-200 shadow-sm card-hover">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-900">🚀 The Visionary (战略远见官)</span>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">标的独立自偿闭环</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">各标的自立闭环 · 严禁跨资产混同补贴</p>
+          <p class="text-xs text-slate-700 mt-2.5 leading-relaxed">
+            资产须实行清晰分层与独立核算：Shopee/Lazada 是高频经营血液；居銮店屋是稳健商业长租与企业所得税税盾标的（每年为公司省税 RM 3,600 并带来 RM 24,000 租金，单盘完全自偿）；新山住宅满足自住刚需；云顶 RedEarth 则纯粹依据自身短租运营自偿率进行商业判断。各标的账目严格隔离，绝不搞跨资产交叉补贴。
+          </p>
+        </div>
+
+        <!-- Customer -->
+        <div class="bg-white rounded-2xl p-5 border-l-4 border-purple-500 border border-slate-200 shadow-sm card-hover">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-900">👤 Customer Advocate (租客代表)</span>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-800">附条件赞成</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">云顶半山真实痛点 · 53楼高空溢价</p>
+          <p class="text-xs text-slate-700 mt-2.5 leading-relaxed">
+            半山住客只关注两点：比山顶酒店便宜多少、以及拍照出不出片、除湿暖风机与热水是否稳定。周边 Windmill 与 Geo38 在打 RM 130 价格战；C-53-03A 拥有 53 楼高空云海视野，软装预算必须精准投入景观吧台与除湿设备，以支撑 RM 184–221/晚的均价。
+          </p>
+        </div>
+
+        <!-- Finance -->
+        <div class="bg-white rounded-2xl p-5 border-l-4 border-blue-600 border border-slate-200 shadow-sm card-hover md:col-span-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-900">💰 The Finance Mind (首席财务官 · 最高权重裁决)</span>
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">现金为王 · 单盘独立自偿决策</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">资本回报率 (ROIC) 绝对主导原则</p>
+          <p class="text-xs text-slate-700 mt-2.5 leading-relaxed">
+            资本回报顺序：<strong>电商毛利 (33.97%) &gt; 商业店屋关联省税 (15.0%) &gt; 房贷利率 (4.20%)</strong>。目前所有保诚大额保单已转为「零月供、锁定期满 Bonus」模式，全盘真实保费仅 AIA 组合与丰隆老单约 RM 460–498/月，资金流极大释放。手握 HLA RM 13,000 提领金与银行结余作为交房防火墙；居銮店屋依靠自身租赁净现金流独立偿还商业贷款并实现盈余；RedEarth 云顶交付后须以自身入住率及现金流自偿门槛（需月流水 RM 4,948）为单一标准独立考核，不搞交叉混淆。
+          </p>
+        </div>
+      </div>
+
+      <!-- ==================== MACRO CASHFLOW & BUSINESS PORTFOLIO ROLLUP ==================== -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-black text-slate-900">🌊 全盘宏观现金流结构与逐级沉淀 (Macro Cashflow Portfolio Rollup)</h3>
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">
+                宏观组合全局视角
+              </span>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">
+              展示戴家杰家庭与双电商全局宏观流动性沉淀；此为全盘组合视角，三大投资不动产的单盘真实盈亏与现金流完全隔离，请前往「🏢 不动产独立核算」分页独立查看。
+            </p>
+          </div>
+          <span class="px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg">
+            净储蓄沉淀率：56.8% (月结余 +RM 8,147)
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left: Cashflow Structure Chart (5 cols) -->
+          <div class="lg:col-span-5 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <div class="flex items-center justify-between mb-2">
+              <h4 class="text-xs font-bold text-slate-800">💸 2026年9–10月 实盘月度总现金流结构 (RM)</h4>
+              <span class="text-[10px] text-slate-400">双电商进出账与薪资</span>
+            </div>
+            <div class="relative h-64">
+              <canvas id="cashflowChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Right: Waterfall Cards (7 cols) -->
+          <div class="lg:col-span-7 flex flex-col justify-between space-y-3">
+            <div class="text-xs font-bold text-slate-700">逐级资金分配穿透流水：</div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+              <!-- Step 1 -->
+              <div class="p-3 rounded-xl border border-blue-200 bg-blue-50/50">
+                <div class="text-[10px] font-bold text-blue-600 uppercase">1. 总进账流水</div>
+                <div class="text-base font-black text-blue-900 mt-0.5 font-mono">+RM 82,642</div>
+                <div class="text-[10px] text-slate-500 mt-1">Shopee 5.7万 + Lazada 2.0万 + 薪资 5.4k</div>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="p-3 rounded-xl border border-slate-200 bg-slate-50">
+                <div class="text-[10px] font-bold text-slate-500 uppercase">2. 供应链采购与平台费</div>
+                <div class="text-base font-black text-rose-600 mt-0.5 font-mono">-RM 51,000</div>
+                <div class="text-[10px] text-slate-500 mt-1">电商货品成本与平台佣金 (61.7%)</div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="p-3 rounded-xl border border-slate-200 bg-slate-50">
+                <div class="text-[10px] font-bold text-slate-500 uppercase">3. 企业运营与周转金</div>
+                <div class="text-base font-black text-amber-600 mt-0.5 font-mono">-RM 19,000</div>
+                <div class="text-[10px] text-slate-500 mt-1">ALDIMART 备货与运营安全储备</div>
+              </div>
+
+              <!-- Step 4 -->
+              <div class="p-3 rounded-xl border border-emerald-200 bg-emerald-50/60">
+                <div class="text-[10px] font-bold text-emerald-700 uppercase">4. 店屋节税净增益</div>
+                <div class="text-base font-black text-emerald-700 mt-0.5 font-mono">+RM 1,700</div>
+                <div class="text-[10px] text-emerald-800 mt-1">RM 2,000租金双向节税15%净利</div>
+              </div>
+
+              <!-- Step 5 -->
+              <div class="p-3 rounded-xl border border-indigo-200 bg-indigo-50/50">
+                <div class="text-[10px] font-bold text-indigo-700 uppercase">5. 房产建筑期月供</div>
+                <div class="text-base font-black text-indigo-700 mt-0.5 font-mono">-RM 1,215</div>
+                <div class="text-[10px] text-slate-500 mt-1">Paragon 750 + RedEarth 465 (交房前)</div>
+              </div>
+
+              <!-- Step 6 -->
+              <div class="p-3 rounded-xl border border-emerald-200 bg-emerald-50/50">
+                <div class="text-[10px] font-bold text-emerald-700 uppercase">6. 真实纯保障保费</div>
+                <div class="text-base font-black text-emerald-700 mt-0.5 font-mono">-RM 480</div>
+                <div class="text-[10px] text-slate-500 mt-1">AIA医疗/重疾 + HLA (仅占净收入 3.3%)</div>
+              </div>
+
+              <!-- Step 7 -->
+              <div class="p-3 rounded-xl border border-emerald-300 bg-emerald-100/70 shadow-xs col-span-2">
+                <div class="text-[10px] font-bold text-emerald-900 uppercase">7. 月度自由净现金沉淀</div>
+                <div class="text-lg font-black text-emerald-800 mt-0.5 font-mono">+RM 8,147 / 月</div>
+                <div class="text-[10px] text-emerald-700 mt-0.5">扣除日常生活 RM 4.5k 后的纯结余（提供充足流动性垫层）</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: INSURANCE 5-PILLAR MATRIX ==================== -->
+    <section id="view-insurance" class="hidden space-y-6">
+      
+      <!-- Top Insurance Strategic Overview -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <h2 class="text-lg font-black text-slate-900">🛡️ 保单五大支柱防御力与实盘台账 (5-Pillar Matrix)</h2>
+            <p class="text-xs text-slate-500 mt-0.5">穿透 HLA、Prudential 与 AIA 全量保单，基于当前 RM 1,129,899 房贷与真实 RM 460–498/月 保费支出进行精算对账</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold">
+              综合防御等级：A+ (房贷对冲 121%~135% 完全覆盖 / 6份保单零月供锁定复利 / 医疗年额 RM 1,000万)
+            </span>
+          </div>
+        </div>
+
+                <!-- Coverage Traffic-Light Health Matrix -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mt-4 mb-2">
+          <div class="p-3 rounded-xl border border-emerald-300 bg-emerald-50/70">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-emerald-900">身故/全残负债对冲</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs"></span>
+            </div>
+            <div class="text-base font-black text-emerald-950 mt-1 font-mono">135% 覆盖</div>
+            <div class="text-[10px] text-emerald-700 mt-0.5">🟢 极充裕 · 负债全兜底</div>
+          </div>
+
+          <div class="p-3 rounded-xl border border-emerald-300 bg-emerald-50/70">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-emerald-900">百万住院医疗</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs"></span>
+            </div>
+            <div class="text-base font-black text-emerald-950 mt-1 font-mono">RM 1,000万/年</div>
+            <div class="text-[10px] text-emerald-700 mt-0.5">🟢 顶级防线 · 无终身限额</div>
+          </div>
+
+          <div class="p-3 rounded-xl border border-amber-300 bg-amber-50/70">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-amber-900">严重疾病 (CI)</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-xs"></span>
+            </div>
+            <div class="text-base font-black text-amber-950 mt-1 font-mono">RM 230,000</div>
+            <div class="text-[10px] text-amber-800 mt-0.5">🟡 及格 · 3.5年收入补偿</div>
+          </div>
+
+          <div class="p-3 rounded-xl border border-emerald-300 bg-emerald-50/70">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-emerald-900">个人意外与伤残</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs"></span>
+            </div>
+            <div class="text-base font-black text-emerald-950 mt-1 font-mono">RM 505,000</div>
+            <div class="text-[10px] text-emerald-700 mt-0.5">🟢 良好 · 杠杆充足</div>
+          </div>
+
+          <div class="p-3 rounded-xl border border-emerald-300 bg-emerald-50/70 col-span-2 sm:col-span-1">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-emerald-900">保单现值蓄水池</span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs"></span>
+            </div>
+            <div class="text-base font-black text-emerald-950 mt-1 font-mono">RM 450,830</div>
+            <div class="text-[10px] text-emerald-700 mt-0.5">🟢 零月供复利自持</div>
+          </div>
+        </div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 items-center">
+          <!-- Radar Chart (5 cols) -->
+          <div class="lg:col-span-5 flex flex-col items-center">
+            <div class="text-xs font-bold text-slate-600 mb-2 uppercase tracking-wide">五大保障支柱充足度雷达 (当前 vs 安全基准)</div>
+            <div class="w-full max-w-sm h-72">
+              <canvas id="insuranceRadarChart"></canvas>
+            </div>
+            <div class="text-[11px] text-slate-400 mt-2 text-center">以 100 分为家庭及负债安全建议基准线</div>
+          </div>
+
+          <!-- 5 Pillars Breakdown Cards (7 cols) -->
+          <div class="lg:col-span-7 space-y-3">
+            <!-- Pillar 1: Life/TPD -->
+            <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/50 flex items-start justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-sm text-emerald-950">1. 身故与全残保障 (Life & TPD)</span>
+                  <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-600 text-white rounded">充足 (121%~135%)</span>
+                </div>
+                <div class="text-xs text-emerald-800 mt-1">
+                  当前累计保额：<strong class="font-mono text-sm text-emerald-950">RM 1,367,765 – RM 1,525,295</strong> (保诚 6 单约 RM 119.7万 + AIA RM 10万–15万 + HLA 两单 RM 13万)
+                </div>
+                <div class="text-[11px] text-emerald-700 mt-0.5">
+                  ✅ <strong>负债全覆盖：</strong>三核房产总贷款 RM 1,129,899。若发生极端意外，可瞬间清零全部房贷并富余 RM 23.8万–39.5万现金保护家人。
+                </div>
+              </div>
+            </div>
+
+            <!-- Pillar 2: Critical Illness -->
+            <div class="p-3.5 rounded-xl border border-amber-200 bg-amber-50/50 flex items-start justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-sm text-amber-950">2. 重大疾病保障 (Critical Illness)</span>
+                  <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-600 text-white rounded">达标 (3.2–4.0年收入)</span>
+                </div>
+                <div class="text-xs text-amber-800 mt-1">
+                  当前重疾保额：<strong class="font-mono text-sm text-amber-950">RM 210,000 – RM 260,000</strong> (AIA 重疾组合 RM 18万–23万 + 丰隆老单 IL20010664472 RM 30,000；明确标明保诚 31548510 不含重疾)
+                </div>
+                <div class="text-[11px] text-amber-700 mt-0.5">
+                  ⚠️ <strong>纯保障重疾防线：</strong>对应月薪约 3.2–4.0 年收入补偿。保诚大额单已停缴且不含重疾，由 AIA 专业医疗重疾组合筑牢护城河。
+                </div>
+              </div>
+            </div>
+
+            <!-- Pillar 3: Medical Hospitalization -->
+            <div class="p-3.5 rounded-xl border border-blue-200 bg-blue-50/50 flex items-start justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-sm text-blue-950">3. 百万医疗住院 (Medical & Hospitalization)</span>
+                  <span class="px-2 py-0.5 text-[10px] font-bold bg-blue-600 text-white rounded">卓越防线 (RM 1,000万/年)</span>
+                </div>
+                <div class="text-xs text-blue-800 mt-1">
+                  年度限额：<strong class="font-mono text-sm text-blue-950">RM 10,000,000 / 年</strong> (AIA A-LifeLink 2 医疗主单，病房 RM 300/天)
+                </div>
+                <div class="text-[11px] text-blue-700 mt-0.5">
+                  ✅ <strong>顶级医疗防线：</strong>终身无上限，零免赔额 (Zero Deductible)，抵御私立医院医疗通胀，保全实盘资产。
+                </div>
+              </div>
+            </div>
+
+            <!-- Pillar 4: Personal Accident -->
+            <div class="p-3.5 rounded-xl border border-purple-200 bg-purple-50/50 flex items-start justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-sm text-purple-950">4. 意外伤残与跨城差旅 (Personal Accident)</span>
+                  <span class="px-2 py-0.5 text-[10px] font-bold bg-purple-600 text-white rounded">充裕 (RM 50.5万+)</span>
+                </div>
+                <div class="text-xs text-purple-800 mt-1">
+                  意外保额：<strong class="font-mono text-sm text-purple-950">RM 505,000</strong> (保诚 PRUMillion 31548510 意外保障 RM 505,000 保至 40 岁 + Samsung Care+ 浸液保障)
+                </div>
+                <div class="text-[11px] text-purple-700 mt-0.5">
+                  🚙 适合居銮、新山、云顶、KL 高速公路长途往返频次高的实操特征。
+                </div>
+              </div>
+            </div>
+
+            <!-- Pillar 5: Cash Value & Endowment -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-start justify-between gap-3">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-sm text-slate-900">5. 保单现金价值与到期金 (Liquidity & Endowment)</span>
+                  <span class="px-2 py-0.5 text-[10px] font-bold bg-slate-800 text-white rounded">蓄水池现值 RM 450,830 + 15.18万</span>
+                </div>
+                <div class="text-xs text-slate-700 mt-1">
+                  现存现金价值：<strong class="font-mono text-sm text-slate-900">RM 450,830</strong> (PRU 5大ILP RM 438,123.61 + HLA RM 12,706.00) + 31333711 PRUEnrich 3年已缴清本金：<strong class="font-mono text-sm text-indigo-700">RM 151,772.28</strong>
+                </div>
+                <div class="text-[11px] text-slate-600 mt-0.5">
+                  💰 <strong>零月供锁复利：</strong>保诚5份ILP与HLA UL均停止追加现金保费，靠账户单位净值自扣微量COI；锁定复利与 Loyalty Bonus 直至期满或 70 岁一次性领取。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prudential 5 ILPs Underlying Fund Asset Allocation (PRUServices 2026-10-10 实盘穿透) -->
+      <div class="bg-gradient-to-br from-slate-900 via-slate-850 to-indigo-950 text-white rounded-2xl p-5 border border-slate-700 shadow-lg">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700/80 pb-3 mb-4">
+          <div class="flex items-center gap-2.5">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+            <div>
+              <h3 class="text-sm sm:text-base font-extrabold text-white">保诚 5 份投资联结险 (ILP) 底层三大基金组合实盘配置穿透</h3>
+              <p class="text-xs text-slate-300 mt-0.5">提取自 PRUServices 2026-10-10 官方截图 · 5份大额及储蓄险现金价值合计 <strong class="text-emerald-400 font-mono">RM 438,123.61</strong></p>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">零追加现金保费 · 自动扣COI锁复利至70岁</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          <!-- Fund 1 -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-blue-300">全球龙头权益组合</span>
+                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-400/30">52.38%</span>
+              </div>
+              <div class="font-bold text-sm text-white mt-2">PRULink Global Leaders Fund</div>
+              <div class="text-xl font-black text-emerald-400 font-mono mt-1">RM 229,481.43</div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2">底层配置于全球顶尖龙头科技与高质量成长资产，长期复合增值主引擎。</p>
+          </div>
+
+          <!-- Fund 2 -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-300">亚太高息动态收益</span>
+                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30">26.93%</span>
+              </div>
+              <div class="font-bold text-sm text-white mt-2">PRULink Asia Pacific Dynamic Income Fund</div>
+              <div class="text-xl font-black text-amber-400 font-mono mt-1">RM 118,000.27</div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2">亚太稳健高分红股票与优质债券动态配置，提供稳定防御与抗跌分红垫。</p>
+          </div>
+
+          <!-- Fund 3 -->
+          <div class="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-purple-300">新兴市场龙雀组合</span>
+                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-400/30">20.69%</span>
+              </div>
+              <div class="font-bold text-sm text-white mt-2">PRULink Dragon Peacock Fund</div>
+              <div class="text-xl font-black text-purple-400 font-mono mt-1">RM 90,641.92</div>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-2">聚焦大中华与印度双核经济体成长潜力，高弹性α超额收益捕获。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Policy Inventory Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="font-bold text-slate-900">📋 名下保单实盘全量明细库与履约状态 (100% 实盘穿透校准)</h3>
+            <p class="text-xs text-slate-500">保诚大额单与丰隆UL已停缴转为零月供模式；仅 AIA 核心保障正常扣缴</p>
+          </div>
+          <span class="text-xs font-semibold px-2.5 py-1 bg-emerald-50 text-emerald-800 rounded-md border border-emerald-300">
+            月总真实保费支出：仅约 RM 460 – RM 498 / 月 (占个人净薪资仅 8.5%–9.1%)
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-100 text-slate-700 uppercase font-semibold">
+              <tr>
+                <th class="px-4 py-3">保单号与险种名称</th>
+                <th class="px-4 py-3">生效日 / 满期日</th>
+                <th class="px-4 py-3">实盘合同保额与核心权益</th>
+                <th class="px-4 py-3 text-right">真实月缴保费</th>
+                <th class="px-4 py-3 text-right">历史已缴 / 2026-10 现金价值 (RM)</th>
+                <th class="px-4 py-3">看板模型校准状态与实盘操作参数</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <!-- Policy 1: 31331970 -->
+              <tr class="hover:bg-slate-50 transition bg-emerald-50/20">
+                <td class="px-4 py-3 font-semibold text-slate-900">
+                  <span class="font-mono text-emerald-800 font-bold">31331970</span><br>
+                  <span class="text-[11px] font-normal text-slate-600">PRULink Supreme (保诚)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-700">2023-10-25<br><span class="text-slate-400">2093-10-25</span></td>
+                <td class="px-4 py-3 font-medium text-slate-900">身故/全残 RM 153,765<br><span class="text-[10px] text-slate-500 font-normal">无医疗卡 · 纯储蓄联结</span></td>
+                <td class="px-4 py-3 text-right font-mono text-emerald-700 font-bold">RM 0 (已缴清)</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-emerald-700">128,016.99<br><span class="text-[10px] text-slate-500 font-normal">已缴满3年(RM 123,012)</span></td>
+                <td class="px-4 py-3 text-[11px] text-slate-700">
+                  <span class="text-emerald-700 font-bold">✅ 3年缴清 (Paid-Up)：</span>满期通知邮件已归档；月供设为 RM 0，静待 70 岁领取一次性 Bonus。
+                </td>
+              </tr>
+
+              <!-- Policy 2: 31332648 -->
+              <tr class="hover:bg-slate-50 transition bg-emerald-50/20">
+                <td class="px-4 py-3 font-semibold text-slate-900">
+                  <span class="font-mono text-emerald-800 font-bold">31332648</span><br>
+                  <span class="text-[11px] font-normal text-slate-600">PRULink Supreme (保诚)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-700">2023-10<br><span class="text-slate-400">2093-10</span></td>
+                <td class="px-4 py-3 font-medium text-slate-900">身故/全残 RM 100,000–153,765<br><span class="text-[10px] text-slate-500 font-normal">无医疗卡 · 纯储蓄联结</span></td>
+                <td class="px-4 py-3 text-right font-mono text-emerald-700 font-bold">RM 0 (已缴清)</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-emerald-700">93,741.23<br><span class="text-[10px] text-slate-500 font-normal">已缴满 3 年</span></td>
+                <td class="px-4 py-3 text-[11px] text-slate-700">
+                  <span class="text-emerald-700 font-bold">✅ 3年缴清 (Paid-Up)：</span>满期通知邮件已归档；月供设为 RM 0，静待 70 岁领取一次性 Bonus。
+                </td>
+              </tr>
+
+              <!-- Policy 3: 31333328 -->
+              <tr class="hover:bg-slate-50 transition bg-emerald-50/20">
+                <td class="px-4 py-3 font-semibold text-slate-900">
+                  <span class="font-mono text-emerald-800 font-bold">31333328</span><br>
+                  <span class="text-[11px] font-normal text-slate-600">PRULink Supreme (保诚)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-700">2023-10<br><span class="text-slate-400">2093-10</span></td>
+                <td class="px-4 py-3 font-medium text-slate-900">身故/全残 RM 100,000–153,765<br><span class="text-[10px] text-slate-500 font-normal">无医疗卡 · 纯储蓄联结</span></td>
+                <td class="px-4 py-3 text-right font-mono text-emerald-700 font-bold">RM 0 (已缴清)</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-emerald-700">93,458.90<br><span class="text-[10px] text-slate-500 font-normal">已缴满 3 年</span></td>
+                <td class="px-4 py-3 text-[11px] text-slate-700">
+                  <span class="text-emerald-700 font-bold">✅ 3年缴清 (Paid-Up)：</span>满期通知邮件已归档；月供设为 RM 0，静待 70 岁领取一次性 Bonus。
+                </td>
+              </tr>
+
+              <!-- Policy 4: 31528558 -->
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-4 py-3 font-semibold text-slate-900">
+                  <span class="font-mono text-slate-800 font-bold">31528558</span><br>
+                  <span class="text-[11px] font-normal text-slate-600">PRULink Supreme Plus (保诚)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-700">2024-10-25<br><span class="text-slate-400">2094-10-24</span></td>
+                <td class="px-4 py-3 font-medium text-slate-900">身故/全残 RM 124,875<br><span class="text-[10px] text-slate-500 font-normal">无医疗卡 · 2024全年COI仅RM 0.50 · 第10年起每5年享8% Loyalty Bonus</span></td>
+                <td class="px-4 py-3 text-right font-mono text-indigo-700 font-bold">RM 0 (停缴自持)</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-emerald-700">68,673.10<br><span class="text-[10px] text-slate-500 font-normal">原定RM 2,775/月(已缴约2年)</span></td>
+                <td class="px-4 py-3 text-[11px] text-slate-700">
+                  <span class="text-indigo-700 font-bold">⏸️ 停止缴付 (Premium Holiday)：</span>月供设为 RM 0，靠现有 RM 68.6k 单位净值自动冲抵微量 COI 至 70 岁。
+                </td>
+              </tr>
+
+              <!-- Policy 5: 31548510 -->
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-4 py-3 font-semibold text-slate-900">
+                  <span class="font-mono text-slate-800 font-bold">31548510</span><br>
+                  <span class="text-[11px] font-normal text-slate-600">PRUMillion Cover 2.0 (保诚)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-700">2024-11-26<br><span class="text-slate-400">2065-11-26 (70岁期满)</span></td>
+                <td class="px-4 py-3 font-medium text-slate-900">身故 RM 505,000 (至70岁)<br><span class="text-[10px] text-purple-700 font-normal">全残 RM 505,000 / 意外 RM 505,000 (至40岁) · 重疾为 RM 0</span></td>
+                <td class="px-4 py-3 text-right font-mono text-indigo-700 font-bold">RM 0 (停缴自持)</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-emerald-700">54,233.39<br><span class="text-[10px] text-slate-500 font-normal">原定RM 75,000/年(已缴1年)</span></td>
+                <td class="px-4 py-3 text-[11px] text-slate-700">
+                  <span class="text-indigo-700 font-bold">⏸️ 停止缴付 (Premium Holiday)：</span>2026-05-28已取消信用卡扣款；月供 RM 0，用现有 RM 54.2k 现值维持保单至 70 岁期满领取一次性 Bonus。
+                </td>
+              </tr>
+
+              <!-- Policy 6: 31333711 (NEW ADDITION) -->
+              <tr class="hover:bg-slate-50 transition bg-indigo-50/40">
+                <td class="px-4 py-3 font-semibold text-indigo-950">
+                  <span class="font-mono text-indigo-900 font-bold">31333711</span><br>
+                  <span class="text-[11px] font-semibold text-indigo-700">PRUEnrich Gain (保诚·补漏项)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-indigo-900">2023-10-31<br><span class="text-indigo-600">2038-10-31 (15年期满)</span></td>
+                <td class="px-4 py-3 font-medium text-indigo-950">名义保额 RM 62,000 · 身故为已缴保费105% (RM 159,360.89)<br><span class="text-[10px] text-indigo-700 font-normal">每年派发保证生存金 RM 4,340–RM 12,400/年</span></td>
+                <td class="px-4 py-3 text-right font-mono text-emerald-700 font-bold">RM 0 (已缴清)</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-indigo-800">151,772.28 (本金)<br><span class="text-[10px] text-indigo-600 font-normal">3年已全缴清(共RM 151,772.28)</span></td>
+                <td class="px-4 py-3 text-[11px] text-indigo-950">
+                  <span class="text-emerald-700 font-bold">⭐ 【看板漏项必补】3年缴清 (Paid-Up)：</span>最后半年期于 2026-04 缴毕；月供 RM 0，坐等 2038年10月31日 15年期满领本金+复利终期红利。
+                </td>
+              </tr>
+
+              <!-- Policy 7: AIA Combo -->
+              <tr class="hover:bg-slate-50 transition bg-blue-50/30">
+                <td class="px-4 py-3 font-semibold text-slate-900">
+                  <span class="font-mono text-blue-900 font-bold">0903327J01 & XXXX334J06</span><br>
+                  <span class="text-[11px] font-normal text-blue-700">A-LifeLink 2 / A-Life Cover / Critical Care (AIA)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-700">存续旧单 +<br><span class="text-blue-700 font-semibold">2026-09-30 获批</span></td>
+                <td class="px-4 py-3 font-medium text-blue-950">医疗主单年限额 RM 1,000万 (病房 RM 300/天)<br><span class="text-[10px] text-amber-800 font-normal">合计：人寿 RM 10万–15万 · 早期重疾 RM 5万–15万 · 晚期重疾 RM 18万–23万</span></td>
+                <td class="px-4 py-3 text-right font-mono text-blue-700 font-bold">RM 450.00 – 487.70 /月</td>
+                <td class="px-4 py-3 text-right font-mono text-slate-400">纯保障消费型<br><span class="text-[10px] text-slate-400 font-normal">0.00</span></td>
+                <td class="px-4 py-3 text-[11px] text-blue-900">
+                  <span class="text-blue-700 font-bold">🛡️ 唯一需要持续月供的核心纯保障支出：</span>正常供款 (Active Protection)；已用正式批号 0903327J01 与 XXXX334J06 锁定护城河。
+                </td>
+              </tr>
+
+              <!-- Policy 8: HLA EverLife -->
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-4 py-3 font-semibold text-slate-900">
+                  <span class="font-mono text-slate-800 font-bold">UL201412897991</span><br>
+                  <span class="text-[11px] font-normal text-slate-600">HLA Venture Life / EverLife (丰隆)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-700">存续中<br><span class="text-slate-400">终身</span></td>
+                <td class="px-4 py-3 font-medium text-slate-900">纯人寿保额 RM 100,000<br><span class="text-[10px] text-slate-500 font-normal">已砍除重叠 MedGlobal 150 医疗卡</span></td>
+                <td class="px-4 py-3 text-right font-mono text-emerald-700 font-bold">RM 0 (停缴自持)</td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-emerald-700">12,706.00<br><span class="text-[10px] text-slate-500 font-normal">10-07已提领RM 13,000入MBB</span></td>
+                <td class="px-4 py-3 text-[11px] text-slate-700">
+                  <span class="text-emerald-700 font-bold">💧 停止缴付 (Self-Sustaining)：</span>月供 RM 0，每年仅扣 COI RM 113.16/年，剩余现值 RM 12,706 可自动维持 112.3 年。
+                </td>
+              </tr>
+
+              <!-- Policy 9: HLA ExcelCash (NEW ADDITION) -->
+              <tr class="hover:bg-slate-50 transition bg-amber-50/20">
+                <td class="px-4 py-3 font-semibold text-slate-900">
+                  <span class="font-mono text-amber-900 font-bold">IL20010664472</span><br>
+                  <span class="text-[11px] font-semibold text-amber-800">HLA ExcelCash (丰隆·补漏项)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-700">2001-12-28<br><span class="text-slate-400">2095-12-27</span></td>
+                <td class="px-4 py-3 font-medium text-slate-900">基本人寿 RM 30,000 + 提前给付重疾 RM 30,000<br><span class="text-[10px] text-amber-800 font-normal">投保人：TAI KIM PIAN，受保人：TAI CHIA JEK</span></td>
+                <td class="px-4 py-3 text-right font-mono text-amber-800 font-bold">RM 10.20 /月<br><span class="text-[10px] text-slate-400 font-normal">年保费481.5-分红359.1</span></td>
+                <td class="px-4 py-3 text-right font-mono font-bold text-amber-800">分红累积池<br><span class="text-[10px] text-slate-500 font-normal">净成本RM 122.40/年</span></td>
+                <td class="px-4 py-3 text-[11px] text-slate-700">
+                  <span class="text-amber-800 font-bold">🏷️ 【看板漏项必补】父母早期高性价比老保单：</span>用每年派发红利抵扣保费继续持有，提供 RM 30,000 终身重疾与人寿底仓。
+                </td>
+              </tr>
+
+              <!-- Policy 10: Chubb & Samsung Care+ -->
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-4 py-3 font-semibold text-slate-900">
+                  <span class="font-mono text-slate-800 font-bold">MMKMA0010050088</span><br>
+                  <span class="text-[11px] font-normal text-slate-600">Chubb 保险 & Samsung Care+</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-700">2026-10-05 &<br><span class="text-slate-400">2026-09-08</span></td>
+                <td class="px-4 py-3 font-medium text-slate-900">Samsung Care+ 2年意外浸液保障<br><span class="text-[10px] text-slate-500 font-normal">证书号 MYSSMYCB20260908000444 + Chubb 电子单</span></td>
+                <td class="px-4 py-3 text-right font-mono text-slate-400">已全额结清<br><span class="text-[10px] text-slate-400 font-normal">RM 133.65</span></td>
+                <td class="px-4 py-3 text-right font-mono text-slate-400">消费型设备保障<br><span class="text-[10px] text-slate-400 font-normal">0.00</span></td>
+                <td class="px-4 py-3 text-[11px] text-slate-600">
+                  ✅ 归入看板「附加财物与意外保障」栏，已一次性付清。
+                </td>
+              </tr>
+
+              <!-- Policy 11: 31030192 (Historical Matured) -->
+              <tr class="bg-slate-100/70 hover:bg-slate-100 transition text-slate-500">
+                <td class="px-4 py-3 font-semibold text-slate-600">
+                  <span class="font-mono text-slate-500 font-bold">31030192</span><br>
+                  <span class="text-[11px] font-normal text-slate-400">PRUEzy Saver (保诚·历史结清档)</span>
+                </td>
+                <td class="px-4 py-3 font-mono text-slate-500">2023-10-22<br><span class="text-slate-400">2025-10-22 (已满期)</span></td>
+                <td class="px-4 py-3 font-medium text-slate-600">2年期高息储蓄险 (每年RM 20,000 × 2年 = RM 40,000)<br><span class="text-[10px] text-slate-400 font-normal">享 3.0% 保证年息 + 1.8% 活动奖励</span></td>
+                <td class="px-4 py-3 text-right font-mono text-slate-400">已满期结清<br><span class="text-[10px] text-slate-400 font-normal">RM 0</span></td>
+                <td class="px-4 py-3 text-right font-mono text-slate-400">0.00 (已领回)<br><span class="text-[10px] text-slate-400 font-normal">RM 40,000本金已退还</span></td>
+                <td class="px-4 py-3 text-[11px] text-slate-500">
+                  📁 <strong>【历史结清档】：</strong>已于 2025-10-22 满期 100% 退还本金 RM 40,000；在看板归入「已满期结清 (Matured)」，不计入当前持仓。
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: FUTURE POLICY SIMULATOR ==================== -->
+    <section id="view-simulator" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div class="border-b border-slate-200 pb-4 mb-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 class="text-lg font-black text-slate-900">📈 未来保单多维推演与精算压力测试模拟器</h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                基于 2026 实盘基准（实岁 31 岁 / 保险年龄 32 ANB）及零追加现金保费模式，模拟保单现金价值（现值 RM 450,830）在微量 COI 扣除与复合收益下的演变曲线
+              </p>
+            </div>
+            <span class="px-3 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold">
+              精算引擎驱动 · 支持压力测试
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Controls Column (4 cols) -->
+          <div class="lg:col-span-4 space-y-5 bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600 border-b border-slate-200 pb-2">🎛️ 动态精算变量调节</h4>
+
+            <!-- Age Progression -->
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>推演目标年龄</span>
+                <span id="lbl-target-age" class="text-indigo-600 font-mono text-sm">55 岁 (未来 24 年)</span>
+              </div>
+              <input type="range" id="sim-age" min="31" max="75" step="1" value="55" oninput="runPolicySimulation()" class="w-full accent-indigo-600 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>31岁 (当前基准)</span>
+                <span>55岁 (退休前期)</span>
+                <span>70–75岁 (Bonus兑付期)</span>
+              </div>
+            </div>
+
+            <!-- ILP Investment Return Rate -->
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>投资型保单年化投资回报 (PRULink / HLA)</span>
+                <span id="lbl-return-rate" class="text-emerald-600 font-mono text-sm">4.5% (中性稳健)</span>
+              </div>
+              <input type="range" id="sim-return" min="1.0" max="8.0" step="0.5" value="4.5" oninput="runPolicySimulation()" class="w-full accent-emerald-600 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>1.0% (悲观熊市)</span>
+                <span>4.5% (基准中性)</span>
+                <span>8.0% (乐观牛市)</span>
+              </div>
+            </div>
+
+            <!-- Medical Inflation -->
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>马来西亚医疗通胀率 (Medical Inflation)</span>
+                <span id="lbl-med-inflation" class="text-rose-600 font-mono text-sm">10.0% / 年</span>
+              </div>
+              <input type="range" id="sim-inflation" min="5.0" max="15.0" step="0.5" value="10.0" oninput="runPolicySimulation()" class="w-full accent-rose-600 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>5.0% (温和)</span>
+                <span>10.0% (历史均值)</span>
+                <span>15.0% (极端飙升)</span>
+              </div>
+            </div>
+
+            <!-- Policy Cash Withdrawal Sensitivity -->
+            <div>
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span>未来额外提领现金价值 (用于房产/电商)</span>
+                <span id="lbl-extra-withdraw" class="text-amber-600 font-mono text-sm">RM 0 (保持保单蓄水)</span>
+              </div>
+              <input type="range" id="sim-withdraw" min="0" max="50000" step="5000" value="0" oninput="runPolicySimulation()" class="w-full accent-amber-600 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                <span>RM 0</span>
+                <span>RM 25,000</span>
+                <span>RM 50,000</span>
+              </div>
+            </div>
+
+            <!-- Preset Scenarios Buttons -->
+            <div class="pt-2 border-t border-slate-200">
+              <div class="text-[11px] font-semibold text-slate-500 mb-2">快速测试典型场景：</div>
+              <div class="grid grid-cols-3 gap-1.5">
+                <button onclick="setSimulationScenario('conservative')" class="px-2 py-1 bg-white border border-slate-200 rounded text-[11px] font-medium text-slate-700 hover:bg-slate-100 transition">保守承压</button>
+                <button onclick="setSimulationScenario('baseline')" class="px-2 py-1 bg-white border border-slate-200 rounded text-[11px] font-medium text-slate-700 hover:bg-slate-100 transition">基准中性</button>
+                <button onclick="setSimulationScenario('aggressive')" class="px-2 py-1 bg-white border border-slate-200 rounded text-[11px] font-medium text-slate-700 hover:bg-slate-100 transition">乐观繁荣</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Chart & Output Cards (8 cols) -->
+          <div class="lg:col-span-8 space-y-4">
+            <!-- 4 Output Indicator Blocks -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="p-3 rounded-xl border border-slate-200 bg-white">
+                <div class="text-[11px] text-slate-500 font-semibold">推演期末现金价值</div>
+                <div id="sim-out-cashvalue" class="text-lg font-black text-emerald-600 mt-1 font-mono">RM 1,280,000</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">PRU 5大单+HLA复利滚存</div>
+              </div>
+
+              <div class="p-3 rounded-xl border border-slate-200 bg-white">
+                <div class="text-[11px] text-slate-500 font-semibold">保单健康与续存安全期</div>
+                <div id="sim-out-status" class="text-lg font-black text-blue-600 mt-1 font-mono">&gt; 39 年至 70 岁</div>
+                <div class="text-[10px] text-emerald-600 mt-0.5">零追加保费自持安全</div>
+              </div>
+
+              <div class="p-3 rounded-xl border border-slate-200 bg-white">
+                <div class="text-[11px] text-slate-500 font-semibold">年化纯风险成本 (COI)</div>
+                <div id="sim-out-coi" class="text-lg font-black text-rose-600 mt-1 font-mono">RM 1,580 /年</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">账户收益完全覆盖</div>
+              </div>
+
+              <div class="p-3 rounded-xl border border-slate-200 bg-white">
+                <div class="text-[11px] text-slate-500 font-semibold">确定性满期金回款</div>
+                <div class="text-lg font-black text-indigo-600 mt-1 font-mono">+RM 151,772+</div>
+                <div class="text-[10px] text-indigo-500 mt-0.5">PRUEnrich 2038年期满兑付</div>
+              </div>
+            </div>
+
+            <!-- Projection Chart Canvas with Multi-View Switcher -->
+            <div class="p-4 sm:p-5 rounded-2xl border border-slate-200 bg-white shadow-sm space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                <div class="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100/90 rounded-xl">
+                  <button id="btn-mode-crossover" onclick="setSimChartMode('crossover')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-white text-indigo-700 shadow-xs transition">
+                    🏆 视角 1: 财富对冲与债务剪刀差 (Golden Crossover)
+                  </button>
+                  <button id="btn-mode-fan" onclick="setSimChartMode('fan')" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition">
+                    📊 视角 2: 40年多情景走势扇形图 (Fan Chart)
+                  </button>
+                  <button id="btn-mode-coi" onclick="setSimChartMode('coi')" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition">
+                    🛡️ 视角 3: 现金价值 vs 纯保费扣除 (COI Buffer)
+                  </button>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span id="sim-crossover-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                    🌟 黄金交叉点：45~47岁达成
+                  </span>
+                  <span class="text-[11px] text-slate-400 font-mono">单位: RM</span>
+                </div>
+              </div>
+
+              <div id="sim-chart-subtitle" class="text-xs text-slate-600 font-semibold flex items-center justify-between">
+                <span>📈 动态走势推演：保单复利增长 (绿色) vs 30年房贷本金摊销 (红色虚线) vs 个人核心净资产 (蓝色加粗)</span>
+                <span id="sim-status-pill" class="text-[11px] font-mono text-emerald-600">已扣除零月供模式微量 COI</span>
+              </div>
+
+              <div class="relative h-80 w-full">
+                <canvas id="futureSimulationChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Strategic Interpretation Box -->
+            <div id="sim-insight-box" class="p-4 rounded-xl border border-blue-200 bg-blue-50/60 text-xs text-blue-900 leading-relaxed">
+              <strong>💡 精算顾问洞察：</strong>在当前中性年化回报率 4.5% 下，您的投资型保单（PRULink 与 HLA）在 58 岁前均具备极强抗风险韧性，保费与分红能完全覆盖自然费率上涨；若未来考虑从 HLA 再次提领流动资金，建议单次提领不超过 RM 15,000，以防 60 岁后现金价值过快被 COI 侵蚀。
+            </div>
+
+            <!-- Lifetime Financial & Policy Milestone Timeline (2026-2065) -->
+            <div class="p-5 rounded-2xl border border-slate-200 bg-white shadow-xs space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base font-black text-slate-900">🚩 2026–2065 全生命周期关键财务与保单里程碑全景时间轴 (Milestone Roadmap)</h3>
+                  <span class="px-2 py-0.5 text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-full">31岁至70岁全景推演</span>
+                </div>
+                <span class="text-xs text-slate-400">已穿透对齐实盘合同条款与放款时间表</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                <!-- Milestone 1 -->
+                <div class="p-3.5 rounded-xl border border-blue-200 bg-blue-50/40 hover:bg-blue-50/80 transition relative">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600 text-white">2026 Q4 · 31岁</span>
+                    <span class="text-[10px] font-bold text-blue-700">基准确立</span>
+                  </div>
+                  <div class="font-bold text-slate-900 text-xs mt-1">居銮店屋起租 · 5单零月供锁死</div>
+                  <p class="text-slate-600 text-[11px] mt-1.5 leading-relaxed">
+                    店屋 RM 2,000/月 租赁落地，打通 ALDIMART 双向节税 (省 15% 企业税)；保诚 5 大单确立零月供，个人真实纯保障支出降至仅 RM 460–498/月。
+                  </p>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div class="p-3.5 rounded-xl border border-amber-200 bg-amber-50/40 hover:bg-amber-50/80 transition relative">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-600 text-white">2027 · 32岁</span>
+                    <span class="text-[10px] font-bold text-amber-700">双交房软装</span>
+                  </div>
+                  <div class="font-bold text-slate-900 text-xs mt-1">Paragon & RedEarth 双交付</div>
+                  <p class="text-slate-600 text-[11px] mt-1.5 leading-relaxed">
+                    新山自住与云顶短租双期房交付 (VP)，投入 RM 70k–90k 软装准备金；云顶开启短租自偿 (满额月供 RM 1,767，自偿率预计超 100%)。
+                  </p>
+                </div>
+
+                <!-- Milestone 3 -->
+                <div class="p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/40 hover:bg-indigo-50/80 transition relative">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-600 text-white">2030 · 35岁</span>
+                    <span class="text-[10px] font-bold text-indigo-700">首期大红利</span>
+                  </div>
+                  <div class="font-bold text-slate-900 text-xs mt-1">PRULink 10年期 8% Loyalty Bonus</div>
+                  <p class="text-slate-600 text-[11px] mt-1.5 leading-relaxed">
+                    PRULink Supreme Plus (31528558) 满 10 年，首笔 8% Loyalty Bonus 自动滚入单位净值，其后每 5 年持续派发，复利护城河显著加宽。
+                  </p>
+                </div>
+
+                <!-- Milestone 4 -->
+                <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/80 hover:bg-slate-100 transition relative">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-700 text-white">2035 · 40岁</span>
+                    <span class="text-[10px] font-bold text-slate-600">附加险解脱</span>
+                  </div>
+                  <div class="font-bold text-slate-900 text-xs mt-1">意外与全残附约到期解脱</div>
+                  <p class="text-slate-600 text-[11px] mt-1.5 leading-relaxed">
+                    PRUMillion Cover 2.0 (31548510) 意外与全残（RM 50.5万）自然到期，纯寿险 50.5 万保额在极低 COI 下零月供延续至 70 岁。
+                  </p>
+                </div>
+
+                <!-- Milestone 5 -->
+                <div class="p-3.5 rounded-xl border border-emerald-300 bg-emerald-50/40 hover:bg-emerald-50/80 transition relative">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-600 text-white">2038-10 · 43岁</span>
+                    <span class="text-[10px] font-bold text-emerald-700">大额确定回流</span>
+                  </div>
+                  <div class="font-bold text-slate-900 text-xs mt-1">PRUEnrich 15年保证期满 (+RM 15.9万)</div>
+                  <p class="text-slate-600 text-[11px] mt-1.5 leading-relaxed">
+                    PRUEnrich Gain (31333711) 保证期满！一次性领回保证现金与期满分红 <strong>RM 159,360+</strong>！可直接全额清偿一套房贷或转投高股息资产。
+                  </p>
+                </div>
+
+                <!-- Milestone 6 -->
+                <div class="p-3.5 rounded-xl border border-purple-300 bg-purple-50/40 hover:bg-purple-50/80 transition relative">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-600 text-white">2045–2046 · 50–51岁</span>
+                    <span class="text-[10px] font-bold text-purple-700">🌟 黄金交叉点</span>
+                  </div>
+                  <div class="font-bold text-slate-900 text-xs mt-1">保单现值反超房贷总负债</div>
+                  <p class="text-slate-600 text-[11px] mt-1.5 leading-relaxed">
+                    保单现金总价值突破 <strong>RM 100 万</strong>，首次超越三套房产的剩余房贷总和（约 RM 60万–70万），实现 100% 资产无忧自偿对冲！
+                  </p>
+                </div>
+
+                <!-- Milestone 7 -->
+                <div class="p-3.5 rounded-xl border border-teal-300 bg-teal-50/40 hover:bg-teal-50/80 transition relative">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-600 text-white">2056 · 61岁</span>
+                    <span class="text-[10px] font-bold text-teal-700">🔑 房贷清零</span>
+                  </div>
+                  <div class="font-bold text-slate-900 text-xs mt-1">30年期房贷全部结清</div>
+                  <p class="text-slate-600 text-[11px] mt-1.5 leading-relaxed">
+                    新山与云顶 30 年期房贷全面偿清，三处不动产全部转为零负债纯资产（预估总市值超 RM 250万+），净租金全额转化为纯被动养老现金流。
+                  </p>
+                </div>
+
+                <!-- Milestone 8 -->
+                <div class="p-3.5 rounded-xl border border-rose-300 bg-rose-50/40 hover:bg-rose-50/80 transition relative">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-600 text-white">2065 · 70岁</span>
+                    <span class="text-[10px] font-bold text-rose-700">终极大奖兑现</span>
+                  </div>
+                  <div class="font-bold text-slate-900 text-xs mt-1">PRUMillion 70岁满期领取 Bonus</div>
+                  <p class="text-slate-600 text-[11px] mt-1.5 leading-relaxed">
+                    PRUMillion Cover 2.0 (31548510) 满期终极大奖兑现，领回全额满期红利 Bonus！终生保单生涯圆满收官，实现跨周期免税财富传承。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: REAL ESTATE & CASH FLOW ==================== -->
+    <section id="view-properties" class="hidden space-y-6">
+      <!-- ==================== THREE INDEPENDENT REAL ESTATE PROJECTS: ISOLATED P&L & CASH FLOW LEDGERS ==================== -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+        <!-- Section Header with Independence Declaration -->
+        <div class="border-b border-slate-200 pb-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-lg font-black text-slate-900">📑 三大独立投资不动产 — 损益 (P&L) 与现金流严格独立核算表</h3>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-200">
+                  严格独立核算 · 绝无跨资产交叉补贴
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">
+                依据独立会计主体原则（Entity Principle），剥离一切跨资产租金垫付与抵消假设；各标的真实收支、月度净现金流与经济纯损益（P&L）完全隔离呈现，为单项投资决策提供真实依据。
+              </p>
+            </div>
+            <!-- View Mode Switcher -->
+            <div class="flex flex-wrap items-center gap-1.5 p-1 bg-slate-100 rounded-xl">
+              <button id="btn-ledger-all" onclick="switchPropertyLedger('all')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-xs transition">
+                📋 全部独立账目
+              </button>
+              <button id="btn-ledger-paragon" onclick="switchPropertyLedger('paragon')" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-200 transition">
+                🏠 Paragon Gateway (自住)
+              </button>
+              <button id="btn-ledger-redearth" onclick="switchPropertyLedger('redearth')" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-200 transition">
+                ⛰️ RedEarth 云顶 (短租)
+              </button>
+              <button id="btn-ledger-shophouse" onclick="switchPropertyLedger('shophouse')" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-200 transition">
+                🏬 居銮店屋 (商业长租)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Property 1 Isolated Ledger: Paragon Gateway A-24-10 -->
+        <div id="ledger-paragon" class="border border-blue-200 rounded-2xl bg-blue-50/20 p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-blue-200/80 pb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm flex items-center justify-center">1</span>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h4 class="text-base font-black text-slate-900">新山自住房 · Paragon Gateway A-24-10</h4>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 border border-blue-200">纯自住住宅 · 个人居住核心</span>
+                </div>
+                <div class="text-xs text-slate-500 mt-0.5">
+                  SPA 合同价: <strong class="text-slate-800 font-mono">RM 581,812.00</strong> | 大华银行 (UOB) 80% 贷款: <strong class="text-slate-800 font-mono">RM 465,449.00 @ 4.2%</strong> (35年期)
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200">
+                已付首期: <strong class="text-blue-700 font-mono">RM 116,363.00</strong> (20%)
+              </span>
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                当前: 施工期 (放款 2(e)(i) 内墙批荡)
+              </span>
+            </div>
+          </div>
+
+          <!-- Paragon Ledger Table -->
+          <div class="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-700 uppercase font-bold border-b border-slate-200">
+                <tr>
+                  <th class="px-4 py-3">会计核算科目</th>
+                  <th class="px-4 py-3 text-right">当前建筑施工期 (2026年实盘)</th>
+                  <th class="px-4 py-3 text-right">交付后自住常态 (Post-VP 2027+)</th>
+                  <th class="px-4 py-3">会计属性与核验凭据</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="px-4 py-2.5 font-bold text-slate-800">月度总进项流水 (Inflow)</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">纯个人自住住宅，无租赁收入产生</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-4 py-2.5 font-bold text-slate-800">银行按揭实扣月供 (Mortgage)</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 750.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 2,117.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">UOB ONE 账户 PayNet 5000052116 固定代扣；交房后为 35年本息等额</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2 text-slate-600 pl-8">　↳ 其中：利息支出费用化 (Interest)</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-600">-RM 750.00</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-600">-RM 1,629.00</td>
+                  <td class="px-4 py-2 text-slate-400 text-[10px]">纯财务成本，直接计入当期损益</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2 text-slate-600 pl-8">　↳ 其中：本金归还资产化 (Principal)</td>
+                  <td class="px-4 py-2 text-right font-mono text-emerald-600">+RM 0.00</td>
+                  <td class="px-4 py-2 text-right font-mono text-emerald-600">+RM 488.00</td>
+                  <td class="px-4 py-2 text-emerald-700 text-[10px]">转化为个人房屋净资产权益，非经济损耗</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-4 py-2.5 font-bold text-slate-800">物业管理与偿债基金 (Maintenance)</td>
+                  <td class="px-4 py-2.5 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 280.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">施工期由发展商承担；交房后由业主自担 (~RM 0.35/sqft)</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2.5 font-bold text-slate-800">门牌税与地税 (Holding Taxes)</td>
+                  <td class="px-4 py-2.5 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 70.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">新山市议会 (MBJB) 住宅门牌税与土地局地税按月折算</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-4 py-2.5 font-bold text-slate-800">业主自用水电与网络 (Utilities)</td>
+                  <td class="px-4 py-2.5 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 200.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">家庭日常生活自付刚性开销</td>
+                </tr>
+                <tr class="bg-blue-50/60 font-black border-t border-blue-200">
+                  <td class="px-4 py-3 text-blue-950">💸 独立月度净现金流 (Net Cash Flow)</td>
+                  <td class="px-4 py-3 text-right font-mono text-rose-700 text-sm">-RM 750.00 / 月</td>
+                  <td class="px-4 py-3 text-right font-mono text-rose-700 text-sm">-RM 2,667.00 / 月</td>
+                  <td class="px-4 py-3 text-blue-900 font-bold text-[11px]">该单盘每月需个人自备现金承托的全额现金流流出</td>
+                </tr>
+                <tr class="bg-amber-50/60 font-black border-t border-amber-200">
+                  <td class="px-4 py-3 text-amber-950">📊 独立月度纯经济损益 (Economic P&L)</td>
+                  <td class="px-4 py-3 text-right font-mono text-amber-800 text-sm">-RM 750.00 / 月</td>
+                  <td class="px-4 py-3 text-right font-mono text-amber-800 text-sm">-RM 2,179.00 / 月</td>
+                  <td class="px-4 py-3 text-amber-900 font-bold text-[11px]">扣除本金强制储蓄（RM 488）后的单盘真实持有纯成本损益</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Paragon Standalone Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 bg-white rounded-xl border border-slate-200">
+              <span class="text-slate-500 font-semibold">自备沉淀资金合计</span>
+              <div class="text-base font-black text-slate-900 mt-0.5 font-mono">RM 151,363.00</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">已付首期 RM 116,363 + 交付预计软装 RM 35k</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-slate-200">
+              <span class="text-slate-500 font-semibold">商业自偿与回收期</span>
+              <div class="text-base font-black text-slate-700 mt-0.5">纯自用无回收期</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">自住居住资产，不依靠租金回本</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-slate-200">
+              <span class="text-slate-500 font-semibold">独立核算与交叉补贴状态</span>
+              <div class="text-base font-black text-emerald-700 mt-0.5">100% 独立核算</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">无任何外部租金冲抵，支出全额独立列支</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Property 2 Isolated Ledger: Genting RedEarth C-53-03A -->
+        <div id="ledger-redearth" class="border border-rose-200 rounded-2xl bg-rose-50/20 p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-rose-200/80 pb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-lg bg-rose-600 text-white font-black text-sm flex items-center justify-center">2</span>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h4 class="text-base font-black text-slate-900">文旅短租商业 · RedEarth 云顶 C-53-03A</h4>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">商业服务式公寓 · 托管短租自偿</span>
+                </div>
+                <div class="text-xs text-slate-500 mt-0.5">
+                  SPA 合同价: <strong class="text-slate-800 font-mono">RM 457,000.00</strong> | 大马银行 (AmBank) 85% 贷款: <strong class="text-slate-800 font-mono">RM 388,450.00 @ 4.2%</strong> (35年期)
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200">
+                已付首期: <strong class="text-rose-700 font-mono">RM 68,550.00</strong> (15%)
+              </span>
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200">
+                当前: 施工期 (Stage 2(c) 结构框架)
+              </span>
+            </div>
+          </div>
+
+          <!-- RedEarth Ledger Table -->
+          <div class="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-700 uppercase font-bold border-b border-slate-200">
+                <tr>
+                  <th class="px-4 py-3">会计核算科目</th>
+                  <th class="px-4 py-3 text-right">当前建筑施工期 (2026年实盘)</th>
+                  <th class="px-4 py-3 text-right">交付后标准短租 (Net 70/30 基准)</th>
+                  <th class="px-4 py-3 text-right">交付后防守长租 (LTR 备选基准)</th>
+                  <th class="px-4 py-3">会计属性与核验凭据</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="px-4 py-2.5 font-bold text-slate-800">月度总营业流水 (Gross Booking)</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-blue-600">+RM 3,110.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-blue-600">+RM 1,400.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">短租基准: 平日6天@140 + 周末7天@320 (入住率43.3%)；长租固定月租</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-4 py-2 text-slate-600 pl-8">　↳ OTA 平台佣金 (15% 佣金扣除)</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-600">-RM 466.50</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2 text-slate-400 text-[10px]">Airbnb / Agoda / Booking 线上平台抽成</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2 text-slate-600 pl-8">　↳ 托管运营商分成 (Net 30% 托管提成)</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-600">-RM 793.05</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2 text-slate-400 text-[10px]">专业托管代运营分成（扣除OTA后三七开）</td>
+                </tr>
+                <tr class="bg-blue-50/40 font-bold">
+                  <td class="px-4 py-2.5 text-blue-900">业主实得到账房费 (Owner Gross)</td>
+                  <td class="px-4 py-2.5 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono text-blue-700">+RM 1,850.45</td>
+                  <td class="px-4 py-2.5 text-right font-mono text-blue-700">+RM 1,400.00</td>
+                  <td class="px-4 py-2.5 text-blue-800 text-[11px]">扣除中介与代运营后的业主净流入</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-4 py-2.5 font-bold text-slate-800">全口径持有与运营成本 (Total OPEX)</td>
+                  <td class="px-4 py-2.5 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 1,177.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 355.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">含物业225/宽带110/税险150/TNB除湿电190/洗烘180/耗品120/折旧162；长租降至355</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2.5 font-bold text-slate-800">商业贷款满额月供 (Mortgage)</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 465.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 1,766.87</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 1,766.87</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">建筑期月息实扣 ~RM 380–550；交房后 AmBank 35年期合同满额月供</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2 text-slate-600 pl-8">　↳ 其中：利息支出费用化 (Interest)</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-600">-RM 465.00</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-600">-RM 1,358.97</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-600">-RM 1,358.97</td>
+                  <td class="px-4 py-2 text-slate-400 text-[10px]">纯利息支出，计入当期费用</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2 text-slate-600 pl-8">　↳ 其中：本金归还资产化 (Principal)</td>
+                  <td class="px-4 py-2 text-right font-mono text-emerald-600">+RM 0.00</td>
+                  <td class="px-4 py-2 text-right font-mono text-emerald-600">+RM 407.90</td>
+                  <td class="px-4 py-2 text-right font-mono text-emerald-600">+RM 407.90</td>
+                  <td class="px-4 py-2 text-emerald-700 text-[10px]">首年每月本金偿付积累（强制储蓄）</td>
+                </tr>
+                <tr class="bg-rose-50/60 font-black border-t border-rose-200">
+                  <td class="px-4 py-3 text-rose-950">💸 独立月度净现金流 (Net Cash Flow)</td>
+                  <td class="px-4 py-3 text-right font-mono text-rose-700 text-sm">-RM 465.00 / 月</td>
+                  <td class="px-4 py-3 text-right font-mono text-rose-700 text-sm">-RM 1,009.42 / 月</td>
+                  <td class="px-4 py-3 text-right font-mono text-rose-700 text-sm">-RM 721.87 / 月</td>
+                  <td class="px-4 py-3 text-rose-900 font-bold text-[11px]">该单盘每月真实资金缺口，需独立贴补（严禁计入外部租金对冲）</td>
+                </tr>
+                <tr class="bg-amber-50/60 font-black border-t border-amber-200">
+                  <td class="px-4 py-3 text-amber-950">📊 独立月度纯经济损益 (Economic P&L)</td>
+                  <td class="px-4 py-3 text-right font-mono text-amber-800 text-sm">-RM 465.00 / 月</td>
+                  <td class="px-4 py-3 text-right font-mono text-amber-800 text-sm">-RM 601.52 / 月</td>
+                  <td class="px-4 py-3 text-right font-mono text-amber-800 text-sm">-RM 313.97 / 月</td>
+                  <td class="px-4 py-3 text-amber-900 font-bold text-[11px]">计入本金净积累（+RM 408）后的真实经济纯净损益</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- RedEarth Standalone Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 bg-white rounded-xl border border-slate-200">
+              <span class="text-slate-500 font-semibold">自备沉淀资金合计</span>
+              <div class="text-base font-black text-slate-900 mt-0.5 font-mono">RM 113,550.00</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">已付首期 RM 68,550 + 预计软装开荒 RM 45,000</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-slate-200">
+              <span class="text-slate-500 font-semibold">独立自偿平衡门槛</span>
+              <div class="text-base font-black text-rose-600 mt-0.5 font-mono">流水需 RM 4,948/月</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">入住率须超 59% (ADR RM 280) 方可现金流自偿</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-rose-200 bg-rose-50/30">
+              <span class="text-rose-800 font-semibold">独立核算与交叉补贴声明</span>
+              <div class="text-base font-black text-rose-700 mt-0.5">严禁跨项目租金抵扣</div>
+              <div class="text-[10px] text-rose-600 mt-0.5">不与居銮店屋租金混同，缺口 -RM 1,010 独立核算</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Property 3 Isolated Ledger: Kluang Shophouse No. 46 -->
+        <div id="ledger-shophouse" class="border border-emerald-200 rounded-2xl bg-emerald-50/20 p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-emerald-200/80 pb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white font-black text-sm flex items-center justify-center">3</span>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h4 class="text-base font-black text-slate-900">商业租赁税盾 · 居銮商业店屋 No. 46</h4>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">双层商业店屋 · 稳健收租与税盾</span>
+                </div>
+                <div class="text-xs text-slate-500 mt-0.5">
+                  认购协议 (ATP): <strong class="text-slate-800 font-mono">RM 345,000.00</strong> | 丰隆银行 (HLB) 80% 贷款: <strong class="text-slate-800 font-mono">预估 RM 276,000.00 @ 4.5%</strong> (审批中)
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-white text-slate-700 border border-slate-200">
+                已付首期: <strong class="text-emerald-700 font-mono">RM 34,500.00</strong> (10%)
+              </span>
+              <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                2026-11-01 起租 (RM 2,000/月)
+              </span>
+            </div>
+          </div>
+
+          <!-- Shophouse Ledger Table -->
+          <div class="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-2xs">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-50 text-slate-700 uppercase font-bold border-b border-slate-200">
+                <tr>
+                  <th class="px-4 py-3">会计核算科目</th>
+                  <th class="px-4 py-3 text-right">起租初期阶段 (2026.11起 · 贷款未放款)</th>
+                  <th class="px-4 py-3 text-right">贷款放款后常态运营 (Post-Drawdown)</th>
+                  <th class="px-4 py-3">会计属性与核验凭据</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="px-4 py-2.5 font-bold text-slate-800">月度租金总收入 (Gross Rental Inflow)</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-emerald-600">+RM 2,000.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-emerald-600">+RM 2,000.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">ALDIMART 对公租赁协议，2026-11-01 正式起租</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-4 py-2.5 font-bold text-slate-800">商业按揭贷款月供 (Mortgage)</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 1,450.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">当前审批中暂无月供；放款后预估月供 ~RM 1,450 (按80%贷款 RM 276k 预估)</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2 text-slate-600 pl-8">　↳ 其中：利息支出费用化 (Interest)</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-600">-RM 1,035.00</td>
+                  <td class="px-4 py-2 text-slate-400 text-[10px]">贷款利息财务成本，计入当期费用</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2 text-slate-600 pl-8">　↳ 其中：本金归还资产化 (Principal)</td>
+                  <td class="px-4 py-2 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2 text-right font-mono text-emerald-600">+RM 415.00</td>
+                  <td class="px-4 py-2 text-emerald-700 text-[10px]">转化为店屋自身净资产权益积累</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-4 py-2.5 font-bold text-slate-800">居銮市议会商业门牌税 (Assessment Tax)</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 67.67</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 67.67</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">MPK 商业门牌税 RM 812.00/年，按月折算</td>
+                </tr>
+                <tr>
+                  <td class="px-4 py-2.5 font-bold text-slate-800">柔佛州土地局商业地税 (Quit Rent)</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 19.83</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 19.83</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">地契 Geran 128820 Lot 35517 地税 RM 238.00/年，按月折算</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-4 py-2.5 font-bold text-slate-800">独立业主结构维护储备金 (Reserve)</td>
+                  <td class="px-4 py-2.5 text-right font-mono text-slate-400">RM 0.00</td>
+                  <td class="px-4 py-2.5 text-right font-mono font-bold text-rose-600">-RM 50.00</td>
+                  <td class="px-4 py-2.5 text-slate-500 text-[11px]">建筑外立面与基础结构防渗维护金（室内由租客自理）</td>
+                </tr>
+                <tr class="bg-emerald-50/60 font-black border-t border-emerald-200">
+                  <td class="px-4 py-3 text-emerald-950">💸 独立月度净现金流 (Net Cash Flow)</td>
+                  <td class="px-4 py-3 text-right font-mono text-emerald-700 text-sm">+RM 1,912.50 / 月</td>
+                  <td class="px-4 py-3 text-right font-mono text-emerald-700 text-sm">+RM 412.50 / 月</td>
+                  <td class="px-4 py-3 text-emerald-900 font-bold text-[11px]">店屋单盘自身独立产生的纯正自由现金流盈余</td>
+                </tr>
+                <tr class="bg-amber-50/60 font-black border-t border-amber-200">
+                  <td class="px-4 py-3 text-amber-950">📊 独立月度纯经济损益 (Economic P&L)</td>
+                  <td class="px-4 py-3 text-right font-mono text-emerald-800 text-sm">+RM 1,912.50 / 月</td>
+                  <td class="px-4 py-3 text-right font-mono text-emerald-800 text-sm">+RM 827.50 / 月</td>
+                  <td class="px-4 py-3 text-emerald-900 font-bold text-[11px]">店屋单盘税前真实经济纯利（含每月本金积累 RM 415）</td>
+                </tr>
+                <tr class="bg-blue-50/40 text-[11px]">
+                  <td class="px-4 py-2 font-bold text-blue-900">🛡️ 关联企业双向税盾增益 (Corporate Tax Shield)</td>
+                  <td class="px-4 py-2 text-right font-mono text-blue-700 font-bold">+RM 300.00 / 月</td>
+                  <td class="px-4 py-2 text-right font-mono text-blue-700 font-bold">+RM 300.00 / 月</td>
+                  <td class="px-4 py-2 text-blue-800">ALDIMART 15% 企业所得税档位下，租金支出每年省税 RM 3,600</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Shophouse Standalone Metrics -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 bg-white rounded-xl border border-slate-200">
+              <span class="text-slate-500 font-semibold">自备沉淀资金合计</span>
+              <div class="text-base font-black text-slate-900 mt-0.5 font-mono">RM 35,500.00</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">已付 10% 首期 RM 34,500 + 律所费 RM 1,000</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-emerald-200 bg-emerald-50/30">
+              <span class="text-emerald-800 font-semibold">放款后独立现金回报率 (Cash-on-Cash)</span>
+              <div class="text-base font-black text-emerald-700 mt-0.5 font-mono">13.9% ~ 24.1%</div>
+              <div class="text-[10px] text-emerald-600 mt-0.5">纯现金 13.9% / 若叠加企业税盾达 24.1% (回本 4.15~7.17 年)</div>
+            </div>
+            <div class="p-3 bg-white rounded-xl border border-slate-200">
+              <span class="text-slate-500 font-semibold">独立核算与交叉补贴声明</span>
+              <div class="text-base font-black text-emerald-700 mt-0.5">100% 独立受益</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">租金为店屋独立资产收益，绝不充当其他资产抵充垫资</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Property Standalone Side-by-Side Comparison Matrix -->
+        <div class="border border-slate-200 rounded-2xl bg-white p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+            <h4 class="text-sm font-black text-slate-900">📊 三大投资标的独立财务指标横向对比总表 (Strictly Isolated Comparison)</h4>
+            <span class="text-[11px] text-slate-400">纯客观财务核算 · 无交叉补贴 · 供独立投资决策</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-slate-100 text-slate-700 font-bold uppercase">
+                <tr>
+                  <th class="px-3.5 py-2.5">核算对比维度</th>
+                  <th class="px-3.5 py-2.5 text-blue-900 bg-blue-50/50">1. Paragon Gateway A-24-10</th>
+                  <th class="px-3.5 py-2.5 text-rose-900 bg-rose-50/50">2. RedEarth 云顶 C-53-03A</th>
+                  <th class="px-3.5 py-2.5 text-emerald-900 bg-emerald-50/50">3. 居銮商业店屋 No. 46</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr>
+                  <td class="px-3.5 py-2 font-bold text-slate-700">标的资产属性</td>
+                  <td class="px-3.5 py-2 text-slate-800">新山优质住宅 · 纯自住</td>
+                  <td class="px-3.5 py-2 text-slate-800">文旅商业公寓 · 托管短租</td>
+                  <td class="px-3.5 py-2 text-slate-800">双层商业店屋 · 稳健长租</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-3.5 py-2 font-bold text-slate-700">买卖合同总价 (SPA)</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-slate-900">RM 581,812.00</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-slate-900">RM 457,000.00</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-slate-900">RM 345,000.00</td>
+                </tr>
+                <tr>
+                  <td class="px-3.5 py-2 font-bold text-slate-700">银行按揭贷款 (LTV)</td>
+                  <td class="px-3.5 py-2 font-mono text-slate-800">RM 465,449 (80%, UOB)</td>
+                  <td class="px-3.5 py-2 font-mono text-slate-800">RM 388,450 (85%, AmBank)</td>
+                  <td class="px-3.5 py-2 font-mono text-slate-800">预估 RM 276,000 (80%, HLB)</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-3.5 py-2 font-bold text-slate-700">已付自有资金 (首期)</td>
+                  <td class="px-3.5 py-2 font-mono text-blue-700 font-bold">RM 116,363 (20%)</td>
+                  <td class="px-3.5 py-2 font-mono text-rose-700 font-bold">RM 68,550 (15%)</td>
+                  <td class="px-3.5 py-2 font-mono text-emerald-700 font-bold">RM 34,500 (10%)</td>
+                </tr>
+                <tr>
+                  <td class="px-3.5 py-2 font-bold text-slate-700">当前施工/初期月度净现金流</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-rose-600">-RM 750.00 / 月</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-rose-600">-RM 465.00 / 月</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-emerald-600">+RM 1,912.50 / 月</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-3.5 py-2 font-bold text-slate-700">交付/放款后独立月度净现金流</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-rose-600">-RM 2,667.00 / 月</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-rose-600">-RM 1,009.42 / 月 (短租基准)</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-emerald-600">+RM 412.50 / 月 (净盈余)</td>
+                </tr>
+                <tr>
+                  <td class="px-3.5 py-2 font-bold text-slate-700">交付/放款后独立月度纯经济损益</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-amber-700">-RM 2,179.00 / 月</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-amber-700">-RM 601.52 / 月</td>
+                  <td class="px-3.5 py-2 font-mono font-bold text-emerald-700">+RM 827.50 / 月 (纯盈利)</td>
+                </tr>
+                <tr class="bg-slate-50/50">
+                  <td class="px-3.5 py-2 font-bold text-slate-700">独立资本自偿特性与回收期</td>
+                  <td class="px-3.5 py-2 text-slate-600">纯自住消费属性，无商业自偿</td>
+                  <td class="px-3.5 py-2 text-slate-600">基准下租金未达自偿，需贴补 RM 1,010</td>
+                  <td class="px-3.5 py-2 text-emerald-700 font-bold">租金 100% 自偿，回本 4.15~7.17 年</td>
+                </tr>
+                <tr class="bg-slate-100 font-bold text-slate-900">
+                  <td class="px-3.5 py-2.5">跨项目租金抵扣状态</td>
+                  <td class="px-3.5 py-2.5 text-blue-800">🔒 严禁抵扣 · 独立自付</td>
+                  <td class="px-3.5 py-2.5 text-rose-800">🔒 严禁抵扣 · 独立核算</td>
+                  <td class="px-3.5 py-2.5 text-emerald-800">🔒 严禁冲抵其他资产 · 独立收益</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 Dedicated Property Comparison Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-base font-bold text-slate-900">📊 三处不动产合同总价、银行贷款与已付首期对比 (RM)</h3>
+            <span class="text-xs text-slate-500">资本金与杠杆结构</span>
+          </div>
+          <div class="relative h-72">
+            <canvas id="propertyChart"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-base font-bold text-slate-900">📊 三大标的交付后独立月度净现金流与经济纯损益对比 (RM/月)</h3>
+            <span class="text-xs text-slate-500">100% 独立单盘运营</span>
+          </div>
+          <div class="relative h-72">
+            <canvas id="propertyPnlChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Property Portfolio Master Ledger -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+          <h3 class="font-bold text-slate-900">🏢 三核不动产台账与当前放款施工进度</h3>
+          <span class="text-xs font-semibold text-slate-500">合同价总计 RM 1,383,812 / 贷款授信 RM 1,129,899</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-100 text-slate-700 uppercase font-semibold">
+              <tr>
+                <th class="px-4 py-3">房产项目与单元</th>
+                <th class="px-4 py-3">买卖合同 (SPA) 与总价</th>
+                <th class="px-4 py-3">按揭银行与贷款本金</th>
+                <th class="px-4 py-3 text-right">当前建筑期月供</th>
+                <th class="px-4 py-3 text-right">交房后满额月供</th>
+                <th class="px-4 py-3">已付首期、最新工程放款 (Disbursement) 与核验证据</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+              <!-- Property 1 -->
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-4 py-3.5 font-bold text-slate-900">
+                  Paragon Gateway A-24-10<br>
+                  <span class="text-[11px] font-normal text-slate-500">Suria Paragon Phase 1 · 新山自住</span><br>
+                  <span class="text-[10px] text-blue-600 font-normal">发展商: Paragon Premium (Joland Group) · 律所: Messrs Yong & Rajah</span>
+                </td>
+                <td class="px-4 py-3.5">
+                  <span class="font-mono font-bold text-slate-900">RM 581,812.00</span><br>
+                  <span class="text-[11px] font-mono text-slate-500">SPA 日期: 2025-04-10</span>
+                </td>
+                <td class="px-4 py-3.5">
+                  <span class="font-mono font-bold text-slate-800">RM 465,449.00 (80%)</span><br>
+                  <span class="text-[11px] text-slate-500">大华银行 UOB (Batu Pahat 分行)</span>
+                </td>
+                <td class="px-4 py-3.5 text-right font-mono font-bold text-amber-700">RM 750.00</td>
+                <td class="px-4 py-3.5 text-right font-mono text-slate-500">~RM 2,117.00<br><span class="text-[10px] text-slate-400 font-normal">4.2% / 35年</span></td>
+                <td class="px-4 py-3.5 text-slate-700">
+                  • <strong>20% 首期已付清：</strong>RM 116,363.00（含 2025-04-10 四笔收据 RCP0000474–477）<br>
+                  • <strong>已放款工程：</strong>2026-05-19 放款 2(d) RM 43,635.30 (RCP0008180)；2026-07-07 UOB 放款 Stage 2(e)(i) 内墙批荡 <strong>RM 29,090.60</strong> (RCP0009791)<br>
+                  • <strong>当前进度与月供实扣：</strong>Stage 2(f) 排污工程账单 INV0006022 (5%, RM 29,090.60) 请款中；UOB ONE 账户（910-302-562-8）每月 5–7 日固定代扣 PayNet Direct Debit 5000052116 <strong>RM 750.00/月</strong>。
+                </td>
+              </tr>
+
+              <!-- Property 2 -->
+              <tr class="hover:bg-slate-50 transition">
+                <td class="px-4 py-3.5 font-bold text-slate-900">
+                  RedEarth 云顶 C-53-03A<br>
+                  <span class="text-[11px] font-normal text-slate-500">Genting Xintiandi · 454 sqft · 车位 L1-118</span><br>
+                  <span class="text-[10px] text-blue-600 font-normal">发展商: Xintiandi Dev (Aset Kayamas) · 律所: KP Goh & Partners</span>
+                </td>
+                <td class="px-4 py-3.5">
+                  <span class="font-mono font-bold text-slate-900">RM 457,000.00</span><br>
+                  <span class="text-[11px] font-mono text-slate-500">SPA 日期: 2024-09-30</span>
+                </td>
+                <td class="px-4 py-3.5">
+                  <span class="font-mono font-bold text-slate-800">RM 388,450.00 (85%)</span><br>
+                  <span class="text-[11px] text-slate-500">大马银行 AmBank (HL/003945/2024-07/803)</span>
+                </td>
+                <td class="px-4 py-3.5 text-right font-mono font-bold text-amber-700">RM 380–550</td>
+                <td class="px-4 py-3.5 text-right font-mono text-slate-500">~RM 1,767.00<br><span class="text-[10px] text-rose-600 font-semibold">自偿需流水 RM 4,948 (入住率>59%) | 常态缺口 -RM 1,010</span></td>
+                <td class="px-4 py-3.5 text-slate-700">
+                  • <strong>15% 首期已付清：</strong>RM 68,550.00（含 2023-09-16 订金 RM 5,000 与差额款 RM 9,140）<br>
+                  • <strong>已放款工程：</strong>Stage 2(a) 地基工程 5% (RM 22,850.00, 账单 INV1000637)；已推进至 Stage 2(c) 框架结构 10% (<strong>RM 45,700.00</strong>, 账单 INV1010812，2026-09-08 到期)<br>
+                  • <strong>银行加密通知：</strong>2026-08-20 与 2026-10-20 最新加密单 (密码 <code class="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-700 font-bold">5101JEK</code>)；随放款建筑期月息实扣约 RM 380–550/月。
+                </td>
+              </tr>
+
+              <!-- Property 3 -->
+              <tr class="hover:bg-slate-50 transition bg-amber-50/20">
+                <td class="px-4 py-3.5 font-bold text-slate-900">
+                  居銮商业店屋 No. 46<br>
+                  <span class="text-[11px] font-normal text-slate-500">Jalan Kinabalu, Taman Koperasi · 双层 143 sqm</span><br>
+                  <span class="text-[10px] text-blue-600 font-normal">地契: Geran 128820 Lot 35517 · 律所: Rodziah & Co</span>
+                </td>
+                <td class="px-4 py-3.5">
+                  <span class="font-mono font-bold text-slate-900">RM 345,000.00</span><br>
+                  <span class="text-[11px] font-mono text-slate-500">购买协议: ATP00650</span>
+                </td>
+                <td class="px-4 py-3.5">
+                  <span class="font-mono font-bold text-slate-800">RM 276,000.00 (预估80%)</span><br>
+                  <span class="text-[11px] text-amber-700 font-semibold">丰隆银行 HLB 居銮分行 (Elyn Wong 审批中)</span>
+                </td>
+                <td class="px-4 py-3.5 text-right font-mono font-bold text-emerald-700">RM 0.00<br><span class="text-[10px] text-slate-400 font-normal">尚未放款</span></td>
+                <td class="px-4 py-3.5 text-right font-mono text-slate-500">~RM 1,450.00<br><span class="text-[10px] text-emerald-700 font-semibold">起租RM 2,000完全覆盖</span></td>
+                <td class="px-4 py-3.5 text-slate-700">
+                  • <strong>10% 首期已付清 (RM 34,500.00)：</strong>1% 订金 RM 3,450 + 2026-10-12 开具 UOB 银行本票付清 9% 尾款 RM 31,050.00 与律所杂费 RM 1,000<br>
+                  • <strong>官方持有税费：</strong>地税 RM 238/年 + 居銮市议会门牌税 RM 812/年 = RM 1,050/年<br>
+                  • <strong>看板模型设定：</strong>标注为「商业贷款审批中（暂按 80% 贷款 RM 276,000 预估月供 ~RM 1,450 虚位展示，当前实付月供 RM 0，待出正式 Letter of Offer 后锁定）」。
+                </td>
+              </tr>
+            </tbody>
+            <tfoot class="bg-slate-50 font-bold text-slate-900">
+              <tr>
+                <td colspan="3" class="px-4 py-3">三核不动产总计 (合同价 RM 1,383,812 / 贷款授信 RM 1,129,899)</td>
+                <td class="px-4 py-3 text-right font-mono text-amber-700 font-bold">~1,130–1,300</td>
+                <td class="px-4 py-3 text-right font-mono">~5,334.00</td>
+                <td class="px-4 py-3 text-slate-700 font-normal">
+                  • 建筑期实际按揭支出合计约 <strong>RM 1,215.00/月</strong>（Paragon RM 750 + RedEarth ~RM 465 + 店屋 RM 0）<br>
+                  • 交付后三处不动产合同按揭月供合计 <strong>RM 5,334.00/月</strong>（注：各项资产按揭为独立法定债务，无交叉连带担保；各标的单盘独立损益见下方核算台账）
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 5: GENTING REDEARTH SIMULATOR ==================== -->
+    <section id="view-genting" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+        <div class="border-b border-slate-200 pb-4">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-lg font-black text-slate-900">🧮 云顶 RedEarth C-53-03A 全成本穿透与实盘压力测试模拟器</h3>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                  已剔除中介理想化假设 · 100% 穿透全成本
+                </span>
+              </div>
+              <p class="text-xs text-slate-500 mt-1">
+                454 sqft Studio · 53楼高空云海景 · 商业贷款 RM 388,450 @ 4.2% (35年期满额月供 RM 1,767/月) · 穿透 OTA 佣金、TNB高山除湿电费、洗烘亏空与平日/周末极端剪刀差
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-slate-600">托管合同模式：</span>
+              <select id="re-inp-model" onchange="updateGentingSim()" class="text-xs font-bold bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 text-slate-800 focus:ring-2 focus:ring-blue-500">
+                <option value="NET_70_30" selected>规范净额分成 (Net 70/30 - 扣OTA后再三七分)</option>
+                <option value="GROSS_70_30">霸王总额分成 (Gross 70/30 - 抽总流水30%且业主单背OTA)</option>
+                <option value="LTR">防守长租基准 (Long-Term Rental @ RM 1,400/月包物业)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Inputs Column (5 cols) -->
+          <div class="lg:col-span-5 space-y-4 bg-slate-50 p-5 rounded-xl border border-slate-200">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+              <span class="text-xs font-bold uppercase text-slate-700">🎛️ 真实云顶淡旺季变量控制</span>
+              <span class="text-[10px] text-slate-400">平日(日~四) vs 周末(五~六)</span>
+            </div>
+
+            <!-- Weekday ADR & Days -->
+            <div class="space-y-1.5 p-3 rounded-lg bg-white border border-slate-200">
+              <div class="flex justify-between text-xs font-bold">
+                <span class="text-slate-700">平日房价 (周日–周四)</span>
+                <span id="re-val-adr-wd" class="text-blue-600 font-mono text-xs">RM 140 / 晚</span>
+              </div>
+              <input type="range" id="re-inp-adr-wd" min="100" max="220" step="5" value="140" oninput="updateGentingSim()" class="w-full accent-blue-600 cursor-pointer" />
+              <div class="flex justify-between text-xs font-bold pt-1">
+                <span class="text-slate-700">平日入住天数 (满额21.5天)</span>
+                <span id="re-val-days-wd" class="text-blue-600 font-mono text-xs">6 天 (28%)</span>
+              </div>
+              <input type="range" id="re-inp-days-wd" min="2" max="18" step="1" value="6" oninput="updateGentingSim()" class="w-full accent-blue-600 cursor-pointer" />
+              <div class="text-[10px] text-slate-400">云顶半山平日竞品 Studio 互卷，价格战剧烈</div>
+            </div>
+
+            <!-- Weekend ADR & Days -->
+            <div class="space-y-1.5 p-3 rounded-lg bg-white border border-slate-200">
+              <div class="flex justify-between text-xs font-bold">
+                <span class="text-slate-700">周末与假期房价 (周五–周六)</span>
+                <span id="re-val-adr-we" class="text-indigo-600 font-mono text-xs">RM 320 / 晚</span>
+              </div>
+              <input type="range" id="re-inp-adr-we" min="200" max="480" step="10" value="320" oninput="updateGentingSim()" class="w-full accent-indigo-600 cursor-pointer" />
+              <div class="flex justify-between text-xs font-bold pt-1">
+                <span class="text-slate-700">周末入住天数 (满额8.5天)</span>
+                <span id="re-val-days-we" class="text-indigo-600 font-mono text-xs">7 天 (82%)</span>
+              </div>
+              <input type="range" id="re-inp-days-we" min="2" max="8" step="1" value="7" oninput="updateGentingSim()" class="w-full accent-indigo-600 cursor-pointer" />
+              <div class="text-[10px] text-slate-400">新加坡与KL周末度假客集中爆发期</div>
+            </div>
+
+            <!-- Prepay Slider -->
+            <div class="p-3 rounded-lg bg-white border border-slate-200">
+              <div class="flex justify-between text-xs font-bold mb-1">
+                <span class="text-slate-700">交房后每月额外提前还贷</span>
+                <span id="re-val-prepay" class="text-emerald-600 font-mono text-xs">RM 0 / 月</span>
+              </div>
+              <input type="range" id="re-inp-prepay" min="0" max="3000" step="100" value="0" oninput="updateGentingSim()" class="w-full accent-emerald-600 cursor-pointer" />
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1"><span>RM 0 (基准合同还款)</span><span>RM 1,000</span><span>RM 3,000</span></div>
+            </div>
+
+            <!-- Comprehensive OPEX Breakdown Summary Box -->
+            <div class="p-3.5 bg-slate-900 text-white rounded-xl text-xs space-y-2">
+              <div class="flex items-center justify-between border-b border-slate-700 pb-1.5 font-bold">
+                <span class="text-amber-400">🏢 全成本穿透对账表 (月均真实支出)</span>
+                <span id="re-out-total-opex" class="text-rose-400 font-mono">RM 1,177 / 月</span>
+              </div>
+              <div class="grid grid-cols-2 gap-x-2 gap-y-1 text-[11px] text-slate-300">
+                <div>• 物业管理+偿债基金: <strong class="text-white">RM 225</strong></div>
+                <div>• 商用100M光纤宽带: <strong class="text-white">RM 110</strong></div>
+                <div>• 门牌税+地税+险+锁: <strong class="text-white">RM 150</strong></div>
+                <div>• TNB商业除湿+照明: <strong class="text-white">RM 190</strong></div>
+                <div>• 翻台人工+洗烘亏空: <strong class="text-white">RM 180</strong></div>
+                <div>• 客用易耗洗漱补给: <strong class="text-white">RM 120</strong></div>
+                <div>• 彭亨州税+防潮维修金: <strong class="text-white">RM 162</strong></div>
+                <div>• 满额商业房贷本息: <strong class="text-rose-300">RM 1,767</strong></div>
+              </div>
+              <div class="text-[10px] text-amber-200/90 pt-1 border-t border-slate-800">
+                ⚠️ 真实每月总承托底线：<strong>RM 2,944 / 月</strong> (远超中介口中的 RM 2,317)
+              </div>
+            </div>
+          </div>
+
+          <!-- Outputs Column (7 cols) -->
+          <div class="lg:col-span-7 space-y-4">
+            <!-- Top Status Banner -->
+            <div id="re-box-status" class="p-4 rounded-xl border border-rose-200 bg-rose-50/70">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <div class="text-xs font-bold text-rose-800 uppercase tracking-wide">云顶实盘月度现金流诊断</div>
+                  <div id="re-out-cashflow" class="text-3xl font-black text-rose-600 mt-1 font-mono">-RM 1,010 / 月</div>
+                  <div id="re-out-status" class="text-xs font-bold text-rose-700 mt-1">
+                    ⚠️ 真实常态月度亏损 RM 1,010 / 月 (需每月自付补缴)
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-[11px] text-slate-500 font-semibold">首年每月本金积累 (强制储蓄)</div>
+                  <div class="text-lg font-black text-emerald-600 font-mono mt-0.5">+RM 408 / 月</div>
+                  <div class="text-[10px] text-slate-500 mt-0.5">真实经济纯损耗：<strong id="re-out-econ-loss" class="text-slate-800">-RM 602 / 月</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Key Indicators Grid (4 blocks) -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div class="p-3 rounded-xl border border-slate-200 bg-white">
+                <div class="text-[11px] text-slate-500 font-semibold">综合加权房费</div>
+                <div id="re-out-weighted-adr" class="text-base font-black text-slate-900 mt-1 font-mono">RM 239 / 晚</div>
+                <div id="re-out-total-days" class="text-[10px] text-slate-400 mt-0.5">合计 13 天 (43.3%)</div>
+              </div>
+
+              <div class="p-3 rounded-xl border border-slate-200 bg-white">
+                <div class="text-[11px] text-slate-500 font-semibold">月总流水 (Gross)</div>
+                <div id="re-out-gross" class="text-base font-black text-blue-600 mt-1 font-mono">RM 3,110</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">OTA抽15% (-RM 467)</div>
+              </div>
+
+              <div class="p-3 rounded-xl border border-slate-200 bg-white">
+                <div class="text-[11px] text-slate-500 font-semibold">业主实得房费</div>
+                <div id="re-out-net70" class="text-base font-black text-indigo-600 mt-1 font-mono">RM 1,850</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">托管30% (-RM 793)</div>
+              </div>
+
+              <div class="p-3 rounded-xl border border-slate-200 bg-white">
+                <div class="text-[11px] text-slate-500 font-semibold">资本回收期 (Payback)</div>
+                <div id="re-out-payback" class="text-sm font-bold text-rose-600 mt-1 font-mono">无法纯靠租金自偿</div>
+                <div class="text-[10px] text-rose-600 mt-0.5">常态净亏需自付 (缺口 -RM 1,010/月)</div>
+              </div>
+            </div>
+
+            <!-- Standalone Economics & Sensitivity Card (100% Strictly Isolated) -->
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 text-xs text-slate-800 space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-200 pb-2">
+                <div class="flex items-center gap-2 font-bold text-slate-900">
+                  <span>🎯 云顶单一标的独立运营与自偿平衡分析 (Standalone Breakeven)</span>
+                  <span class="px-2 py-0.5 rounded text-[10px] bg-slate-700 text-white font-bold">100% 独立标的核算</span>
+                </div>
+                <span class="text-[10px] text-slate-400 font-mono">无任何外部资产补贴</span>
+              </div>
+              <p class="leading-relaxed text-slate-600">
+                <strong>独立自偿平衡门槛 (Cashflow Breakeven)：</strong>云顶项目每月固定持有+浮动运营费（基准 <strong>RM 1,177 / 月</strong>）与商业贷款月供（<strong>RM 1,767 / 月</strong>）合计硬性承托总成本为 <strong>RM 2,944 / 月</strong>。在规范 70/30 分成模式下，月短租总流水（Gross Booking）须达到 <strong>RM 4,948 / 月</strong>（例如：加权均价 RM 280/晚且月入住 17.7 天，或入住率达到 59.0%），业主实得到账房费方可实现 100% 独立自偿、现金流不倒贴。
+              </p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-[11px]">
+                <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs">
+                  <div class="font-bold text-slate-900">🏢 长租基准防守测算 (Long-Term Rental)</div>
+                  <div class="text-slate-600 mt-1 leading-relaxed">若切换为固定长租（RM 1,400/月），租客自付水电与宽带，业主自持净费用降至 RM 305/月，月度净现金流为 <strong>-RM 672 / 月</strong>，免除翻台维护内耗与淡旺季客流波动风险。</div>
+                </div>
+                <div class="p-3 bg-white rounded-lg border border-slate-200 shadow-2xs">
+                  <div class="font-bold text-slate-900">🔒 纯独立核算准则 (Zero Cross-Subsidy)</div>
+                  <div class="text-slate-600 mt-1 leading-relaxed">本模拟器数据 100% 独立反映 Genting RedEarth C-53-03A 单一标的财务模型，绝不计入居銮店屋租金或其他任何外部资产的冲抵或交叉补贴，专供独立投资判断。</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Amortization Stats Row -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-xs flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <span class="text-slate-500">贷款结清年限：</span>
+                <strong id="re-out-years" class="text-slate-900 font-mono">35.0 年</strong>
+                <span id="re-out-saved-years" class="text-slate-400 ml-1">(按合同进度)</span>
+              </div>
+              <div>
+                <span class="text-slate-500">累计节省利息：</span>
+                <strong id="re-out-saved-interest" class="text-emerald-700 font-mono">RM 0</strong>
+              </div>
+              <div class="text-slate-500 text-[11px]">
+                按揭计息准则：AmBank 商业房贷 4.20% 年化，35年等额本息标准摊销
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 6: PREMIUM CALENDAR & RADAR ==================== -->
+    <section id="view-radar" class="hidden space-y-6">
+      <!-- 12-Month Premium Flow Calendar -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4 mb-4">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">📅 2026–2027 年度真实保费扣缴日历与银行账户映射</h3>
+            <p class="text-xs text-slate-500">保诚 6 单与丰隆 UL 零月供；仅追踪 AIA 核心医疗重疾组合与丰隆老单净扣</p>
+          </div>
+          <span class="text-xs font-mono bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-md font-semibold">年保费真实总承托：仅约 RM 5,640 (月扣 RM 460–488)</span>
+        </div>
+
+        <!-- 12 Months Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <!-- M1 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+            <div class="font-bold text-slate-900 flex justify-between"><span>1 月</span><span class="text-blue-600 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-slate-500 mt-1">AIA 组合扣款 (UOB/MBB)</div>
+          </div>
+          <!-- M2 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+            <div class="font-bold text-slate-900 flex justify-between"><span>2 月</span><span class="text-blue-600 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-slate-500 mt-1">AIA 组合扣款</div>
+          </div>
+          <!-- M3 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+            <div class="font-bold text-slate-900 flex justify-between"><span>3 月</span><span class="text-blue-600 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-slate-500 mt-1">AIA 组合扣款</div>
+          </div>
+          <!-- M4 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+            <div class="font-bold text-slate-900 flex justify-between"><span>4 月</span><span class="text-blue-600 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-slate-500 mt-1">AIA 组合扣款</div>
+          </div>
+          <!-- M5 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+            <div class="font-bold text-slate-900 flex justify-between"><span>5 月</span><span class="text-blue-600 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-slate-500 mt-1">AIA 组合扣款</div>
+          </div>
+          <!-- M6 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+            <div class="font-bold text-slate-900 flex justify-between"><span>6 月</span><span class="text-blue-600 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-slate-500 mt-1">AIA 组合扣款</div>
+          </div>
+          <!-- M7 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+            <div class="font-bold text-slate-900 flex justify-between"><span>7 月</span><span class="text-blue-600 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-slate-500 mt-1">AIA 组合扣款</div>
+          </div>
+          <!-- M8 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+            <div class="font-bold text-slate-900 flex justify-between"><span>8 月</span><span class="text-blue-600 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-slate-500 mt-1">AIA 组合扣款</div>
+          </div>
+          <!-- M9 -->
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs">
+            <div class="font-bold text-slate-900 flex justify-between"><span>9 月</span><span class="text-blue-600 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-slate-500 mt-1">AIA 组合扣款</div>
+          </div>
+          <!-- M10 (Current) -->
+          <div class="p-3 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-xs">
+            <div class="font-bold text-emerald-950 flex justify-between"><span>10 月 (当期)</span><span class="text-emerald-700 font-mono">+RM 12,530</span></div>
+            <div class="text-[10px] text-emerald-800 mt-1">HLA 提领入账 RM 13,000 (净盈余)</div>
+          </div>
+          <!-- M11 (Upcoming) -->
+          <div class="p-3 rounded-xl border-2 border-blue-500 bg-blue-50 text-xs">
+            <div class="font-bold text-blue-950 flex justify-between"><span>11 月 (重点)</span><span class="text-blue-700 font-mono">RM 470</span></div>
+            <div class="text-[10px] text-blue-800 mt-1">AIA 扣缴 + 店屋 RM 2,000 收租</div>
+          </div>
+          <!-- M12 -->
+          <div class="p-3 rounded-xl border border-indigo-200 bg-indigo-50 text-xs">
+            <div class="font-bold text-indigo-950 flex justify-between"><span>12 月 (重点)</span><span class="text-indigo-700 font-mono">RM 480</span></div>
+            <div class="text-[10px] text-indigo-800 mt-1">HLA ExcelCash 红利抵扣结算</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Items Checklist (Interactive) -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-slate-900">⚡ 2026年10–11月 关键财务、法务与保单必办雷达</h3>
+          <span class="text-xs text-slate-400">勾选状态会自动保存在本地浏览器</span>
+        </div>
+
+        <div class="space-y-3" id="checklist-container">
+          <!-- Item 1 -->
+          <label class="flex items-start gap-3 p-4 rounded-xl border border-rose-200 bg-rose-50/60 cursor-pointer hover:bg-rose-50 transition">
+            <input type="checkbox" id="chk-hotel" onchange="saveChecklist()" class="mt-1 h-4 w-4 rounded accent-rose-600">
+            <div class="text-xs sm:text-sm">
+              <div class="font-bold text-rose-900">【2026-10-25 今日核销】吉隆坡艾美 / 万丽酒店买一送一券入住确认</div>
+              <p class="text-rose-800 text-xs mt-1">出示万豪 App 内 Club Marriott 电子礼券核销艾美 (#80786772) 或万丽 (#79017050) 差旅住宿。</p>
+            </div>
+          </label>
+
+          <!-- Item 2 -->
+          <label class="flex items-start gap-3 p-4 rounded-xl border border-amber-200 bg-amber-50/60 cursor-pointer hover:bg-amber-50 transition">
+            <input type="checkbox" id="chk-ambank" onchange="saveChecklist()" class="mt-1 h-4 w-4 rounded accent-amber-600">
+            <div class="text-xs sm:text-sm">
+              <div class="font-bold text-amber-900">【本周必办】解锁 2026-10-20 AmBank 贷款通知书 (eNotice 19102026)</div>
+              <p class="text-amber-800 text-xs mt-1">使用 7 位密码 <code class="font-mono bg-white px-1 py-0.5 rounded text-indigo-700 font-bold">5101JEK</code> 解锁加密附件，核实 RedEarth Stage 2(c) RM 45,700 放款日及滞纳金情况，归档至 Drive 05_大马银行。</p>
+            </div>
+          </label>
+
+          <!-- Item 3 -->
+          <label class="flex items-start gap-3 p-4 rounded-xl border border-blue-200 bg-blue-50/60 cursor-pointer hover:bg-blue-50 transition">
+            <input type="checkbox" id="chk-shophouse" onchange="saveChecklist()" class="mt-1 h-4 w-4 rounded accent-blue-600">
+            <div class="text-xs sm:text-sm">
+              <div class="font-bold text-blue-900">【2026-11-01 起租】居銮商业店屋租约签署、LHDN 印花税与首笔 RM 2,000 转账</div>
+              <p class="text-blue-800 text-xs mt-1">签署个人与 ALDIMART 租约，30天内通过 LHDN STAMPS 完税，11月5日前由对公账户汇出 RM 2,000 租金以锁定年省 RM 3,600 企业税；跟进丰隆银行 (Elyn Wong) 贷款正式批复信。</p>
+            </div>
+          </label>
+
+          <!-- Item 4 (NEW: Insurance specific) -->
+          <label class="flex items-start gap-3 p-4 rounded-xl border border-emerald-200 bg-emerald-50/60 cursor-pointer hover:bg-emerald-50 transition">
+            <input type="checkbox" id="chk-pru" onchange="saveChecklist()" class="mt-1 h-4 w-4 rounded accent-emerald-600">
+            <div class="text-xs sm:text-sm">
+              <div class="font-bold text-emerald-900">【保单校准执行】确认保诚 6 份存续保单零月供状态与 70 岁期满 Bonus 锁定</div>
+              <p class="text-emerald-800 text-xs mt-1">确认 31548510、31528558 等保费假期 (Premium Holiday) 生效，月供归零无异常代扣，依赖账户现值自持；核实 PRUEnrich 31333711 已缴清归档待 2038 兑付。</p>
+            </div>
+          </label>
+
+          <!-- Item 5 -->
+          <label class="flex items-start gap-3 p-4 rounded-xl border border-indigo-200 bg-indigo-50/60 cursor-pointer hover:bg-indigo-50 transition">
+            <input type="checkbox" id="chk-kpdn" onchange="saveChecklist()" class="mt-1 h-4 w-4 rounded accent-indigo-600">
+            <div class="text-xs sm:text-sm">
+              <div class="font-bold text-indigo-900">【2026-11-11 周三 10:00 AM】峇株巴辖 KPDN 消费人仲裁庭出庭 (TTPM-J-(P)-1227-2026)</div>
+              <p class="text-indigo-800 text-xs mt-1">地点：Aras 6, Wisma Sin Long, Batu Pahat。携带身份证、YTL 挂号信回执及 3 套完整打印卷宗出庭维权。</p>
+            </div>
+          </label>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 border-t border-slate-800 text-slate-400 py-6 text-xs text-center">
+    <div class="max-w-7xl mx-auto px-4 space-y-1">
+      <p>戴家杰 (TAI CHIA JEK) 个人全景财务与保单量化指挥舱 · 专有私密资产看板</p>
+      <p class="text-slate-500">100% 浏览器本地运算与加密存储 · 无云端外泄风险 · 数据基准：2026 年 10 月实盘校准</p>
+    </div>
+  </footer>
+
+  <!-- Google Sheets Sync Modal -->
+  <div id="sheetsModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-emerald-50/70">
+        <div class="flex items-center gap-2">
+          <span class="p-2 bg-emerald-600 text-white rounded-lg">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16c0 1.1.9 2 2 2h12a2 2 0 002-2V8l-6-6H6a2 2 0 00-2 2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 2v6h6M8 13h8M8 17h8M8 9h2"/></svg>
+          </span>
+          <div>
+            <h3 class="font-bold text-slate-900">📊 连结 Google Sheets 实时数据库</h3>
+            <p class="text-xs text-slate-500">将您的云端表格发布为只读 CSV 链接，看板将每次打开秒级自动拉取</p>
+          </div>
+        </div>
+        <button onclick="closeSheetsModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">&times;</button>
+      </div>
+      <div class="p-6 space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Google Sheets 发布 CSV 链接 (Policies 保单台账)</label>
+          <input type="url" id="inp-sheet-policies" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?gid=0&single=true&output=csv" class="w-full font-mono text-xs p-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <p class="text-[11px] text-slate-400 mt-1">在 Google 表格中点击「文件」➔「共享」➔「发布到网络」➔ 选择工作表并选择「逗号分隔值(.csv)」。</p>
+        </div>
+
+        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 text-slate-600 leading-relaxed">
+          <div class="font-bold text-slate-800 mb-1">📌 数据更新与隐私安全机制：</div>
+          • <strong>纯客户端只读解析：</strong>链接仅用于读取公开只读格式，不向云端发送任何私密写入请求；<br>
+          • <strong>本地自动记忆：</strong>输入的链接将安全存储在您浏览器的 <code>localStorage</code> 中，下次打开无需重复配置；<br>
+          • <strong>未连接时状态：</strong>若未配置链接或处于离线环境，系统自动调用预置的 2026年10月确凿实盘凭据基准数据。
+        </div>
+
+        <div id="sheets-sync-status" class="hidden p-3 rounded-lg text-xs font-semibold"></div>
+      </div>
+      <div class="px-6 py-3 border-t border-slate-200 bg-slate-50 flex justify-end gap-2">
+        <button onclick="closeSheetsModal()" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200 transition">取消</button>
+        <button onclick="saveAndSyncSheets()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          保存并立即拉取同步
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON Configuration Modal -->
+  <div id="jsonModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div>
+          <h3 class="font-bold text-slate-900">⚙️ 结构化配置数据编辑器 (JSON Data Schema)</h3>
+          <p class="text-xs text-slate-500">直接查看或修改全局配置数据，图表与指标将即时重绘</p>
+        </div>
+        <button onclick="closeJsonModal()" class="text-slate-400 hover:text-slate-600 font-bold text-lg">&times;</button>
+      </div>
+      <div class="p-6 flex-1 overflow-y-auto">
+        <textarea id="jsonTextarea" class="w-full h-80 font-mono text-xs p-4 bg-slate-900 text-emerald-400 rounded-xl border border-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        <div class="text-[11px] text-slate-500 mt-2">提示：修改保单保额、房贷余额或电商收入后点击下方保存，页面数据将自动重新装载。</div>
+      </div>
+      <div class="px-6 py-3 border-t border-slate-200 bg-slate-50 flex items-center justify-between gap-2">
+        <button onclick="resetToCalibratedDefault()" class="px-3 py-2 rounded-lg text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-300 hover:bg-rose-100 transition">恢复实盘校准默认值</button>
+        <div class="flex gap-2">
+          <button onclick="closeJsonModal()" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-200 transition">取消</button>
+          <button onclick="saveJsonConfig()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white transition">保存并重新渲染</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    // ==========================================
+    // 1. GLOBAL PROFILE DATA (SCHEMA-DRIVEN CALIBRATED)
+    // ==========================================
+    let TAI_FINANCIAL_PROFILE = {
+      schemaVersion: "2026.10.28-v2",
+      profile: {
+        name: "戴家杰 (TAI CHIA JEK)",
+        auditDate: "2026-10-28",
+        age: 31,
+        ic: "950601-01-5101",
+        dob: "1995-06-01",
+        insuranceAgeANB: 32,
+        netSalary: 5443.75,
+        liquidCash: 26629.43,
+        liquidAssets: {
+          uobOne: 13562.66,
+          uobStash: 66.77,
+          maybankHlaWithdrawal: 13000.00,
+          uobFixedDeposit: 0,
+          securitiesMoomoo: "Pending Sync (待后续批次补全)",
+          securitiesFundingSocieties: "Pending Sync (待后续批次补全)"
+        }
+      },
+      properties: [
+        { 
+          id: "paragon", 
+          name: "Paragon Gateway A-24-10", 
+          type: "新山自住房", 
+          spaDate: "2025-04-10",
+          developer: "Paragon Premium (Joland Group)",
+          lawFirm: "Messrs Yong & Rajah",
+          bank: "UOB Malaysia (Batu Pahat)",
+          value: 581812, 
+          loan: 465449, 
+          installmentCurrent: 750, 
+          installmentPostVP: 2117, 
+          downpayment: 116363, 
+          stage: "Stage 2(e)(i) 内墙批荡已放款 / Stage 2(f) 排污账单中", 
+          status: "建筑期实扣 UOB ONE (910-302-562-8) 每月 5–7 日 PayNet 5000052116 代扣 RM 750/月 (交房后预估 RM 2,117/月)" 
+        },
+        { 
+          id: "redearth", 
+          name: "RedEarth 云顶 C-53-03A", 
+          type: "文旅短租自偿", 
+          spaDate: "2024-09-30",
+          developer: "Xintiandi Development (Aset Kayamas)",
+          lawFirm: "KP Goh & Partners",
+          bank: "AmBank (M) Berhad (HL/003945/2024-07/803)",
+          parcel: "454 sqft · 车位 L1-118",
+          value: 457000, 
+          loan: 388450, 
+          installmentCurrent: 465, 
+          installmentPostVP: 1767, 
+          downpayment: 68550, 
+          stage: "Stage 2(c) 结构框架 10% (RM 45,700)", 
+          status: "建筑期月息实扣 RM 380–550/月 (交房后预估 RM 1,767/月) · 放款函密码 5101JEK" 
+        },
+        { 
+          id: "shophouse", 
+          name: "居銮商业店屋 No. 46, Jalan Kinabalu", 
+          type: "商业租赁税盾", 
+          spaDate: "ATP00650",
+          title: "双层店屋 · Geran 128820 Lot 35517 · 143 sqm",
+          lawFirm: "Rodziah and Company",
+          bank: "Hong Leong Bank 居銮分行 (对接人: Elyn Wong She Yee)",
+          value: 345000, 
+          loan: 276000, 
+          installmentCurrent: 0, 
+          installmentPostVP: 1450, 
+          downpayment: 34500, 
+          holdingTaxAnnual: 1050, 
+          stage: "丰隆银行 HLB 审批中 (未放款)", 
+          status: "商业贷款审批中 (暂按80%贷款 RM 276,000 预估月供 ~RM 1,450 虚位展示，当前实付 RM 0)" 
+        }
+      ],
+      ecommerce: {
+        shopeeRevenue: 57149.96,
+        lazadaRevenue: 20091.61,
+        shopeeEndBalance: 60366.06,
+        lazadaEndBalance: 13403.17,
+        grossMargin: 0.3397
+      },
+      insurance: {
+        fundAllocation: [
+          { name: "PRULink Global Leaders Fund", value: 229481.43, pct: 52.38, focus: "全球龙头权益与科技资产" },
+          { name: "PRULink Asia Pacific Dynamic Income Fund", value: 118000.27, pct: 26.93, focus: "亚太高息动态收益与债券" },
+          { name: "PRULink Dragon Peacock Fund", value: 90641.92, pct: 20.69, focus: "大中华与印度双核驱动" }
+        ],
+        policies: [
+          { name: "PRULink Supreme", number: "31331970", company: "Prudential", commencementDate: "2023-10-25", maturityDate: "2093-10-25", lifeCover: 153765, ciCover: 0, medCover: 0, accidentCover: 0, premiumMonth: 0, cashValue: 128016.99, status: "3年已缴清 (Paid-Up)·月供RM 0·静待70岁领Bonus" },
+          { name: "PRULink Supreme", number: "31332648", company: "Prudential", commencementDate: "2023-10", maturityDate: "2093-10", lifeCover: 100000, maxLifeCover: 153765, ciCover: 0, medCover: 0, accidentCover: 0, premiumMonth: 0, cashValue: 93741.23, status: "3年已缴清 (Paid-Up)·月供RM 0·静待70岁领Bonus" },
+          { name: "PRULink Supreme", number: "31333328", company: "Prudential", commencementDate: "2023-10", maturityDate: "2093-10", lifeCover: 100000, maxLifeCover: 153765, ciCover: 0, medCover: 0, accidentCover: 0, premiumMonth: 0, cashValue: 93458.90, status: "3年已缴清 (Paid-Up)·月供RM 0·静待70岁领Bonus" },
+          { name: "PRULink Supreme Plus", number: "31528558", company: "Prudential", commencementDate: "2024-10-25", maturityDate: "2094-10-24", lifeCover: 124875, ciCover: 0, medCover: 0, accidentCover: 0, premiumMonth: 0, cashValue: 68673.10, status: "停止缴付 (Premium Holiday)·月供RM 0·微量COI自扣至70岁" },
+          { name: "PRUMillion Cover 2.0", number: "31548510", company: "Prudential", commencementDate: "2024-11-26", maturityDate: "2065-11-26", lifeCover: 505000, ciCover: 0, medCover: 0, accidentCover: 505000, premiumMonth: 0, cashValue: 54233.39, status: "停止缴付 (Premium Holiday)·月供RM 0·不含重疾·维持至70岁期满" },
+          { name: "PRUEnrich Gain", number: "31333711", company: "Prudential", commencementDate: "2023-10-31", maturityDate: "2038-10-31", lifeCover: 159360.89, ciCover: 0, medCover: 0, accidentCover: 0, premiumMonth: 0, cashValue: 151772.28, status: "【看板漏项必补】3年缴清 (Paid-Up)·月供RM 0·2038年满期领本金+终期红利" },
+          { name: "A-Life Cover & Med", number: "0903327J01", company: "AIA", commencementDate: "2026-09-30", maturityDate: "终身", lifeCover: 100000, ciCover: 0, medCover: 10000000, accidentCover: 0, premiumMonth: 250, cashValue: 0, status: "正常供款·A-LifeLink 2 医疗主单RM 1000万/年 (病房RM 300)" },
+          { name: "A-Life Essential Critical Care", number: "XXXX334J06", company: "AIA", commencementDate: "2026-09-30", maturityDate: "终身", lifeCover: 0, ciCover: 200000, medCover: 0, accidentCover: 0, premiumMonth: 220, cashValue: 0, status: "正常供款·早期重疾5-15万+晚期重疾18-23万核心纯保障" },
+          { name: "HLA Venture Life / EverLife", number: "UL201412897991", company: "Hong Leong", commencementDate: "存续中", maturityDate: "终身", lifeCover: 100000, ciCover: 0, medCover: 0, accidentCover: 0, premiumMonth: 0, cashValue: 12706.00, status: "停止缴付 (Self-Sustaining)·月供RM 0·COI年扣RM 113.16可自持112年" },
+          { name: "HLA ExcelCash", number: "IL20010664472", company: "Hong Leong", commencementDate: "2001-12-28", maturityDate: "2095-12-27", lifeCover: 30000, ciCover: 30000, medCover: 0, accidentCover: 0, premiumMonth: 10.20, cashValue: 5000.00, status: "【看板漏项必补】高性价比老保单·年保费481.5抵扣红利359.1后净月供RM 10.20" },
+          { name: "Chubb & Samsung Care+", number: "MMKMA0010050088", company: "Chubb / Samsung", commencementDate: "2026-10-05", maturityDate: "2028-09-08", lifeCover: 0, ciCover: 0, medCover: 0, accidentCover: 5000, premiumMonth: 0, cashValue: 0, status: "已付清·附加财物与意外保障" },
+          { name: "PRUEzy Saver", number: "31030192", company: "Prudential", commencementDate: "2023-10-22", maturityDate: "2025-10-22", lifeCover: 0, ciCover: 0, medCover: 0, accidentCover: 0, premiumMonth: 0, cashValue: 0, status: "【历史结清档】2025-10-22已满期退还本金RM 40,000·不计入当前持仓" }
+        ],
+        pillars: {
+          lifeTotal: 1367765,
+          lifeTotalRange: "RM 1,367,765 – RM 1,525,295",
+          ciTotal: 230000,
+          ciTotalRange: "RM 210,000 – RM 260,000",
+          medAnnualTotal: 10000000,
+          accidentTotal: 510000,
+          totalPrudentialIlpCashValue: 438123.61,
+          totalHlaCashValue: 12706.00,
+          totalLiquidCashValue: 450829.61,
+          pruEnrichPaidUpEquity: 151772.28,
+          monthlyPremiumCashOutflow: 480.20,
+          monthlyPremiumRange: "RM 460 – RM 498 / 月"
+        }
+      }
+    };
+
+    // Load custom profile from LocalStorage if exists and matching calibrated version
+    try {
+      const saved = localStorage.getItem("TAI_FINANCIAL_PROFILE_SAVED");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed?.schemaVersion === TAI_FINANCIAL_PROFILE.schemaVersion && parsed?.profile?.age === 31 && parsed?.insurance?.fundAllocation) {
+          TAI_FINANCIAL_PROFILE = parsed;
+        } else {
+          localStorage.setItem("TAI_FINANCIAL_PROFILE_SAVED", JSON.stringify(TAI_FINANCIAL_PROFILE));
+        }
+      }
+    } catch(e) {
+      console.warn("Storage load error:", e);
+    }
+
+    // ==========================================
+    // 2. TAB SWITCHING SYSTEM
+    // ==========================================
+    const tabs = ['overview', 'insurance', 'simulator', 'properties', 'genting', 'radar'];
+    let chartInstances = {};
+
+    function switchTab(targetTab) {
+      tabs.forEach(t => {
+        const viewEl = document.getElementById('view-' + t);
+        const btnEl = document.getElementById('tab-' + t);
+        if (!viewEl || !btnEl) return;
+        
+        if (t === targetTab) {
+          viewEl.classList.remove('hidden');
+          btnEl.classList.add('active');
+          btnEl.classList.remove('text-slate-400');
+        } else {
+          viewEl.classList.add('hidden');
+          btnEl.classList.remove('active');
+          btnEl.classList.add('text-slate-400');
+        }
+      });
+
+      // Lazy render tab specific charts
+      setTimeout(() => {
+        if (targetTab === 'overview') renderOverviewCharts();
+        if (targetTab === 'insurance') renderInsuranceRadar();
+        if (targetTab === 'simulator') runPolicySimulation();
+        if (targetTab === 'properties') renderPropertyCharts();
+        if (targetTab === 'genting') updateGentingSim();
+      }, 50);
+    }
+
+    // Interactive switcher for isolated property accounting ledgers
+    function switchPropertyLedger(target) {
+      const cards = ['ledger-paragon', 'ledger-redearth', 'ledger-shophouse'];
+      const btns = ['btn-ledger-all', 'btn-ledger-paragon', 'btn-ledger-redearth', 'btn-ledger-shophouse'];
+
+      btns.forEach(b => {
+        const el = document.getElementById(b);
+        if (el) {
+          el.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:bg-slate-200 transition';
+        }
+      });
+
+      const activeBtn = document.getElementById('btn-ledger-' + target);
+      if (activeBtn) {
+        activeBtn.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-indigo-600 text-white shadow-xs transition';
+      }
+
+      cards.forEach(c => {
+        const el = document.getElementById(c);
+        if (!el) return;
+        if (target === 'all') {
+          el.classList.remove('hidden');
+        } else {
+          if (c === 'ledger-' + target) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    // ==========================================
+    // 3. CHART RENDERING ENGINES
+    // ==========================================
+    function renderOverviewCharts() {
+      const totalPropValue = TAI_FINANCIAL_PROFILE.properties.reduce((s, p) => s + (Number(p.value) || 0), 0);
+      const totalPropLoan = TAI_FINANCIAL_PROFILE.properties.reduce((s, p) => s + (Number(p.loan) || 0), 0);
+      const totalLifeCover = TAI_FINANCIAL_PROFILE.insurance.pillars.lifeTotal || 1367765;
+      const totalCashVal = TAI_FINANCIAL_PROFILE.insurance.pillars.totalLiquidCashValue || 450830;
+      const verifiedLiquidCash = TAI_FINANCIAL_PROFILE.profile.liquidCash || 26629.43;
+
+      // Solvency chart
+      const ctx1 = document.getElementById('overviewSolvencyChart');
+      if (ctx1) {
+        if (chartInstances.solvency) chartInstances.solvency.destroy();
+        chartInstances.solvency = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: ['三核不动产总值', '三核总负债贷款', '身故全残总保额', '保单现金总价值', '已核实个人活期'],
+            datasets: [{
+              label: '金额 (RM)',
+              data: [totalPropValue, totalPropLoan, totalLifeCover, Math.round(totalCashVal), Math.round(verifiedLiquidCash)],
+              backgroundColor: ['#1e293b', '#ef4444', '#10b981', '#f59e0b', '#0ea5e9'],
+              borderRadius: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { ticks: { callback: v => 'RM ' + (v / 1000).toFixed(0) + 'k' } }
+            }
+          }
+        });
+      }
+
+      // Capital return rate chart
+      const ctx2 = document.getElementById('capitalRateChart');
+      if (ctx2) {
+        if (chartInstances.rates) chartInstances.rates.destroy();
+        chartInstances.rates = new Chart(ctx2, {
+          type: 'bar',
+          data: {
+            labels: ['电商备货毛利率', '居銮店屋省税率', '保单平均分红率', '商业店屋贷款率', '住宅房贷利率'],
+            datasets: [{
+              label: '回报/成本率 (%)',
+              data: [33.97, 15.00, 4.50, -4.50, -4.20],
+              backgroundColor: ['#2563eb', '#10b981', '#6366f1', '#f59e0b', '#ef4444'],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { ticks: { callback: v => v + '%' } }
+            }
+          }
+        });
+      }
+
+      // Macro household & business cashflow structure chart
+      const ctxCash = document.getElementById('cashflowChart');
+      if (ctxCash) {
+        if (chartInstances.cash) chartInstances.cash.destroy();
+        chartInstances.cash = new Chart(ctxCash, {
+          type: 'bar',
+          data: {
+            labels: ['Shopee 回款', 'ALDIMART 支出', 'Lazada 回款', '个人净薪资', 'HLA 现金提领', '建筑期房贷实扣', '真实月保费'],
+            datasets: [{
+              label: '金额 (RM)',
+              data: [57150, -46310, 20092, 5444, 13000, -1215, -480],
+              backgroundColor: ['#2563eb', '#ef4444', '#0ea5e9', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899'],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { ticks: { callback: v => 'RM ' + (v/1000) + 'k' } } }
+          }
+        });
+      }
+    }
+
+    function renderInsuranceRadar() {
+      const ctx = document.getElementById('insuranceRadarChart');
+      if (!ctx) return;
+      if (chartInstances.radar) chartInstances.radar.destroy();
+
+      chartInstances.radar = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: [
+            '身故全残 (Life/TPD)',
+            '重疾保障 (CI)',
+            '百万医疗 (Medical)',
+            '意外伤残 (Accident)',
+            '保单现金储备 (Liquidity)'
+          ],
+          datasets: [
+            {
+              label: '当前具备保额指数',
+              data: [128, 85, 100, 85, 95],
+              backgroundColor: 'rgba(16, 185, 129, 0.25)',
+              borderColor: '#10b981',
+              pointBackgroundColor: '#10b981',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: '#10b981'
+            },
+            {
+              label: '安全推荐基准线',
+              data: [100, 100, 100, 100, 100],
+              backgroundColor: 'rgba(148, 163, 184, 0.15)',
+              borderColor: '#94a3b8',
+              borderDash: [5, 5],
+              pointBackgroundColor: '#94a3b8',
+              pointBorderColor: '#fff'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: '#e2e8f0' },
+              grid: { color: '#f1f5f9' },
+              pointLabels: { font: { size: 11, weight: '600' }, color: '#334155' },
+              ticks: { display: false, max: 140, min: 0 }
+            }
+          },
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+          }
+        }
+      });
+    }
+
+    function renderPropertyCharts() {
+      const ctxProp = document.getElementById('propertyChart');
+      if (ctxProp) {
+        if (chartInstances.prop) chartInstances.prop.destroy();
+        const labels = TAI_FINANCIAL_PROFILE.properties.map(p => p.name.split(' ')[0] || p.name);
+        const values = TAI_FINANCIAL_PROFILE.properties.map(p => p.value);
+        const loans = TAI_FINANCIAL_PROFILE.properties.map(p => p.loan);
+        const downpayments = TAI_FINANCIAL_PROFILE.properties.map(p => p.downpayment);
+
+        chartInstances.prop = new Chart(ctxProp, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              { label: '合同总价', data: values, backgroundColor: '#1e293b', borderRadius: 6 },
+              { label: '银行贷款', data: loans, backgroundColor: '#3b82f6', borderRadius: 6 },
+              { label: '已付首期', data: downpayments, backgroundColor: '#10b981', borderRadius: 6 }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: { y: { ticks: { callback: v => 'RM ' + (v/1000) + 'k' } } }
+          }
+        });
+      }
+
+      // Standalone post-VP net cash flow & economic P&L comparison chart
+      const ctxPropPnl = document.getElementById('propertyPnlChart');
+      if (ctxPropPnl) {
+        if (chartInstances.propPnl) chartInstances.propPnl.destroy();
+        chartInstances.propPnl = new Chart(ctxPropPnl, {
+          type: 'bar',
+          data: {
+            labels: ['Paragon Gateway (自住)', 'RedEarth 云顶 (短租基准)', '居銮商业店屋 (长租)'],
+            datasets: [
+              {
+                label: '独立月度净现金流 (Net Cashflow)',
+                data: [-2667.00, -1009.42, 412.50],
+                backgroundColor: ['#f87171', '#fb7185', '#34d399'],
+                borderRadius: 6
+              },
+              {
+                label: '独立月度纯经济损益 (Economic P&L)',
+                data: [-2179.00, -601.52, 827.50],
+                backgroundColor: ['#fb923c', '#fdba74', '#10b981'],
+                borderRadius: 6
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ctx.dataset.label + ': ' + (ctx.raw >= 0 ? '+RM ' : '-RM ') + Math.abs(ctx.raw).toLocaleString() + ' / 月'
+                }
+              }
+            },
+            scales: {
+              y: {
+                ticks: {
+                  callback: v => (v >= 0 ? '+RM ' : '-RM ') + Math.abs(v).toLocaleString()
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // ==========================================
+    // 4. FUTURE POLICY ACTUARIAL SIMULATOR
+    // ==========================================
+    function setSimulationScenario(type) {
+      if (type === 'conservative') {
+        document.getElementById('sim-return').value = 2.0;
+        document.getElementById('sim-inflation').value = 12.0;
+        document.getElementById('sim-withdraw').value = 20000;
+      } else if (type === 'baseline') {
+        document.getElementById('sim-return').value = 4.5;
+        document.getElementById('sim-inflation').value = 10.0;
+        document.getElementById('sim-withdraw').value = 0;
+      } else if (type === 'aggressive') {
+        document.getElementById('sim-return').value = 6.5;
+        document.getElementById('sim-inflation').value = 8.0;
+        document.getElementById('sim-withdraw').value = 0;
+      }
+      runPolicySimulation();
+    }
+
+    let currentSimChartMode = 'crossover'; // 'crossover' | 'fan' | 'coi'
+
+    function setSimChartMode(mode) {
+      currentSimChartMode = mode;
+      
+      const btnCross = document.getElementById('btn-mode-crossover');
+      const btnFan = document.getElementById('btn-mode-fan');
+      const btnCoi = document.getElementById('btn-mode-coi');
+      
+      [btnCross, btnFan, btnCoi].forEach(btn => {
+        if (!btn) return;
+        btn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition';
+      });
+
+      if (mode === 'crossover' && btnCross) {
+        btnCross.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-white text-indigo-700 shadow-xs transition';
+      } else if (mode === 'fan' && btnFan) {
+        btnFan.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-white text-indigo-700 shadow-xs transition';
+      } else if (mode === 'coi' && btnCoi) {
+        btnCoi.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-white text-indigo-700 shadow-xs transition';
+      }
+
+      runPolicySimulation();
+    }
+
+    function runPolicySimulation() {
+      const targetAge = parseInt(document.getElementById('sim-age').value, 10);
+      const returnRate = parseFloat(document.getElementById('sim-return').value) / 100;
+      const medInflation = parseFloat(document.getElementById('sim-inflation').value) / 100;
+      const extraWithdraw = parseFloat(document.getElementById('sim-withdraw').value);
+
+      document.getElementById('lbl-target-age').textContent = targetAge + ' 岁 (未来 ' + (targetAge - 31) + ' 年)';
+      document.getElementById('lbl-return-rate').textContent = (returnRate * 100).toFixed(1) + '% ' + (returnRate >= 0.05 ? '(偏乐观)' : returnRate <= 0.025 ? '(悲观防御)' : '(中性稳健)');
+      document.getElementById('lbl-med-inflation').textContent = (medInflation * 100).toFixed(1) + '% / 年';
+      document.getElementById('lbl-extra-withdraw').textContent = extraWithdraw > 0 ? 'RM ' + extraWithdraw.toLocaleString() + ' (提领削减现金)' : 'RM 0 (保持保单蓄水)';
+
+      // Actuarial projections from age 31 to targetAge
+      const startAge = 31;
+      const years = Math.max(2, targetAge - startAge);
+      let labels = [];
+      let cashValueData = [];
+      let cashValueConsData = [];
+      let cashValueOptData = [];
+      let remainingLoanData = [];
+      let netWorthData = [];
+      let coiData = [];
+      
+      let baseStartingCV = (TAI_FINANCIAL_PROFILE.insurance?.pillars?.totalLiquidCashValue || 450830) - extraWithdraw;
+      let currentCV = baseStartingCV;
+      let currentCV_cons = baseStartingCV;
+      let currentCV_opt = baseStartingCV;
+      
+      let annualPremium = 0; // ZERO cash premium! Premium holiday / Paid up!
+      let baseCOI = 450;
+
+      // Mortgage amortization baseline: RM 1,129,899 over 30 years at 4.2%
+      const totalLoan0 = 1129899;
+      const rMonth = 0.042 / 12;
+      const nMonths = 360;
+      const pmtMonth = totalLoan0 * (rMonth * Math.pow(1 + rMonth, nMonths)) / (Math.pow(1 + rMonth, nMonths) - 1);
+      
+      let initialPropertyValue = 1383812;
+      let liquidCash0 = 26629.43;
+
+      let crossoverAge = null;
+
+      for (let i = 0; i <= years; i++) {
+        const age = startAge + i;
+        labels.push(age + '岁');
+        
+        // COI grows with age (exponential after 50)
+        let coiFactor = Math.pow(1.055, i);
+        if (age > 50) coiFactor *= Math.pow(1.045, age - 50);
+        const currentYearCOI = Math.round(baseCOI * coiFactor);
+        coiData.push(currentYearCOI);
+
+        // Calculate remaining mortgage loan
+        const elapsedMonths = i * 12;
+        let remLoan = 0;
+        if (elapsedMonths < nMonths) {
+          remLoan = Math.round(pmtMonth * (1 - Math.pow(1 + rMonth, -(nMonths - elapsedMonths))) / rMonth);
+        }
+        remainingLoanData.push(remLoan);
+
+        // Calculate property value with modest 2.0% appreciation
+        const propVal = Math.round(initialPropertyValue * Math.pow(1.02, i));
+
+        // Cash values under base, conservative (2.5%), and optimistic (6.5%)
+        if (i > 0) {
+          let bonus = 0;
+          if ((age - 31) >= 8 && (age - 31) % 5 === 0) {
+            bonus = Math.round(currentCV * 0.04);
+          }
+          currentCV = Math.max(0, Math.round((currentCV - currentYearCOI + bonus) * (1 + returnRate)));
+          currentCV_cons = Math.max(0, Math.round((currentCV_cons - currentYearCOI + Math.round(bonus * 0.6)) * (1 + 0.025)));
+          currentCV_opt = Math.max(0, Math.round((currentCV_opt - currentYearCOI + Math.round(bonus * 1.3)) * (1 + 0.065)));
+        }
+
+        cashValueData.push(currentCV);
+        cashValueConsData.push(currentCV_cons);
+        cashValueOptData.push(currentCV_opt);
+
+        // Net worth = Property Value + Cash Value + Liquid Cash - Remaining Loan
+        const netWorth = propVal + currentCV + Math.round(liquidCash0) - remLoan;
+        netWorthData.push(netWorth);
+
+        // Detect golden crossover
+        if (crossoverAge === null && currentCV >= remLoan && i > 0) {
+          crossoverAge = age;
+        }
+      }
+
+      // Update crossover badge
+      const badgeEl = document.getElementById('sim-crossover-badge');
+      if (badgeEl) {
+        if (crossoverAge) {
+          badgeEl.textContent = '🌟 黄金交叉点：' + crossoverAge + '岁达成 (保单现值反超房贷)';
+          badgeEl.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300';
+        } else {
+          badgeEl.textContent = '⏳ 黄金交叉点：当前收益率下需更长时间';
+          badgeEl.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700 border border-slate-300';
+        }
+      }
+
+      // Update Output Indicators
+      const finalCV = cashValueData[cashValueData.length - 1];
+      const finalCOI = coiData[coiData.length - 1];
+      
+      const outCVEl = document.getElementById('sim-out-cashvalue');
+      outCVEl.textContent = 'RM ' + finalCV.toLocaleString();
+      outCVEl.className = finalCV > 100000 ? 'text-lg font-black text-emerald-600 mt-1 font-mono' : 'text-lg font-black text-rose-600 mt-1 font-mono';
+
+      const outCOIEl = document.getElementById('sim-out-coi');
+      outCOIEl.textContent = 'RM ' + finalCOI.toLocaleString() + ' /年';
+
+      const outStatusEl = document.getElementById('sim-out-status');
+      const insightBox = document.getElementById('sim-insight-box');
+      const subTitleEl = document.getElementById('sim-chart-subtitle');
+
+      if (finalCV > 200000) {
+        outStatusEl.textContent = '🛡️ 极其健康';
+        outStatusEl.className = 'text-lg font-black text-emerald-600 mt-1 font-mono';
+        insightBox.className = 'p-4 rounded-xl border border-emerald-200 bg-emerald-50/60 text-xs text-emerald-950 leading-relaxed';
+        insightBox.innerHTML = `<strong>💡 稳健精算结论：</strong>在 ${(returnRate*100).toFixed(1)}% 年化收益率与零追加现金保费模式下，现有 <strong>RM 450,830</strong> 账户价值每年产生约 RM 20,000+ 复利收益，远远超过微量 COI 扣费，保单现金价值持续稳健滚存，至 ${targetAge} 岁累积高达 <strong>RM ${finalCV.toLocaleString()}</strong>；${crossoverAge ? '并在 <strong>' + crossoverAge + ' 岁</strong> 达成黄金交叉，届时保单现金价值全面反超三套房产的剩余房贷总和！' : ''} 此外，2038 年（43岁）还将获得 PRUEnrich 31333711 的本金与分红确定性回流（RM 15.9万+）！`;
+      } else if (finalCV > 0) {
+        outStatusEl.textContent = '⚠️ 需关注费率';
+        outStatusEl.className = 'text-lg font-black text-amber-600 mt-1 font-mono';
+        insightBox.className = 'p-4 rounded-xl border border-amber-200 bg-amber-50/60 text-xs text-amber-950 leading-relaxed';
+        insightBox.innerHTML = `<strong>💡 预警洞察：</strong>在 ${targetAge} 岁时保单现金价值滑落至 <strong>RM ${finalCV.toLocaleString()}</strong>。由于高龄 COI 年扣费达 RM ${finalCOI.toLocaleString()}，建议在 50 岁前后利用满期保单回流金对投资账户进行适度 Top-up，以防断保。`;
+      } else {
+        outStatusEl.textContent = '🚨 有断保风险';
+        outStatusEl.className = 'text-lg font-black text-rose-600 mt-1 font-mono';
+        insightBox.className = 'p-4 rounded-xl border border-rose-200 bg-rose-50/60 text-xs text-rose-950 leading-relaxed';
+        insightBox.innerHTML = `<strong>🚨 压力测试告警：</strong>由于投资回报率偏低或前期提领过多，至 ${targetAge} 岁前现金价值已被高额 COI 侵蚀完毕！若遇到此类极端情况，需提前将医疗险转为纯消费型或增加月保费。`;
+      }
+
+      // Configure Datasets based on selected mode
+      let chartDatasets = [];
+      if (currentSimChartMode === 'crossover') {
+        if (subTitleEl) subTitleEl.innerHTML = '<span>📈 <strong>财富对冲剪刀差：</strong>保单现金价值复利 (绿色) vs 30年房贷本金摊销 (红色虚线) vs 个人核心净资产 (蓝色加粗)</span>';
+        chartDatasets = [
+          {
+            label: '保单现金总价值 (RM)',
+            data: cashValueData,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.12)',
+            fill: true,
+            tension: 0.3,
+            borderWidth: 2.8,
+            pointRadius: 2
+          },
+          {
+            label: '三核房产剩余贷款总额 (RM)',
+            data: remainingLoanData,
+            borderColor: '#ef4444',
+            backgroundColor: 'transparent',
+            borderDash: [5, 4],
+            tension: 0.2,
+            borderWidth: 2.2,
+            pointRadius: 1
+          },
+          {
+            label: '家庭核心净资产总值 (RM)',
+            data: netWorthData,
+            borderColor: '#3b82f6',
+            backgroundColor: 'transparent',
+            tension: 0.3,
+            borderWidth: 3,
+            pointRadius: 2
+          }
+        ];
+      } else if (currentSimChartMode === 'fan') {
+        if (subTitleEl) subTitleEl.innerHTML = '<span>📊 <strong>未来40年三情景走势扇形图：</strong>乐观 6.5% (蓝色) vs 中性基准 4.5% (绿色填充) vs 保守承压 2.5% (橙色)</span>';
+        chartDatasets = [
+          {
+            label: '乐观繁荣情景 (6.5% 年化)',
+            data: cashValueOptData,
+            borderColor: '#3b82f6',
+            backgroundColor: 'transparent',
+            borderDash: [3, 3],
+            tension: 0.3,
+            borderWidth: 2
+          },
+          {
+            label: '基准中性预期 (当前设定收益率)',
+            data: cashValueData,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.15)',
+            fill: true,
+            tension: 0.3,
+            borderWidth: 3
+          },
+          {
+            label: '保守承压情景 (2.5% 年化)',
+            data: cashValueConsData,
+            borderColor: '#f59e0b',
+            backgroundColor: 'transparent',
+            tension: 0.3,
+            borderWidth: 2
+          },
+          {
+            label: '年纯风险保费扣除 COI (RM)',
+            data: coiData,
+            borderColor: '#ef4444',
+            backgroundColor: 'transparent',
+            borderDash: [4, 4],
+            tension: 0.2,
+            borderWidth: 1.5
+          }
+        ];
+      } else {
+        if (subTitleEl) subTitleEl.innerHTML = '<span>🛡️ <strong>保单自持安全缓冲：</strong>保单现金总价值 (绿色) vs 纯风险保费扣除 (COI 红色虚线)</span>';
+        chartDatasets = [
+          {
+            label: '保单现金总价值 (RM)',
+            data: cashValueData,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            fill: true,
+            tension: 0.3,
+            borderWidth: 2.5
+          },
+          {
+            label: '年保险成本 COI (RM)',
+            data: coiData,
+            borderColor: '#ef4444',
+            backgroundColor: 'transparent',
+            borderDash: [4, 4],
+            tension: 0.2,
+            borderWidth: 2
+          }
+        ];
+      }
+
+      // Render chart
+      const ctxSim = document.getElementById('futureSimulationChart');
+      if (ctxSim) {
+        if (chartInstances.sim) chartInstances.sim.destroy();
+        chartInstances.sim = new Chart(ctxSim, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: chartDatasets
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              mode: 'index',
+              intersect: false,
+            },
+            scales: {
+              y: { 
+                ticks: { callback: v => 'RM ' + (v/1000).toFixed(0) + 'k' },
+                grid: { color: 'rgba(226, 232, 240, 0.6)' }
+              },
+              x: {
+                grid: { display: false }
+              }
+            },
+            plugins: {
+              legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11, weight: 'bold' } } },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return context.dataset.label + ': RM ' + Number(context.parsed.y).toLocaleString();
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // ==========================================
+    // 5. GENTING REDEARTH SIMULATOR
+    // ==========================================
+    function updateGentingSim() {
+      // 1. 获取输入参数
+      const modelEl = document.getElementById('re-inp-model');
+      const splitModel = modelEl ? modelEl.value : 'NET_70_30'; // NET_70_30 | GROSS_70_30 | LTR
+
+      const wdAdrEl = document.getElementById('re-inp-adr-wd');
+      const wdDaysEl = document.getElementById('re-inp-days-wd');
+      const weAdrEl = document.getElementById('re-inp-adr-we');
+      const weDaysEl = document.getElementById('re-inp-days-we');
+      const prepayEl = document.getElementById('re-inp-prepay');
+
+      const weekdayAdr = wdAdrEl ? parseFloat(wdAdrEl.value) : 140;
+      const weekdayDays = wdDaysEl ? parseInt(wdDaysEl.value, 10) : 6;
+      const weekendAdr = weAdrEl ? parseFloat(weAdrEl.value) : 320;
+      const weekendDays = weDaysEl ? parseInt(weDaysEl.value, 10) : 7;
+      const prepay = prepayEl ? parseFloat(prepayEl.value) : 0;
+
+      const totalDays = weekdayDays + weekendDays;
+      const gross = (weekdayAdr * weekdayDays) + (weekendAdr * weekendDays);
+      const weightedAdr = totalDays > 0 ? Math.round(gross / totalDays) : 0;
+
+      // 更新输入回显
+      if (document.getElementById('re-val-adr-wd')) document.getElementById('re-val-adr-wd').textContent = 'RM ' + weekdayAdr + ' / 晚';
+      if (document.getElementById('re-val-days-wd')) document.getElementById('re-val-days-wd').textContent = weekdayDays + ' 天 (' + Math.round((weekdayDays/21.5)*100) + '%)';
+      if (document.getElementById('re-val-adr-we')) document.getElementById('re-val-adr-we').textContent = 'RM ' + weekendAdr + ' / 晚';
+      if (document.getElementById('re-val-days-we')) document.getElementById('re-val-days-we').textContent = weekendDays + ' 天 (' + Math.round((weekendDays/8.5)*100) + '%)';
+      if (document.getElementById('re-val-prepay')) document.getElementById('re-val-prepay').textContent = 'RM ' + prepay.toLocaleString() + ' / 月';
+
+      // 2. 收益分账逻辑
+      let otaCut = 0;
+      let operatorCut = 0;
+      let ownerGross = 0;
+
+      if (splitModel === 'NET_70_30') {
+        otaCut = Math.round(gross * 0.15); // 15% 平台佣金
+        const netPayout = gross - otaCut;
+        operatorCut = Math.round(netPayout * 0.30); // 净到账 30% 托管
+        ownerGross = netPayout - operatorCut;
+      } else if (splitModel === 'GROSS_70_30') {
+        otaCut = Math.round(gross * 0.15);
+        operatorCut = Math.round(gross * 0.30); // 总流水 30% (霸王条款)
+        ownerGross = gross - otaCut - operatorCut;
+      } else if (splitModel === 'LTR') {
+        // 防守型长租：固定月租 RM 1,400，无平台与托管提成
+        ownerGross = 1400;
+      }
+
+      // 3. 全口径持有与运营成本 (Opex)
+      let staticHolding = 484.73; // 物业224.73 + 宽带110 + 门牌税65 + 地税15 + 保险40 + 门锁系统30
+      let utilities = 0;
+      let turnovers = Math.max(1, Math.round(totalDays / 1.7)); // 平均每次入住 1.7 晚
+      let turnoverCost = 0;
+      let stateTax = 0;
+      let ffeReserve = 0;
+
+      if (splitModel === 'LTR') {
+        staticHolding = 304.73; // 长租租客自理宽带
+        utilities = 0;          // 租客自付水电
+        turnoverCost = 0;
+        stateTax = 0;
+        ffeReserve = 50.00;     // 基础修缮金
+      } else {
+        utilities = 150 + (totalDays * 4.5) + 40; // TNB 待机除湿150 + 每天用电4.5 + 水排污40
+        turnoverCost = turnovers * (20 + 12);     // 单次洗烘人工亏空 RM 20 + 易耗品 RM 12
+        stateTax = totalDays * 3.0;               // 彭亨州税 RM 3/晚
+        ffeReserve = Math.round(gross * 0.04);     // 计提 4% FF&E 折旧重置金
+      }
+
+      const totalOpex = Math.round(staticHolding + utilities + turnoverCost + stateTax + ffeReserve);
+      const mortgagePmt = 1766.87;
+      const netCash = Math.round(ownerGross - totalOpex - mortgagePmt);
+
+      // 4. 更新界面核心指标
+      if (document.getElementById('re-out-total-opex')) {
+        document.getElementById('re-out-total-opex').textContent = 'RM ' + totalOpex.toLocaleString() + ' / 月';
+      }
+      if (document.getElementById('re-out-weighted-adr')) {
+        document.getElementById('re-out-weighted-adr').textContent = splitModel === 'LTR' ? '长租月租' : 'RM ' + weightedAdr + ' / 晚';
+      }
+      if (document.getElementById('re-out-total-days')) {
+        document.getElementById('re-out-total-days').textContent = splitModel === 'LTR' ? '全月包租 (100%)' : '合计 ' + totalDays + ' 天 (' + Math.round((totalDays/30)*100) + '%)';
+      }
+      if (document.getElementById('re-out-gross')) {
+        document.getElementById('re-out-gross').textContent = 'RM ' + (splitModel === 'LTR' ? 1400 : gross).toLocaleString();
+      }
+      if (document.getElementById('re-out-net70')) {
+        document.getElementById('re-out-net70').textContent = 'RM ' + ownerGross.toLocaleString();
+      }
+
+      const cfEl = document.getElementById('re-out-cashflow');
+      const stEl = document.getElementById('re-out-status');
+      const boxStatus = document.getElementById('re-box-status');
+      const econLossEl = document.getElementById('re-out-econ-loss');
+
+      const initialPrincipalPaydown = 407.90; // 首年每月净本金沉淀
+      const monthlyEconomicLoss = netCash + initialPrincipalPaydown;
+
+      if (econLossEl) {
+        econLossEl.textContent = (monthlyEconomicLoss >= 0 ? '+RM ' : '-RM ') + Math.abs(Math.round(monthlyEconomicLoss)).toLocaleString() + ' / 月';
+      }
+
+      if (cfEl && stEl) {
+        cfEl.textContent = (netCash >= 0 ? '+RM ' : '-RM ') + Math.abs(netCash).toLocaleString() + ' / 月';
+        if (netCash >= 0) {
+          cfEl.className = 'text-3xl font-black text-emerald-600 mt-1 font-mono';
+          stEl.className = 'text-xs font-bold text-emerald-700 mt-1';
+          stEl.textContent = '✅ 租金完全自偿并实现盈余 RM ' + netCash + ' / 月';
+          if (boxStatus) boxStatus.className = 'p-4 rounded-xl border border-emerald-200 bg-emerald-50/70';
+        } else {
+          cfEl.className = 'text-3xl font-black text-rose-600 mt-1 font-mono';
+          stEl.className = 'text-xs font-bold text-rose-700 mt-1';
+          stEl.textContent = '⚠️ 真实常态月度亏损 RM ' + Math.abs(netCash) + ' / 月 (需每月自付补缴)';
+          if (boxStatus) boxStatus.className = 'p-4 rounded-xl border border-rose-200 bg-rose-50/70';
+        }
+      }
+
+      // 5. 严格本息还贷摊销 (Amortization)
+      let balance = 388450;
+      const r = 0.042 / 12;
+      let months = 0;
+      let totalInterest = 0;
+      const initialCapEx = 68550 + 45000; // 首期 RM 68,550 + 2027年软装开荒 RM 45,000 = RM 113,550
+
+      while (balance > 0 && months < 420) {
+        const interest = balance * r;
+        totalInterest += interest;
+        const principalPaid = (mortgagePmt - interest) + prepay;
+        balance -= principalPaid;
+        months++;
+      }
+
+      const baseTotalInterest = (mortgagePmt * 420) - 388450;
+      const savedInterest = Math.max(0, Math.round(baseTotalInterest - totalInterest));
+      const years = (months / 12).toFixed(1);
+      const savedYears = (35 - (months / 12)).toFixed(1);
+
+      if (document.getElementById('re-out-years')) document.getElementById('re-out-years').textContent = years + ' 年';
+      if (document.getElementById('re-out-saved-years')) document.getElementById('re-out-saved-years').textContent = '(缩短 ' + savedYears + ' 年)';
+      if (document.getElementById('re-out-saved-interest')) document.getElementById('re-out-saved-interest').textContent = 'RM ' + savedInterest.toLocaleString();
+
+      // 6. 严谨资本回本期判定 (彻底清除 +6500 硬编码)
+      const paybackEl = document.getElementById('re-out-payback');
+      if (paybackEl) {
+        if (netCash > 0) {
+          const pb = (initialCapEx / (netCash * 12)).toFixed(1);
+          paybackEl.textContent = pb + ' 年 (现金流自偿)';
+          paybackEl.className = 'text-base font-black text-emerald-600 mt-1 font-mono';
+        } else if (monthlyEconomicLoss > 0) {
+          const pb = (initialCapEx / (monthlyEconomicLoss * 12)).toFixed(1);
+          paybackEl.textContent = pb + ' 年 (含本金增厚)';
+          paybackEl.className = 'text-base font-black text-amber-600 mt-1 font-mono';
+        } else {
+          paybackEl.textContent = '无法纯靠租金自偿';
+          paybackEl.className = 'text-sm font-bold text-rose-600 mt-1 font-mono';
+        }
+      }
+    }
+
+    // ==========================================
+    // 6. CHECKLIST & LOCAL PERSISTENCE
+    // ==========================================
+    function saveChecklist() {
+      const keys = ['chk-hotel', 'chk-ambank', 'chk-shophouse', 'chk-pru', 'chk-kpdn'];
+      const state = {};
+      keys.forEach(k => {
+        const el = document.getElementById(k);
+        if (el) state[k] = el.checked;
+      });
+      localStorage.setItem("TAI_RADAR_CHECKLIST", JSON.stringify(state));
+    }
+
+    function loadChecklist() {
+      try {
+        const saved = localStorage.getItem("TAI_RADAR_CHECKLIST");
+        if (saved) {
+          const state = JSON.parse(saved);
+          Object.keys(state).forEach(k => {
+            const el = document.getElementById(k);
+            if (el) el.checked = state[k];
+          });
+        }
+      } catch(e) {}
+    }
+
+    // ==========================================
+    // 7. JSON & GOOGLE SHEETS CONFIG MODALS
+    // ==========================================
+    function openJsonModal() {
+      document.getElementById('jsonTextarea').value = JSON.stringify(TAI_FINANCIAL_PROFILE, null, 2);
+      document.getElementById('jsonModal').classList.remove('hidden');
+    }
+
+    function closeJsonModal() {
+      document.getElementById('jsonModal').classList.add('hidden');
+    }
+
+    function saveJsonConfig() {
+      try {
+        const parsed = JSON.parse(document.getElementById('jsonTextarea').value);
+        TAI_FINANCIAL_PROFILE = parsed;
+        localStorage.setItem("TAI_FINANCIAL_PROFILE_SAVED", JSON.stringify(parsed));
+        closeJsonModal();
+        alert("配置已成功更新！页面图表已重新加载。");
+        location.reload();
+      } catch(e) {
+        alert("JSON 语法解析错误，请检查输入格式:\n" + e.message);
+      }
+    }
+
+    function resetToCalibratedDefault() {
+      if (confirm("确定要恢复至 2026-10 实盘校准主数据蓝图初始值吗？此操作将清除所有自定义本地修改。")) {
+        localStorage.removeItem("TAI_FINANCIAL_PROFILE_SAVED");
+        localStorage.removeItem("TAI_SHEETS_POLICIES_URL");
+        location.reload();
+      }
+    }
+
+    function openSheetsModal() {
+      const savedUrl = localStorage.getItem("TAI_SHEETS_POLICIES_URL") || "";
+      document.getElementById('inp-sheet-policies').value = savedUrl;
+      document.getElementById('sheetsModal').classList.remove('hidden');
+    }
+
+    function closeSheetsModal() {
+      document.getElementById('sheetsModal').classList.add('hidden');
+    }
+
+    async function saveAndSyncSheets() {
+      const url = document.getElementById('inp-sheet-policies').value.trim();
+      const statusEl = document.getElementById('sheets-sync-status');
+      if (!url) {
+        alert("请输入有效的 Google Sheets 发布 CSV 链接");
+        return;
+      }
+
+      statusEl.classList.remove('hidden');
+      statusEl.className = 'p-3 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200';
+      statusEl.textContent = '⏳ 正在连接 Google Sheets 并拉取最新数据...';
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("HTTP 状态异常: " + res.status);
+        const csvText = await res.text();
+        const parsedRows = parseCSV(csvText);
+
+        if (parsedRows.length > 0) {
+          localStorage.setItem("TAI_SHEETS_POLICIES_URL", url);
+          
+          // Map CSV rows to policy schema
+          const mappedPolicies = parsedRows.map(r => {
+            const num = r.policy_id || r.保单号 || r.number || "";
+            const name = r.policy_name || r.险种名称 || r.name || "保单";
+            const comp = r.company || r.保险机构 || "保险机构";
+            const comm = r.commencement_date || r.生效日 || "";
+            const mat = r.maturity_date || r.满期日 || "";
+            const life = parseFloat(r.life_tpd_cover_rm || r.身故保额 || 0) || 0;
+            const ci = parseFloat(r.ci_cover_rm || r.重疾保额 || 0) || 0;
+            const med = parseFloat(r.medical_annual_limit_rm || r.医疗限额 || 0) || 0;
+            const acc = parseFloat(r.accident_cover_rm || r.意外保额 || 0) || 0;
+            const prem = parseFloat(r.monthly_premium_rm || r.月缴保费 || 0) || 0;
+            const cv = parseFloat(r.current_cash_value_rm || r.现金价值 || 0) || 0;
+            const status = r.evidence_link_or_note || r.current_status_notes || r.status || "";
+            return {
+              name,
+              number: num,
+              company: comp,
+              commencementDate: comm,
+              maturityDate: mat,
+              lifeCover: life,
+              ciCover: ci,
+              medCover: med,
+              accidentCover: acc,
+              premiumMonth: prem,
+              cashValue: cv,
+              status
+            };
+          });
+
+          if (mappedPolicies.length > 0) {
+            TAI_FINANCIAL_PROFILE.insurance.policies = mappedPolicies;
+            // Dynamically recalculate pillar totals
+            let lifeTot = 0, ciTot = 0, medTot = 0, accTot = 0, pruIlpCv = 0, hlaCv = 0, premTot = 0;
+            mappedPolicies.forEach(p => {
+              if (p.company === 'Prudential' && p.number !== '31333711' && p.number !== '31030192') pruIlpCv += p.cashValue;
+              if (p.company.includes('Hong Leong') || p.company === 'HLA') hlaCv += p.cashValue;
+              lifeTot += p.lifeCover;
+              ciTot += p.ciCover;
+              if (p.medCover > medTot) medTot = p.medCover;
+              accTot += p.accidentCover;
+              premTot += p.premiumMonth;
+            });
+            TAI_FINANCIAL_PROFILE.insurance.pillars.lifeTotal = lifeTot;
+            TAI_FINANCIAL_PROFILE.insurance.pillars.ciTotal = ciTot;
+            TAI_FINANCIAL_PROFILE.insurance.pillars.totalPrudentialIlpCashValue = pruIlpCv;
+            TAI_FINANCIAL_PROFILE.insurance.pillars.totalHlaCashValue = hlaCv;
+            TAI_FINANCIAL_PROFILE.insurance.pillars.totalLiquidCashValue = pruIlpCv + hlaCv;
+            TAI_FINANCIAL_PROFILE.insurance.pillars.monthlyPremiumCashOutflow = premTot;
+
+            localStorage.setItem("TAI_FINANCIAL_PROFILE_SAVED", JSON.stringify(TAI_FINANCIAL_PROFILE));
+          }
+
+          statusEl.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
+          statusEl.textContent = '✅ 成功拉取并实时更新了 ' + parsedRows.length + ' 份保单记录及精算支柱！正在重新渲染图表...';
+          setTimeout(() => {
+            closeSheetsModal();
+            location.reload();
+          }, 1200);
+        } else {
+          throw new Error("CSV 数据为空或格式不匹配");
+        }
+      } catch(err) {
+        statusEl.className = 'p-3 rounded-lg text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+        statusEl.textContent = '❌ 同步失败: ' + err.message + ' (请确认表格已点击「发布到网络」且格式为 CSV)';
+      }
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length < 2) return [];
+      const parseLine = (line) => {
+        const row = [];
+        let cur = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          if (char === '"') {
+            if (inQuotes && line[i + 1] === '"') {
+              cur += '"';
+              i++;
+            } else {
+              inQuotes = !inQuotes;
+            }
+          } else if (char === ',' && !inQuotes) {
+            row.push(cur.trim());
+            cur = '';
+          } else {
+            cur += char;
+          }
+        }
+        row.push(cur.trim());
+        return row.map(v => v.replace(/^"|"$/g, '').trim());
+      };
+      const headers = parseLine(lines[0]);
+      const rows = [];
+      for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const row = parseLine(lines[i]);
+        if (row.length >= headers.length) {
+          const item = {};
+          headers.forEach((h, idx) => item[h] = row[idx]);
+          rows.push(item);
+        }
+      }
+      return rows;
+    }
+
+    // ==========================================
+    // INITIALIZATION ON LOAD
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+      loadChecklist();
+      renderOverviewCharts();
+      updateGentingSim();
+    });
+  </script>
+</body>
+</html>
