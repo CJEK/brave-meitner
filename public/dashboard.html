@@ -1914,8 +1914,8 @@
                   </button>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span id="sim-crossover-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
-                    🌟 黄金交叉点：45~47岁达成
+                  <span id="sim-crossover-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    🌟 黄金交叉点：43岁达成 (保单现值反超房贷)
                   </span>
                   <span class="text-[11px] text-slate-400 font-mono">单位: RM</span>
                 </div>
@@ -3082,7 +3082,7 @@
     // 1. GLOBAL PROFILE DATA (SCHEMA-DRIVEN CALIBRATED)
     // ==========================================
     let TAI_FINANCIAL_PROFILE = {
-      schemaVersion: "2026.10.29-actuarial-v3",
+      schemaVersion: "2026.10.29-actuarial-v4",
       profile: {
         name: "戴家杰 (TAI CHIA JEK)",
         auditDate: "2026-10-28",
@@ -3900,7 +3900,7 @@
 
       // Actuarial projections from age 31 to targetAge
       const startAge = 31;
-      const years = Math.max(2, targetAge - startAge);
+      const years = Math.max(0, targetAge - startAge);
       let labels = [];
       let cashValueData = [];
       let cashValueConsData = [];
@@ -3966,7 +3966,7 @@
 
           // Actuarial Step-ups:
           // 1. Age 43 (2038): PRUEnrich 31333711 matures with capital + dividends reinvested (+RM 220,000)
-          // 2. Age 70 (2065): HLA EverGain 30880190 matures and returns accumulated cash booster (+RM 43,632)
+          // 2. Age 70 (2065): PRUMillion Cover 2.0 (31548510) triggers 8% Loyalty Booster (+RM 43,632)
           let stepUp = 0;
           if (age === 43) stepUp += 220000;
           if (age === 70) stepUp += 43632;
@@ -3991,29 +3991,29 @@
           cvPointRadii.push(8);
           cvPointHoverRadii.push(12);
           cvPointBgColors.push('#3b82f6');
-          cvPointBorderColors.push('#ffffff');
-          cvPointBorderWidths.push(2);
+          cvPointBorderColors.push('#1d4ed8');
+          cvPointBorderWidths.push(1.5);
         } else if (age === 36) {
           cvPointStyles.push('star');
           cvPointRadii.push(8);
           cvPointHoverRadii.push(12);
           cvPointBgColors.push('#8b5cf6');
-          cvPointBorderColors.push('#ffffff');
-          cvPointBorderWidths.push(2);
+          cvPointBorderColors.push('#6d28d9');
+          cvPointBorderWidths.push(1.5);
         } else if (age === 43) {
           cvPointStyles.push('star');
           cvPointRadii.push(9);
           cvPointHoverRadii.push(14);
           cvPointBgColors.push('#f59e0b');
-          cvPointBorderColors.push('#ffffff');
-          cvPointBorderWidths.push(2);
+          cvPointBorderColors.push('#b45309');
+          cvPointBorderWidths.push(1.5);
         } else if (age === 70) {
           cvPointStyles.push('star');
           cvPointRadii.push(8);
           cvPointHoverRadii.push(12);
           cvPointBgColors.push('#ec4899');
-          cvPointBorderColors.push('#ffffff');
-          cvPointBorderWidths.push(2);
+          cvPointBorderColors.push('#be185d');
+          cvPointBorderWidths.push(1.5);
         } else {
           cvPointStyles.push('circle');
           cvPointRadii.push(2.5);
@@ -4064,7 +4064,7 @@
         outStatusEl.textContent = '🛡️ 极其健康';
         outStatusEl.className = 'text-lg font-black text-emerald-600 mt-1 font-mono';
         insightBox.className = 'p-4 rounded-xl border border-emerald-200 bg-emerald-50/60 text-xs text-emerald-950 leading-relaxed';
-        insightBox.innerHTML = `<strong>💡 稳健精算结论：</strong>在 ${(returnRate*100).toFixed(1)}% 年化基准收益率与零追加现金保费模式下，保单现金池在 <strong>33岁</strong> 迈过退保惩罚归零点、<strong>36岁</strong> 享受管理费归零加成 (+1.5%/年)，并在 <strong>43岁</strong>（2038）与 <strong>70岁</strong>（2065）分别迎来 PRUEnrich 满期本金分红（<strong>+RM 220,000+</strong>）与 HLA EverGain 满期红利（<strong>+RM 43,632</strong>）。在扣除微量 COI 成本后，现金池至 ${targetAge} 岁滚存高达 <strong>RM ${finalCV.toLocaleString()}</strong>；${crossoverAge ? '并在 <strong>' + crossoverAge + ' 岁</strong> 达成黄金交叉，届时保单现金价值全面反超三套房产的剩余房贷总和！' : ''}`;
+        insightBox.innerHTML = `<strong>💡 稳健精算结论：</strong>在 ${(returnRate*100).toFixed(1)}% 年化基准收益率与零追加现金保费模式下，保单现金池在 <strong>33岁</strong> 迈过退保惩罚归零点、<strong>36岁</strong> 享受管理费归零加成 (+1.5%/年)，并在 <strong>43岁</strong>（2038）与 <strong>70岁</strong>（2065）分别迎来 PRUEnrich 满期本金分红（<strong>+RM 220,000+</strong>）与 PRUMillion Cover 2.0 8% Loyalty Booster（<strong>+RM 43,632</strong>）。在扣除微量 COI 成本后，现金池至 ${targetAge} 岁滚存高达 <strong>RM ${finalCV.toLocaleString()}</strong>；${crossoverAge ? '并在 <strong>' + crossoverAge + ' 岁</strong> 达成黄金交叉，届时保单现金价值全面反超三套房产的剩余房贷总和！' : ''}`;
       } else if (finalCV > 0) {
         outStatusEl.textContent = '⚠️ 需关注费率';
         outStatusEl.className = 'text-lg font-black text-amber-600 mt-1 font-mono';
@@ -4231,7 +4231,7 @@
                       if (age === 33) return '⭐ 33岁甜蜜点 (2028)：退保惩罚费全线归零 (0%)，保单变现零损耗！';
                       if (age === 36) return '⭐ 36岁甜蜜点 (2031)：账户管理费全线归零 (0%)，净复利增厚+1.5%！';
                       if (age === 43) return '⭐ 43岁甜蜜点 (2038)：PRUEnrich满期注水 +RM 220,000+ 现金回流！';
-                      if (age === 70) return '⭐ 70岁甜蜜点 (2065)：HLA EverGain满期注水 +RM 43,632 红利增厚！';
+                      if (age === 70) return '⭐ 70岁甜蜜点 (2065)：PRUMillion 2.0 派发 8% Loyalty Booster (+RM 43,632) 注入现金池！';
                     }
                     return null;
                   }
@@ -4530,7 +4530,7 @@
             let lifeTot = 0, ciTot = 0, medTot = 0, accTot = 0, pruIlpCv = 0, hlaCv = 0, premTot = 0;
             mappedPolicies.forEach(p => {
               if (p.company === 'Prudential' && p.number !== '31333711' && p.number !== '31030192') pruIlpCv += p.cashValue;
-              if (p.company.includes('Hong Leong') || p.company === 'HLA') hlaCv += p.cashValue;
+              if ((p.company.includes('Hong Leong') || p.company === 'HLA') && p.number !== 'IL20010664472') hlaCv += p.cashValue;
               lifeTot += p.lifeCover;
               ciTot += p.ciCover;
               if (p.medCover > medTot) medTot = p.medCover;
